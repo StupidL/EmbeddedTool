@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.clans.fab.FloatingActionMenu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fab_menu"
+    app:menu_animationDelayPerItem="100"
+    app:menu_backgroundColor="@android:color/transparent"
+    app:menu_colorNormal="@color/colorAccent2"
+    app:menu_colorPressed="@color/colorPrimary2"
+    app:menu_fab_hide_animation="@anim/fab_slide_out_to_right"
+    app:menu_fab_show_animation="@anim/fab_slide_in_from_right"
+    app:menu_labels_colorNormal="@color/colorPrimary2"
+    app:menu_openDirection="up"
+    app:menu_shadowColor="#938f8f"
+    app:menu_shadowRadius="1dp"
+    app:menu_shadowXOffset="1dp"
+    app:menu_shadowYOffset="1dp"
+    app:menu_showShadow="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="16dp">
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab_chart"
+        app:fab_colorDisabled="#aabbcc"
+        app:fab_colorNormal="#E0E0E0"
+        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_label="图表工具"
+        app:fab_size="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu_chart" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab_text_view"
+        app:fab_colorDisabled="#aabbcc"
+        app:fab_colorNormal="#FF8A65"
+        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_label="文本显示"
+        app:fab_size="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu_text" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab_receive_button"
+        app:fab_colorDisabled="#aabbcc"
+        app:fab_colorNormal="#7986CB"
+        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_label="接收按钮"
+        app:fab_size="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu_down_button" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab_send_button"
+        app:fab_colorDisabled="#aabbcc"
+        app:fab_colorNormal="#FFB74D"
+        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_label="发送按钮"
+        app:fab_size="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu_up_button" />
+</com.github.clans.fab.FloatingActionMenu>

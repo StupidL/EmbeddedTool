@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="32dp"
+    android:paddingRight="32dp"
+    android:paddingTop="16dp">
+
+    <TableRow
+        android:id="@+id/row_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start">
+
+        <TextView
+            android:id="@+id/stupid_button_dialog_text_name"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|start"
+            android:text="文字: " />
+
+        <EditText
+            android:id="@+id/stupid_button_dialog_name"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:ellipsize="start"
+            android:gravity="center_vertical|start"
+            android:hint="BUTTON"
+            android:maxLines="1"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+        <TextView
+            android:id="@+id/stupid_button_dialog_id"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|start"
+            android:text="ID" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/row_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_1">
+
+        <TextView
+            android:id="@+id/stupid_button_dialog_type_text"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/row_1"
+            android:gravity="center_vertical|start"
+            android:text="类型: " />
+
+        <Spinner
+            android:id="@+id/stupid_button_dialog_spinner"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/row_1"
+            android:layout_toEndOf="@id/stupid_button_dialog_type_text"
+            android:entries="@array/StupidButtonType"
+            android:gravity="center_vertical|start" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/row_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_2">
+
+        <TextView
+            android:id="@+id/stupid_button_dialog_bind_text"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/row_1"
+            android:gravity="center_vertical|start"
+            android:text="绑定: " />
+
+        <EditText
+            android:id="@+id/stupid_button_dialog_bind_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|start"
+            android:hint="绑定视图的ID"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+    </TableRow>
+
+    <Button
+        android:id="@+id/stupid_button_dialog_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_3"
+        android:background="@null"
+        android:gravity="center_vertical|start"
+        android:text="删除"
+        android:textColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/stupid_button_dialog_ok"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/row_3"
+        android:background="@null"
+        android:gravity="center_vertical|end"
+        android:text="OK"
+        android:textColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/stupid_button_dialog_cancel"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_3"
+        android:layout_toStartOf="@id/stupid_button_dialog_ok"
+        android:background="@null"
+        android:gravity="center_vertical|end"
+        android:text="CANCEL"
+        android:textColor="@color/colorAccent" />
+
+
+</RelativeLayout>
