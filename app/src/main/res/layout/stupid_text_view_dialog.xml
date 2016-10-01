@@ -14,32 +14,32 @@
         android:gravity="center_vertical|start">
 
         <TextView
-            android:id="@+id/stupid_button_dialog_text_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/stupid_text_view_dialog_text_id"
+            android:layout_width="35dp"
             android:layout_height="40dp"
-            android:gravity="center_vertical|start"
-            android:text="文字: " />
+            android:gravity="center_vertical|end"
+            android:text="ID: " />
 
         <EditText
-            android:id="@+id/stupid_button_dialog_name"
+            android:id="@+id/stupid_text_view_dialog_et_id"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
-            android:hint="BUTTON"
+            android:hint="文本框的id"
             android:maxLength="10"
             android:maxLines="1"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <TextView
-            android:id="@+id/stupid_button_dialog_width_text"
-            android:layout_width="wrap_content"
+            android:id="@+id/stupid_text_view_dialog_text_width"
+            android:layout_width="35dp"
             android:layout_height="40dp"
             android:gravity="center_vertical|start"
             android:text="宽度: " />
 
         <EditText
-            android:id="@+id/stupid_button_dialog_width_et"
+            android:id="@+id/stupid_text_view_dialog_et_width"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:ellipsize="start"
@@ -58,31 +58,28 @@
         android:layout_below="@id/row_1">
 
         <TextView
-            android:id="@+id/stupid_button_dialog_type_text"
-            android:layout_width="wrap_content"
+            android:id="@+id/stupid_text_view_dialog_text_type"
+            android:layout_width="35dp"
             android:layout_height="40dp"
-            android:layout_below="@id/row_1"
-            android:gravity="center_vertical|start"
+            android:gravity="center_vertical|end"
             android:text="类型: " />
 
         <Spinner
-            android:id="@+id/stupid_button_dialog_spinner"
+            android:id="@+id/stupid_text_view_dialog_spinner_type"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:layout_below="@id/row_1"
-            android:layout_toEndOf="@id/stupid_button_dialog_type_text"
             android:entries="@array/StupidButtonType"
             android:gravity="center_vertical|start" />
 
         <TextView
-            android:id="@+id/stupid_button_dialog_height_text"
-            android:layout_width="wrap_content"
+            android:id="@+id/stupid_text_view_dialog_text_height"
+            android:layout_width="35dp"
             android:layout_height="40dp"
             android:gravity="center_vertical|start"
             android:text="高度: " />
 
         <EditText
-            android:id="@+id/stupid_button_dialog_height_et"
+            android:id="@+id/stupid_text_view_dialog_et_height"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:ellipsize="start"
@@ -94,57 +91,33 @@
 
     </TableRow>
 
-    <TableRow
-        android:id="@+id/row_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/row_2">
-
-        <TextView
-            android:id="@+id/stupid_button_dialog_bind_text"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_below="@id/row_1"
-            android:gravity="center_vertical|start"
-            android:text="绑定: " />
-
-        <EditText
-            android:id="@+id/stupid_button_dialog_bind_et"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical|start"
-            android:hint="绑定视图的ID"
-            android:inputType="number"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
-    </TableRow>
-
     <Button
-        android:id="@+id/stupid_button_dialog_delete"
+        android:id="@+id/stupid_text_view_dialog_button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/row_3"
+        android:layout_below="@id/row_2"
         android:background="@null"
         android:gravity="center_vertical|start"
         android:text="删除"
         android:textColor="@color/colorAccent" />
 
     <Button
-        android:id="@+id/stupid_button_dialog_ok"
+        android:id="@+id/stupid_text_view_dialog_button_ok"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/row_3"
+        android:layout_below="@id/row_2"
         android:background="@null"
         android:gravity="center"
         android:text="OK"
         android:textColor="@color/colorAccent" />
 
     <Button
-        android:id="@+id/stupid_button_dialog_cancel"
+        android:id="@+id/stupid_text_view_dialog_button_cancel"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/row_3"
-        android:layout_toStartOf="@id/stupid_button_dialog_ok"
+        android:layout_below="@id/row_2"
+        android:layout_toStartOf="@id/stupid_text_view_dialog_button_ok"
         android:background="@null"
         android:gravity="center"
         android:text="CANCEL"

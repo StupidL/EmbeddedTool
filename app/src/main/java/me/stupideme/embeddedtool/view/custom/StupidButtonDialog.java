@@ -23,8 +23,9 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
     private StupidButtonDialogListener mListener;
 
     EditText editText;
+    EditText width;
+    EditText height;
     EditText bindId;
-    TextView id;
     Spinner type;
     Button cancel;
     Button ok;
@@ -40,9 +41,9 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         cancel = (Button) findViewById(R.id.stupid_button_dialog_cancel);
         ok = (Button) findViewById(R.id.stupid_button_dialog_ok);
         delete = (Button) findViewById(R.id.stupid_button_dialog_delete);
-        id = (TextView) findViewById(R.id.stupid_button_dialog_id);
-        id.setText("Hello");
-        bindId= (EditText) findViewById(R.id.stupid_button_dialog_bind_et);
+        bindId = (EditText) findViewById(R.id.stupid_button_dialog_bind_et);
+        width = (EditText) findViewById(R.id.stupid_button_dialog_width_et);
+        height = (EditText) findViewById(R.id.stupid_button_dialog_height_et);
 
         type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -64,10 +65,19 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
     /**
      * set text for the button.
+     *
      * @param name name of the button
      */
-    public void setName(String name) {
+    void showButtonName(String name) {
         editText.setText(name);
+    }
+
+    void showButtonWidth(int w) {
+        width.setText(w + "");
+    }
+
+    void showButtonHeight(int h) {
+        height.setText(h + "");
     }
 
     @Override
@@ -77,8 +87,16 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
                 mListener.onCancel();
                 break;
             case R.id.stupid_button_dialog_ok:
-                map.put("name", editText.getText().toString());
-                mListener.onBindTextView(Integer.parseInt(bindId.getText().toString()));
+                if (!editText.getText().toString().isEmpty())
+                    map.put("name", editText.getText().toString());
+                if (!width.getText().toString().isEmpty())
+                    map.put("width", width.getText().toString());
+                if (!height.getText().toString().isEmpty())
+                    map.put("height", height.getText().toString());
+                String id = bindId.getText().toString();
+                if (!id.isEmpty()) {
+                    mListener.onBindTextView(Integer.parseInt(id));
+                }
                 mListener.onSave(map);
                 break;
             case R.id.stupid_button_dialog_delete:
@@ -87,10 +105,11 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    public interface StupidButtonDialogListener {
+    interface StupidButtonDialogListener {
 
         /**
          * callback methos. set a view type to button
+         *
          * @param type the index of ViewType array, so we can find out the button's type
          */
         void onSetViewType(int type);
@@ -102,6 +121,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
         /**
          * callback method. It will called when the "OK" button clicked in the dialog.
+         *
          * @param map
          */
         void onSave(Map<String, String> map);
@@ -114,6 +134,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         /**
          * callback method. It will called when the "OK" button clicked in the dialog.
          * the purpose of this method is to save the id which the button want to bind.
+         *
          * @param id id of the text view which this button want to bind.
          */
         void onBindTextView(int id);

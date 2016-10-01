@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/stupid_text_view"
+    android:id="@+id/stupid_edit_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/text_view"
+    <EditText
+        android:id="@+id/stupid_text_view_et"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_weight="1" />
 
     <ImageButton
-        android:id="@+id/image_button"
+        android:id="@+id/stupid_text_view_image_button"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@null"
         android:contentDescription=""
+        android:scaleX="1.5"
+        android:scaleY="1.5"
         android:src="@drawable/ic_send_blue_600_24dp" />
 
 </LinearLayout>

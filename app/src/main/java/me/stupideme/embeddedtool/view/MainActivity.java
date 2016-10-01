@@ -28,7 +28,6 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
 public class MainActivity extends AppCompatActivity implements IMainView {
 
     private MainPresenter mPresenter;
-
     private FrameLayout mFrameLayout;
 
     private View.OnTouchListener mTouchListener;
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void addTextView() {
-        StupidTextView stupidTextView = new StupidTextView(MainActivity.this);
+        StupidTextView stupidTextView = new StupidTextView(MainActivity.this, mPresenter);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         stupidTextView.setLayoutParams(params);

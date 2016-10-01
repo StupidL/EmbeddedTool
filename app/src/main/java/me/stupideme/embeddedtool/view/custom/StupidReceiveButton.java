@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 public class StupidReceiveButton extends Button implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
-    private IReceiveLink iReceiveLink;
+    private IReceiveMessage iReceiveMessage;
     private ViewType mViewType;
     private StupidButtonDialog mDialog;
     private ViewType[] mButtonTypes = {ViewType.BUTTON_0, ViewType.BUTTON_1, ViewType.BUTTON_2,
@@ -34,7 +35,9 @@ public class StupidReceiveButton extends Button implements StupidButtonDialog.St
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                mDialog.setName(getText().toString());
+                mDialog.showButtonName(getText().toString());
+                mDialog.showButtonWidth(getWidth());
+                mDialog.showButtonHeight(getHeight());
                 mDialog.show();
                 return false;
             }
@@ -45,8 +48,8 @@ public class StupidReceiveButton extends Button implements StupidButtonDialog.St
         super(context, attrs);
     }
 
-    public void bindTextView(IReceiveLink link) {
-        iReceiveLink = link;
+    public void bindTextView(IReceiveMessage link) {
+        iReceiveMessage = link;
     }
 
     public ViewType getViewType() {
@@ -68,9 +71,21 @@ public class StupidReceiveButton extends Button implements StupidButtonDialog.St
     @Override
     public void onSave(Map<String, String> map) {
         mDialog.dismiss();
-        setText(map.get("name"));
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
+        if (map.containsKey("name"))
+            setText(map.get("name"));
+        if (map.containsKey("width")) {
+            params.width = Integer.parseInt(map.get("width"));
+            setLayoutParams(params);
+        }
+        if (map.containsKey("height")) {
+            params.height = Integer.parseInt(map.get("height"));
+            setLayoutParams(params);
+        }
+
         data = mPresenter.receiveDataOverButton();  // receive data over wifi or bluetooth and save
-        iReceiveLink.receiveDataToTextView(toString());// send the data to the text view
+        if (iReceiveMessage != null)
+            iReceiveMessage.receiveToTarget(toString());// send the data to the text view
         Log.v("StupidReceiveButton ", "data saved");
     }
 
@@ -81,22 +96,14 @@ public class StupidReceiveButton extends Button implements StupidButtonDialog.St
 
     @Override
     public void onBindTextView(int id) {
-        IReceiveLink view = (IReceiveLink) mPresenter.findTextView(id);
+        IReceiveMessage view = (IReceiveMessage) mPresenter.findTextView(id);
         bindTextView(view);
-        Log.v("StupidReceiveButton ","bind text view success");
+        Log.v("StupidReceiveButton ", "bind text view success");
     }
 
     @Override
     public String toString() {
-        return "";
+        return "Iam Stupid Receive Button";
     }
 
-    public interface IReceiveLink {
-
-        /**
-         * send text to the text view which have been bind to this button
-         * @param s the text send to the text view
-         */
-        void receiveDataToTextView(String s);
-    }
 }
