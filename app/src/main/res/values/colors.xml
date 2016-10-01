@@ -8,4 +8,12 @@
     <color name="colorPrimary2">#795548</color>
     <color name="colorPrimaryDark2">#5D4037</color>
     <color name="colorAccent2">#607D8B</color>
+
+    <color name="Gray">#616161</color>
+    <color name="Purple">#9C27B0</color>
+    <color name="Indigo">#3F51B5</color>
+    <color name="Teal">#009688</color>
+    <color name="Orange">#FF5722</color>
+    <color name="Brown">#795548</color>
+    <color name="BlueGray">#607D8B</color>
 </resources>

@@ -5,4 +5,14 @@
         <item>Type1</item>
         <item>Type2</item>
     </array>
+
+    <array name="StupidTextViewColors">
+        <item>Gray</item>
+        <item>Purple</item>
+        <item>Indigo</item>
+        <item>Teal</item>
+        <item>Orange</item>
+        <item>Brown</item>
+        <item>BlueGray</item>
+    </array>
 </resources>

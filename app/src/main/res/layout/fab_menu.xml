@@ -32,6 +32,17 @@
         android:src="@drawable/menu_chart" />
 
     <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab_edit_text"
+        app:fab_colorDisabled="#aabbcc"
+        app:fab_colorNormal="#43a9ce"
+        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_label="文本编辑"
+        app:fab_size="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/menu_chart" />
+
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fab_text_view"
         app:fab_colorDisabled="#aabbcc"
         app:fab_colorNormal="#FF8A65"

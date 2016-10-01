@@ -12,4 +12,8 @@ public interface INetModel {
     void sendDataOverTextView(String s);
 
     String receiveDataOverTextView();
+
+    void sendDataOverEditText(String s);
+
+    String receiveDataOverEditText();
 }

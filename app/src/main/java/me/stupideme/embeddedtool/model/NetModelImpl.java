@@ -25,4 +25,14 @@ public class NetModelImpl implements INetModel {
     public String receiveDataOverTextView() {
         return "";
     }
+
+    @Override
+    public void sendDataOverEditText(String s) {
+
+    }
+
+    @Override
+    public String receiveDataOverEditText() {
+        return null;
+    }
 }

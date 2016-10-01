@@ -1,11 +1,13 @@
 package me.stupideme.embeddedtool.presenter;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import me.stupideme.embeddedtool.model.INetModel;
 import me.stupideme.embeddedtool.model.NetModelImpl;
 import me.stupideme.embeddedtool.view.IMainView;
+import me.stupideme.embeddedtool.view.custom.StupidEditText;
 
 /**
  * Created by StupidL on 2016/9/30.
@@ -25,7 +27,7 @@ public class MainPresenter {
         iMainView.addSendButton();
     }
 
-    public void addReceiveButton(){
+    public void addReceiveButton() {
         iMainView.addReceiveButton();
     }
 
@@ -39,6 +41,14 @@ public class MainPresenter {
 
     public void removeTextView(TextView view) {
         iMainView.removeTextView(view);
+    }
+
+    public void addEditText() {
+        iMainView.addEditText();
+    }
+
+    public void removeEditText(StupidEditText view) {
+        iMainView.removeEditText(view);
     }
 
     public void sendDataOverButton(String s) {
@@ -57,7 +67,15 @@ public class MainPresenter {
         return iNetModel.receiveDataOverTextView();
     }
 
-    public TextView findTextView(int id){
+    public TextView findTextView(int id) {
         return iMainView.findTextViewById(id);
+    }
+
+    public void sendDataOverEditText(String s) {
+        iNetModel.sendDataOverEditText(s);
+    }
+
+    public String receiveDataOverEditText() {
+        return iNetModel.receiveDataOverEditText();
     }
 }

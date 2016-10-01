@@ -11,8 +11,8 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.ViewType;
 
 /**
  * Created by StupidL on 2016/10/1.
@@ -27,17 +27,14 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
 
     private Map<String, String> map = new HashMap<>();
 
-    private ViewType[] mTextViewTypes = {ViewType.TEXT_0, ViewType.TEXT_1,
-            ViewType.TEXT_2, ViewType.TEXT_3, ViewType.TEXT_4};
-
-    public StupidTextViewDialog(Context context, StupidTextViewListener listener) {
+    public StupidTextViewDialog(final Context context, StupidTextViewListener listener) {
         super(context);
         mListener = listener;
         setContentView(R.layout.stupid_text_view_dialog);
         id = (EditText) findViewById(R.id.stupid_text_view_dialog_et_id);
         width = (EditText) findViewById(R.id.stupid_text_view_dialog_et_width);
         height = (EditText) findViewById(R.id.stupid_text_view_dialog_et_height);
-        Spinner type = (Spinner) findViewById(R.id.stupid_text_view_dialog_spinner_type);
+        Spinner color = (Spinner) findViewById(R.id.stupid_text_view_dialog_spinner_color);
         Button delete = (Button) findViewById(R.id.stupid_text_view_dialog_button_delete);
         Button cancel = (Button) findViewById(R.id.stupid_text_view_dialog_button_cancel);
         Button ok = (Button) findViewById(R.id.stupid_text_view_dialog_button_ok);
@@ -46,15 +43,15 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);
 
-        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.setViewType(mTextViewTypes[i]);
+                mListener.setBgColor(context.getResources().getColor(Constants.mColors[i]));
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                mListener.setViewType(mTextViewTypes[0]);
+                mListener.setBgColor(context.getResources().getColor(Constants.mColors[0]));
             }
         });
     }
@@ -98,7 +95,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
     }
 
     interface StupidTextViewListener {
-        void setViewType(ViewType type);
+        void setBgColor(int color);
 
         void onDelete();
 

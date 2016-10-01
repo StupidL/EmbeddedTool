@@ -7,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,25 +21,25 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
     private StupidButtonDialogListener mListener;
 
-    EditText editText;
-    EditText width;
-    EditText height;
-    EditText bindId;
-    Spinner type;
-    Button cancel;
-    Button ok;
-    Button delete;
+    private EditText editText;
+    private EditText width;
+    private EditText height;
+    private EditText bindId;
     private Map<String, String> map = new HashMap<>();
 
-    public StupidButtonDialog(Context context, StupidButtonDialogListener listener) {
+    private int[] mColors = {R.color.Gray, R.color.Purple, R.color.Indigo, R.color.Teal,
+            R.color.Orange, R.color.Brown, R.color.BlueGray};
+
+    StupidButtonDialog(final Context context, StupidButtonDialogListener listener) {
         super(context);
         mListener = listener;
         setContentView(R.layout.stupid_button_dialog);
         editText = (EditText) findViewById(R.id.stupid_button_dialog_name);
-        type = (Spinner) findViewById(R.id.stupid_button_dialog_spinner);
-        cancel = (Button) findViewById(R.id.stupid_button_dialog_cancel);
-        ok = (Button) findViewById(R.id.stupid_button_dialog_ok);
-        delete = (Button) findViewById(R.id.stupid_button_dialog_delete);
+        Spinner type = (Spinner) findViewById(R.id.stupid_button_dialog_spinner);
+        Spinner color = (Spinner) findViewById(R.id.stupid_button_dialog_spinner_color);
+        Button cancel = (Button) findViewById(R.id.stupid_button_dialog_cancel);
+        Button ok = (Button) findViewById(R.id.stupid_button_dialog_ok);
+        Button delete = (Button) findViewById(R.id.stupid_button_dialog_delete);
         bindId = (EditText) findViewById(R.id.stupid_button_dialog_bind_et);
         width = (EditText) findViewById(R.id.stupid_button_dialog_width_et);
         height = (EditText) findViewById(R.id.stupid_button_dialog_height_et);
@@ -48,12 +47,24 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.onSetViewType(i);
+                mListener.setViewType(i);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                mListener.onSetViewType(0);
+                mListener.setViewType(0);
+            }
+        });
+
+        color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mListener.setBgColor(context.getResources().getColor(mColors[i]));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                mListener.setBgColor(context.getResources().getColor(mColors[0]));
             }
         });
 
@@ -112,7 +123,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
          *
          * @param type the index of ViewType array, so we can find out the button's type
          */
-        void onSetViewType(int type);
+        void setViewType(int type);
 
         /**
          * callback method. It will be called when the "delete" button in the dialog clicked.
@@ -138,5 +149,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
          * @param id id of the text view which this button want to bind.
          */
         void onBindTextView(int id);
+
+        void setBgColor(int color);
     }
 }

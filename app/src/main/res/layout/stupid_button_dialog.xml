@@ -101,6 +101,21 @@
         android:layout_below="@id/row_2">
 
         <TextView
+            android:id="@+id/stupid_button_dialog_color_text"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/row_1"
+            android:gravity="center_vertical|start"
+            android:text="颜色: " />
+
+        <Spinner
+            android:id="@+id/stupid_button_dialog_spinner_color"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:entries="@array/StupidTextViewColors"
+            android:gravity="center_vertical|start" />
+
+        <TextView
             android:id="@+id/stupid_button_dialog_bind_text"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -113,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical|start"
-            android:hint="绑定视图的ID"
+            android:hint="ID"
             android:inputType="number"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
     </TableRow>

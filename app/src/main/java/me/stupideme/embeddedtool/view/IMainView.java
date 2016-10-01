@@ -3,6 +3,8 @@ package me.stupideme.embeddedtool.view;
 import android.widget.Button;
 import android.widget.TextView;
 
+import me.stupideme.embeddedtool.view.custom.StupidEditText;
+
 /**
  * Created by StupidL on 2016/9/30.
  */
@@ -44,4 +46,8 @@ public interface IMainView {
      * @return a text view type of object
      */
     TextView findTextViewById(int id);
+
+    void addEditText();
+
+    void removeEditText(StupidEditText view);
 }
