@@ -119,9 +119,8 @@
             android:id="@+id/stupid_button_dialog_bind_text"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_below="@id/row_1"
             android:gravity="center_vertical|start"
-            android:text="绑定: " />
+            android:text="标识: " />
 
         <EditText
             android:id="@+id/stupid_button_dialog_bind_et"

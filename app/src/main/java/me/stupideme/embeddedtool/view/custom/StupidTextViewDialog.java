@@ -24,6 +24,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
     private EditText id;
     private EditText width;
     private EditText height;
+    private EditText bindId;
 
     private Map<String, String> map = new HashMap<>();
 
@@ -34,6 +35,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         id = (EditText) findViewById(R.id.stupid_text_view_dialog_et_id);
         width = (EditText) findViewById(R.id.stupid_text_view_dialog_et_width);
         height = (EditText) findViewById(R.id.stupid_text_view_dialog_et_height);
+        bindId = (EditText) findViewById(R.id.stupid_text_view_dialog_et_bind);
         Spinner color = (Spinner) findViewById(R.id.stupid_text_view_dialog_spinner_color);
         Button delete = (Button) findViewById(R.id.stupid_text_view_dialog_button_delete);
         Button cancel = (Button) findViewById(R.id.stupid_text_view_dialog_button_cancel);
@@ -89,6 +91,9 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
                     map.put("width", width.getText().toString());
                 if (!height.getText().toString().isEmpty())
                     map.put("height", height.getText().toString());
+                if (!bindId.getText().toString().isEmpty()) {
+                    mListener.bindViewById(Integer.parseInt(bindId.getText().toString()));
+                }
                 mListener.onSave(map);
                 break;
         }
@@ -105,5 +110,6 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
 
         void setHeight(int height);
 
+        void bindViewById(int id);
     }
 }

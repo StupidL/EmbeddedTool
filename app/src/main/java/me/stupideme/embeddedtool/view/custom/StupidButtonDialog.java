@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 
 /**
@@ -24,11 +25,8 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
     private EditText editText;
     private EditText width;
     private EditText height;
-    private EditText bindId;
+    private EditText id;
     private Map<String, String> map = new HashMap<>();
-
-    private int[] mColors = {R.color.Gray, R.color.Purple, R.color.Indigo, R.color.Teal,
-            R.color.Orange, R.color.Brown, R.color.BlueGray};
 
     StupidButtonDialog(final Context context, StupidButtonDialogListener listener) {
         super(context);
@@ -40,7 +38,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         Button cancel = (Button) findViewById(R.id.stupid_button_dialog_cancel);
         Button ok = (Button) findViewById(R.id.stupid_button_dialog_ok);
         Button delete = (Button) findViewById(R.id.stupid_button_dialog_delete);
-        bindId = (EditText) findViewById(R.id.stupid_button_dialog_bind_et);
+        id = (EditText) findViewById(R.id.stupid_button_dialog_bind_et);
         width = (EditText) findViewById(R.id.stupid_button_dialog_width_et);
         height = (EditText) findViewById(R.id.stupid_button_dialog_height_et);
 
@@ -59,12 +57,12 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.setBgColor(context.getResources().getColor(mColors[i]));
+                mListener.setBgColor(context.getResources().getColor(Constants.mColors[i]));
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                mListener.setBgColor(context.getResources().getColor(mColors[0]));
+                mListener.setBgColor(context.getResources().getColor(Constants.mColors[0]));
             }
         });
 
@@ -91,6 +89,10 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         height.setText(h + "");
     }
 
+    void showButtonId(int i) {
+        id.setText(i + "");
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -104,10 +106,8 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
                     map.put("width", width.getText().toString());
                 if (!height.getText().toString().isEmpty())
                     map.put("height", height.getText().toString());
-                String id = bindId.getText().toString();
-                if (!id.isEmpty()) {
-                    mListener.onBindTextView(Integer.parseInt(id));
-                }
+                if (!id.getText().toString().isEmpty())
+                    map.put("id", id.getText().toString());
                 mListener.onSave(map);
                 break;
             case R.id.stupid_button_dialog_delete:
@@ -141,14 +141,6 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
          * callback method. It will called when the "CANCEL" button clicked in the dialog.
          */
         void onCancel();
-
-        /**
-         * callback method. It will called when the "OK" button clicked in the dialog.
-         * the purpose of this method is to save the id which the button want to bind.
-         *
-         * @param id id of the text view which this button want to bind.
-         */
-        void onBindTextView(int id);
 
         void setBgColor(int color);
     }

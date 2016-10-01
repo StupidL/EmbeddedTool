@@ -24,6 +24,7 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
     private Map<String, String> map = new HashMap<>();
     private EditText width;
     private EditText height;
+    private EditText bindId;
 
     public StupidEditTextDialog(final Context context, StupidEditTextDialogListener listener) {
         super(context);
@@ -31,6 +32,7 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
         mListener = listener;
         width = (EditText) findViewById(R.id.stupid_et_dialog_et_width);
         height = (EditText) findViewById(R.id.stupid_et_dialog_et_height);
+        bindId = (EditText) findViewById(R.id.stupid_et_dialog_et_bind);
         Spinner type = (Spinner) findViewById(R.id.stupid_et_dialog_spinner_type);
         final Spinner color = (Spinner) findViewById(R.id.stupid_et_dialog_spinner_color);
 
@@ -93,6 +95,8 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
                     map.put("width", width.getText().toString());
                 if (!height.getText().toString().isEmpty())
                     map.put("height", height.getText().toString());
+                if (!bindId.getText().toString().isEmpty())
+                    mListener.bindViewById(Integer.parseInt(bindId.getText().toString()));
                 mListener.onSave(map);
                 break;
         }
@@ -108,5 +112,7 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
         void onSave(Map<String, String> map);
 
         void setBgColor(int color);
+
+        void bindViewById(int id);
     }
 }

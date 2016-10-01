@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.presenter;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -67,10 +68,6 @@ public class MainPresenter {
         return iNetModel.receiveDataOverTextView();
     }
 
-    public TextView findTextView(int id) {
-        return iMainView.findTextViewById(id);
-    }
-
     public void sendDataOverEditText(String s) {
         iNetModel.sendDataOverEditText(s);
     }
@@ -78,4 +75,9 @@ public class MainPresenter {
     public String receiveDataOverEditText() {
         return iNetModel.receiveDataOverEditText();
     }
+
+    public View bindViewById(int id){
+        return iMainView.getViewById(id);
+    }
+
 }

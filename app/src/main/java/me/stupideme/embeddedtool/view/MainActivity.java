@@ -59,21 +59,21 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public void addSendButton() {
         StupidSendButton stupidSendButton = new StupidSendButton(MainActivity.this, mPresenter);
-        stupidSendButton.setText("Button" + viewIndex);
         stupidSendButton.setId(viewIndex++);
+        stupidSendButton.setText("Button" + stupidSendButton.getId());
         stupidSendButton.setOnTouchListener(mTouchListener);
         mFrameLayout.addView(stupidSendButton);
-        Log.i("view id: ", viewIndex + "");
+        Log.i("StupidSendBtnID: ", stupidSendButton.getId() + "");
     }
 
     @Override
     public void addReceiveButton() {
         StupidReceiveButton button = new StupidReceiveButton(MainActivity.this, mPresenter);
-        button.setText("Button" + viewIndex);
         button.setId(viewIndex++);
+        button.setText("Button" + button.getId());
         button.setOnTouchListener(mTouchListener);
         mFrameLayout.addView(button);
-        Log.i("view id: ", viewIndex + "");
+        Log.i("StupidReceiveBtnID: ", button.getId() + "");
     }
 
     @Override
@@ -85,10 +85,10 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     public void addTextView() {
         StupidTextView stupidTextView = new StupidTextView(MainActivity.this, mPresenter);
         stupidTextView.setId(viewIndex++);
-        stupidTextView.setText("id: " + (viewIndex - 1));
+        stupidTextView.setText("id: " + stupidTextView.getId());
         stupidTextView.setOnTouchListener(mTouchListener);
         mFrameLayout.addView(stupidTextView);
-        Log.i("text view id ", viewIndex - 1 + "");
+        Log.i("StupidTextViewID ", stupidTextView.getId() + "");
     }
 
     @Override
@@ -97,16 +97,13 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
     @Override
-    public TextView findTextViewById(int id) {
-        return (TextView) mFrameLayout.findViewById(id);
-    }
-
-    @Override
     public void addEditText() {
         StupidEditText editText = new StupidEditText(this, mPresenter);
         editText.setOnTouchListener(mTouchListener);
+        editText.setId(viewIndex++);
+        editText.setText("ID: " + editText.getId());
         mFrameLayout.addView(editText);
-        Log.v("StupidEditText","edit text added");
+        Log.v("StupidEditTextID ", editText.getId() + "");
     }
 
     @Override
@@ -114,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         mFrameLayout.removeView(view);
     }
 
+    @Override
+    public View getViewById(int id) {
+        return mFrameLayout.findViewById(id);
+    }
 
     public void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -134,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         });
         receiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {mPresenter.addReceiveButton();
+            public void onClick(View view) {
+                mPresenter.addReceiveButton();
             }
         });
         textView.setOnClickListener(new View.OnClickListener() {

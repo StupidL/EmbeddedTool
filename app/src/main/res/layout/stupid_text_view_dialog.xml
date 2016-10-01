@@ -91,11 +91,37 @@
 
     </TableRow>
 
+    <TableRow
+        android:id="@+id/row_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_2">
+
+        <TextView
+            android:id="@+id/stupid_text_view_dialog_text_bind"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|end"
+            android:text="绑定: " />
+
+        <EditText
+            android:id="@+id/stupid_text_view_dialog_et_bind"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:ellipsize="start"
+            android:gravity="center_vertical|start"
+            android:hint="要绑定的视图ID"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+    </TableRow>
+
     <Button
         android:id="@+id/stupid_text_view_dialog_button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/row_2"
+        android:layout_below="@id/row_3"
         android:background="@null"
         android:gravity="center_vertical|start"
         android:text="删除"
@@ -106,7 +132,7 @@
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/row_2"
+        android:layout_below="@id/row_3"
         android:background="@null"
         android:gravity="center"
         android:text="OK"
@@ -116,7 +142,7 @@
         android:id="@+id/stupid_text_view_dialog_button_cancel"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/row_2"
+        android:layout_below="@id/row_3"
         android:layout_toStartOf="@id/stupid_text_view_dialog_button_ok"
         android:background="@null"
         android:gravity="center"

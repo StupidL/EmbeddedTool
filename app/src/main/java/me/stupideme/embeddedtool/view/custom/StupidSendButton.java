@@ -1,6 +1,7 @@
 package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
@@ -12,6 +13,7 @@ import android.widget.FrameLayout;
 
 import java.util.Map;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.ViewType;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
@@ -23,7 +25,6 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 public class StupidSendButton extends Button implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
-    private ISendMessage iSendMessage;
     private ViewType mViewType;
     private StupidButtonDialog mDialog;
     private ViewType[] mButtonTypes = {ViewType.BUTTON_0, ViewType.BUTTON_1, ViewType.BUTTON_2,
@@ -34,7 +35,7 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
     }
 
 
-    public StupidSendButton(Context context, MainPresenter presenter) {
+    public StupidSendButton(final Context context, MainPresenter presenter) {
         super(context);
         mPresenter = presenter;
         mDialog = new StupidButtonDialog(context, this);
@@ -53,6 +54,7 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
                 mDialog.showButtonName(getText().toString());
                 mDialog.showButtonWidth(getWidth());
                 mDialog.showButtonHeight(getHeight());
+                mDialog.showButtonId(getId());
                 mDialog.show();
                 return false;
             }
@@ -62,20 +64,12 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
             @Override
             public void onClick(View view) {
                 mPresenter.sendDataOverButton(toString());
-                if (iSendMessage != null)
-                    iSendMessage.sendToTarget(toString());
-                Log.v("StupidSendButton ", "data saved and send to text view");
+                Intent intent = new Intent();
+                intent.setAction(Constants.ACTION_BUTTON_CLICKED + getId());
+                intent.putExtra("type",Constants.BUTTON_TYPE_SEND);
+                context.sendBroadcast(intent);
             }
         });
-    }
-
-    /**
-     * bind the text view
-     *
-     * @param link text view to be bind
-     */
-    public void bindTextView(ISendMessage link) {
-        iSendMessage = link;
     }
 
     public ViewType getViewType() {
@@ -113,6 +107,9 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
+        if (map.containsKey("id")) {
+            setId(Integer.parseInt(map.get("id")));
+        }
 
     }
 
@@ -120,13 +117,6 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
     public void onCancel() {
         mDialog.dismiss();
         Log.v("StupidSendButton ", "dialog canceled");
-    }
-
-    @Override
-    public void onBindTextView(int id) {
-        ISendMessage view = (ISendMessage) mPresenter.findTextView(id);
-        bindTextView(view);
-        Log.v("StupidSendButton ", "bind text view success");
     }
 
     @Override

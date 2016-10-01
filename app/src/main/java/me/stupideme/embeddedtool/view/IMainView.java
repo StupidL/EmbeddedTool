@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.view;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -38,16 +39,9 @@ public interface IMainView {
      */
     void removeTextView(TextView view);
 
-    /**
-     * sometimes a button(both of send button and receive button) need to bind a text view
-     * to show the message received, so we need to find the text view first. Therefore wo need
-     * to set id for the text view when it is created.
-     * @param id the id of the text view
-     * @return a text view type of object
-     */
-    TextView findTextViewById(int id);
-
     void addEditText();
 
     void removeEditText(StupidEditText view);
+
+    View getViewById(int id);
 }
