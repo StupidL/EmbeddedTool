@@ -1,7 +1,7 @@
 # EmbeddedTool
-This is an tool for embedded devices developers.
-You can easily communicate with embedded devices over bluetooth or wifi.
-This project using the MVP pattern and you can easily add new features.
+This is an tool for embedded devices developers.  
+You can easily communicate with embedded devices over bluetooth or wifi.  
+This project using the MVP pattern and you can easily add new features.  
 
 ## Progress
 * Add button(send type) from menu.
@@ -17,7 +17,7 @@ All of these views can be remove or reshaped by performing long click.
 * Add Progressbar
 
 ## Screenshots
-![](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.png)
+![Main](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.PNG)  
 
 ## License
 Copyright 2016 ZhouYang Luo
