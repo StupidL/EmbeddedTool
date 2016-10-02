@@ -60,7 +60,7 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
                 mDialog.showEditTextWidth(getWidth());
                 mDialog.showEditTextHeight(getHeight());
                 mDialog.show();
-                return false;
+                return true;
             }
         });
 
