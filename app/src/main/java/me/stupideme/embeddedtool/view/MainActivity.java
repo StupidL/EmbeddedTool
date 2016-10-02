@@ -17,9 +17,10 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
+import me.stupideme.embeddedtool.view.custom.StupidChartView;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
-import me.stupideme.embeddedtool.view.custom.StupidReceiveButton;
-import me.stupideme.embeddedtool.view.custom.StupidSendButton;
+import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
+import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
@@ -58,17 +59,17 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void addSendButton() {
-        StupidSendButton stupidSendButton = new StupidSendButton(MainActivity.this, mPresenter);
-        stupidSendButton.setId(viewIndex++);
-        stupidSendButton.setText("Button" + stupidSendButton.getId());
-        stupidSendButton.setOnTouchListener(mTouchListener);
-        mFrameLayout.addView(stupidSendButton);
-        Log.i("StupidSendBtnID: ", stupidSendButton.getId() + "");
+        StupidButtonSend stupidButtonSend = new StupidButtonSend(MainActivity.this, mPresenter);
+        stupidButtonSend.setId(viewIndex++);
+        stupidButtonSend.setText("Button" + stupidButtonSend.getId());
+        stupidButtonSend.setOnTouchListener(mTouchListener);
+        mFrameLayout.addView(stupidButtonSend);
+        Log.i("StupidSendBtnID: ", stupidButtonSend.getId() + "");
     }
 
     @Override
     public void addReceiveButton() {
-        StupidReceiveButton button = new StupidReceiveButton(MainActivity.this, mPresenter);
+        StupidButtonReceive button = new StupidButtonReceive(MainActivity.this, mPresenter);
         button.setId(viewIndex++);
         button.setText("Button" + button.getId());
         button.setOnTouchListener(mTouchListener);
@@ -114,6 +115,16 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public View getViewById(int id) {
         return mFrameLayout.findViewById(id);
+    }
+
+    @Override
+    public void addChartView() {
+
+    }
+
+    @Override
+    public void removeChartView(StupidChartView view) {
+        mFrameLayout.removeView(view);
     }
 
     public void initView() {

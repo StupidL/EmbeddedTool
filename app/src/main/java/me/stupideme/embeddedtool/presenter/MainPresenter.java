@@ -2,12 +2,12 @@ package me.stupideme.embeddedtool.presenter;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import me.stupideme.embeddedtool.model.INetModel;
 import me.stupideme.embeddedtool.model.NetModelImpl;
 import me.stupideme.embeddedtool.view.IMainView;
+import me.stupideme.embeddedtool.view.custom.StupidChartView;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 
 /**
@@ -50,6 +50,14 @@ public class MainPresenter {
 
     public void removeEditText(StupidEditText view) {
         iMainView.removeEditText(view);
+    }
+
+    public void addChartView(){
+        iMainView.addChartView();
+    }
+
+    public void removeChartView(StupidChartView view){
+        iMainView.removeChartView(view);
     }
 
     public void sendDataOverButton(String s) {

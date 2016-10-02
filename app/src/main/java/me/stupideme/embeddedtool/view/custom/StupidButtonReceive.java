@@ -19,10 +19,10 @@ import me.stupideme.embeddedtool.ViewType;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
- * Created by StupidL on 2016/9/28.
+ * Created by StupidL on 2016/9/30.
  */
 
-public class StupidSendButton extends Button implements StupidButtonDialog.StupidButtonDialogListener {
+public class StupidButtonReceive extends Button implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
     private ViewType mViewType;
@@ -30,13 +30,11 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
     private ViewType[] mButtonTypes = {ViewType.BUTTON_0, ViewType.BUTTON_1, ViewType.BUTTON_2,
             ViewType.BUTTON_3, ViewType.BUTTON_4};
 
-    public StupidSendButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+    private String data;
 
-
-    public StupidSendButton(final Context context, MainPresenter presenter) {
+    public StupidButtonReceive(final Context context, MainPresenter presenter) {
         super(context);
+        mPresenter = presenter;
         mPresenter = presenter;
         mDialog = new StupidButtonDialog(context, this);
 
@@ -63,22 +61,20 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.sendDataOverButton(toString());
+                data = mPresenter.receiveDataOverButton();  // receive data over wifi or bluetooth and save
                 Intent intent = new Intent();
                 intent.setAction(Constants.ACTION_BUTTON_CLICKED + getId());
-                intent.putExtra("type",Constants.BUTTON_TYPE_SEND);
                 context.sendBroadcast(intent);
             }
         });
     }
 
-    public ViewType getViewType() {
-        return mViewType;
+    public StupidButtonReceive(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
-    @Override
-    public String toString() {
-        return "I am Stupid Send Button";
+    public ViewType getViewType() {
+        return mViewType;
     }
 
     @Override
@@ -90,7 +86,7 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
     public void onDelete() {
         mDialog.dismiss();
         mPresenter.removeButton(this);
-        Log.v("StupidSendButton ", "button removed");
+        Log.v("StupidReceiveButton ", "button removed");
     }
 
     @Override
@@ -107,21 +103,24 @@ public class StupidSendButton extends Button implements StupidButtonDialog.Stupi
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
-        if (map.containsKey("id")) {
+        if (map.containsKey("id"))
             setId(Integer.parseInt(map.get("id")));
-        }
 
     }
 
     @Override
     public void onCancel() {
         mDialog.dismiss();
-        Log.v("StupidSendButton ", "dialog canceled");
     }
 
     @Override
     public void setBgColor(int color) {
         setBackgroundColor(color);
+    }
+
+    @Override
+    public String toString() {
+        return "Iam Stupid Receive Button";
     }
 
 }
