@@ -26,6 +26,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
     private EditText width;
     private EditText height;
     private EditText id;
+    private int colour;
     private Map<String, String> map = new HashMap<>();
 
     StupidButtonDialog(final Context context, StupidButtonDialogListener listener) {
@@ -57,12 +58,11 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.setBgColor(context.getResources().getColor(Constants.mColors[i]));
+                colour = i;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                mListener.setBgColor(context.getResources().getColor(Constants.mColors[0]));
             }
         });
 
@@ -108,6 +108,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
                     map.put("height", height.getText().toString());
                 if (!id.getText().toString().isEmpty())
                     map.put("id", id.getText().toString());
+                map.put("color", colour + "");
                 mListener.onSave(map);
                 break;
             case R.id.stupid_button_dialog_delete:
@@ -121,7 +122,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         /**
          * callback methos. set a view type to button
          *
-         * @param type the index of ViewType array, so we can find out the button's type
+         * @param type the index of DataType array, so we can find out the button's type
          */
         void setViewType(int type);
 
@@ -141,7 +142,5 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
          * callback method. It will called when the "CANCEL" button clicked in the dialog.
          */
         void onCancel();
-
-        void setBgColor(int color);
     }
 }

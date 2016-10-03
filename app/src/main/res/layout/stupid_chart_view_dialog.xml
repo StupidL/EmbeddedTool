@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="16dp">
+
+    <TableRow
+        android:id="@+id/row_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start">
+
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|end"
+            android:text="类型: " />
+
+        <Spinner
+            android:id="@+id/stupid_chart_view_dialog_spinner_type"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:entries="@array/StupidButtonType"
+            android:gravity="center_vertical|start" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/row_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_1">
+
+        <TextView
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|end"
+            android:text="颜色: " />
+
+        <Spinner
+            android:id="@+id/stupid_chart_view_dialog_spinner_color"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:entries="@array/StupidTextViewColors"
+            android:gravity="center_vertical|start" />
+
+    </TableRow>
+
+    <LinearLayout
+        android:id="@+id/row_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_2"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|end"
+            android:text="Max_X: " />
+
+        <EditText
+            android:id="@+id/stupid_chart_view_dialog_et_x_max"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+
+            android:entries="@array/StupidTextViewColors"
+            android:gravity="center_vertical|start"
+            android:hint="1000"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|end"
+            android:text="Max_Y: " />
+
+        <EditText
+            android:id="@+id/stupid_chart_view_dialog_et_y_max"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:entries="@array/StupidTextViewColors"
+            android:gravity="center_vertical|start"
+            android:hint="100"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_3"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|end"
+            android:text="Min_X: " />
+
+        <EditText
+            android:id="@+id/stupid_chart_view_dialog_et_x_min"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+
+            android:entries="@array/StupidTextViewColors"
+            android:gravity="center_vertical|start"
+            android:hint="1000"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical|end"
+            android:text="Min_Y: " />
+
+        <EditText
+            android:id="@+id/stupid_chart_view_dialog_et_y_min"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:entries="@array/StupidTextViewColors"
+            android:gravity="center_vertical|start"
+            android:hint="100"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/stupid_chart_view_dialog_button_ok"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/row_4"
+        android:background="@null"
+        android:gravity="center"
+        android:text="OK"
+        android:textColor="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/stupid_chart_view_dialog_button_cancel"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_4"
+        android:layout_toStartOf="@id/stupid_chart_view_dialog_button_ok"
+        android:background="@null"
+        android:gravity="center"
+        android:text="CANCEL"
+        android:textColor="@color/colorAccent" />
+
+
+</RelativeLayout>

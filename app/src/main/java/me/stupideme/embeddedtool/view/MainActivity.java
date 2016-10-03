@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +18,6 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
-import me.stupideme.embeddedtool.view.custom.StupidChartView;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
@@ -117,16 +117,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         return mFrameLayout.findViewById(id);
     }
 
-    @Override
-    public void addChartView() {
-
-    }
-
-    @Override
-    public void removeChartView(StupidChartView view) {
-        mFrameLayout.removeView(view);
-    }
-
     public void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -137,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         FloatingActionButton receiveButton = (FloatingActionButton) findViewById(R.id.fab_receive_button);
         FloatingActionButton textView = (FloatingActionButton) findViewById(R.id.fab_text_view);
         FloatingActionButton editText = (FloatingActionButton) findViewById(R.id.fab_edit_text);
+        FloatingActionButton chart = (FloatingActionButton) findViewById(R.id.fab_chart);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
             @Override
             public void onClick(View view) {
                 mPresenter.addEditText();
+            }
+        });
+        chart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,ChartActivity.class));
             }
         });
     }

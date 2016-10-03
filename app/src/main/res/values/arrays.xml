@@ -15,4 +15,8 @@
         <item>Brown</item>
         <item>BlueGray</item>
     </array>
+    <array name="StupidChartViewTypes">
+        <item>LineChart</item>
+        <item>BarChart</item>
+    </array>
 </resources>

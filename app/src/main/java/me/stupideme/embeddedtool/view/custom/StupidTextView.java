@@ -16,7 +16,6 @@ import android.widget.TextView;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
@@ -38,7 +37,6 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
 
         setMaxLines(10);
         setTextColor(Color.WHITE);
-        setBgColor(getResources().getColor(R.color.BlueGray));
         setWidth(1400);
         setHeight(250);
         setLayoutParams(new LinearLayoutCompat.LayoutParams(
@@ -60,12 +58,6 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
 
     public StupidTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    @Override
-    public void setBgColor(int color) {
-        setBackgroundColor(color);
-        Log.v("Stupid Text View Color", color + "");
     }
 
     @Override
@@ -98,6 +90,7 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
+        setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
         mPresenter.sendDataOverTextView(toString());
     }
 

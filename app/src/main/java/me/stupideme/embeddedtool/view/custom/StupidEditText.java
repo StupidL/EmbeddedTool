@@ -17,8 +17,8 @@ import android.widget.FrameLayout;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
+import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.ViewType;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
@@ -32,9 +32,9 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
     private View bindView;
     private MyReceiver receiver;
 
-    private ViewType mViewType;
-    private ViewType[] mButtonTypes = {ViewType.BUTTON_0, ViewType.BUTTON_1, ViewType.BUTTON_2,
-            ViewType.BUTTON_3, ViewType.BUTTON_4};
+    private DataType mDataType;
+    private DataType[] mButtonTypes = {DataType.BUTTON_0, DataType.BUTTON_1, DataType.BUTTON_2,
+            DataType.BUTTON_3, DataType.BUTTON_4};
 
     public StupidEditText(final Context context, MainPresenter presenter) {
         super(context);
@@ -70,8 +70,8 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
         super(context, attrs);
     }
 
-    public ViewType getViewType() {
-        return mViewType;
+    public DataType getViewType() {
+        return mDataType;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
 
     @Override
     public void setViewType(int i) {
-        mViewType = mButtonTypes[i];
+        mDataType = mButtonTypes[i];
     }
 
     @Override
@@ -110,12 +110,10 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
+        if(map.containsKey("color")){
+            setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
+        }
         mDialog.dismiss();
-    }
-
-    @Override
-    public void setBgColor(int color) {
-        setBackgroundColor(color);
     }
 
     @Override

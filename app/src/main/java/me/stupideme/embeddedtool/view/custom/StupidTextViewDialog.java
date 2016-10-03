@@ -25,6 +25,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
     private EditText width;
     private EditText height;
     private EditText bindId;
+    private int colour;
 
     private Map<String, String> map = new HashMap<>();
 
@@ -48,12 +49,11 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.setBgColor(context.getResources().getColor(Constants.mColors[i]));
+                colour = i;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                mListener.setBgColor(context.getResources().getColor(Constants.mColors[0]));
             }
         });
     }
@@ -94,14 +94,13 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
                 if (!bindId.getText().toString().isEmpty()) {
                     mListener.bindViewById(Integer.parseInt(bindId.getText().toString()));
                 }
+                map.put("color", colour + "");
                 mListener.onSave(map);
                 break;
         }
     }
 
     interface StupidTextViewListener {
-        void setBgColor(int color);
-
         void onDelete();
 
         void onCancel();

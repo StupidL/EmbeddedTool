@@ -12,4 +12,5 @@ public class Constants {
 
     public static final int BUTTON_TYPE_SEND = 0x10;
     public static final int BUTTON_TYPE_RECEIVE = 0x11;
+
 }

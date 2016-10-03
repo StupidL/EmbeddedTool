@@ -4,7 +4,7 @@ package me.stupideme.embeddedtool;
  * Created by StupidL on 2016/9/29.
  */
 
-public enum ViewType {
+public enum DataType {
     BUTTON_0,   // B0:
     BUTTON_1,   // B1:
     BUTTON_2,   // B2:
@@ -16,4 +16,7 @@ public enum ViewType {
     TEXT_2,     // C2:
     TEXT_3,     // C3:
     TEXT_4,     // C4:
+
+    CHART_0,
+    CHART_1
 }

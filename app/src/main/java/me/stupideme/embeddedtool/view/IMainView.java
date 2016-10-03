@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import me.stupideme.embeddedtool.view.custom.StupidChartView;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 
 /**
@@ -61,11 +60,5 @@ public interface IMainView {
     /**
      * add a chart view to a view group
      */
-    void addChartView();
 
-    /**
-     * remove a chart view from it's parent
-     * @param view the view to be removed
-     */
-    void removeChartView(StupidChartView view);
 }

@@ -14,8 +14,8 @@ import android.widget.FrameLayout;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
+import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.ViewType;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
@@ -25,10 +25,10 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 public class StupidButtonReceive extends Button implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
-    private ViewType mViewType;
+    private DataType mDataType;
     private StupidButtonDialog mDialog;
-    private ViewType[] mButtonTypes = {ViewType.BUTTON_0, ViewType.BUTTON_1, ViewType.BUTTON_2,
-            ViewType.BUTTON_3, ViewType.BUTTON_4};
+    private DataType[] mButtonTypes = {DataType.BUTTON_0, DataType.BUTTON_1, DataType.BUTTON_2,
+            DataType.BUTTON_3, DataType.BUTTON_4};
 
     private String data;
 
@@ -73,13 +73,13 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
         super(context, attrs);
     }
 
-    public ViewType getViewType() {
-        return mViewType;
+    public DataType getViewType() {
+        return mDataType;
     }
 
     @Override
     public void setViewType(int type) {
-        mViewType = mButtonTypes[type];
+        mDataType = mButtonTypes[type];
     }
 
     @Override
@@ -105,17 +105,13 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
         }
         if (map.containsKey("id"))
             setId(Integer.parseInt(map.get("id")));
-
+        setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
+        Log.v("ButtonColor", map.get("color"));
     }
 
     @Override
     public void onCancel() {
         mDialog.dismiss();
-    }
-
-    @Override
-    public void setBgColor(int color) {
-        setBackgroundColor(color);
     }
 
     @Override
