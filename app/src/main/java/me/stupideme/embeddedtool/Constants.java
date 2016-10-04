@@ -8,6 +8,9 @@ public class Constants {
     public static final int[] mColors = {R.color.Gray, R.color.Purple, R.color.Indigo, R.color.Teal,
             R.color.Orange, R.color.Brown, R.color.BlueGray};
 
+    public static final DataType[] mButtonTypes = {DataType.BUTTON_0, DataType.BUTTON_1, DataType.BUTTON_2,
+            DataType.BUTTON_3, DataType.BUTTON_4};
+
     public static final String ACTION_BUTTON_CLICKED = "me.stupidme.action.BUTTON_CLICKED";
 
     public static final int BUTTON_TYPE_SEND = 0x10;

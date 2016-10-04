@@ -1,13 +1,15 @@
 package me.stupideme.embeddedtool.presenter;
 
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import me.stupideme.embeddedtool.model.INetModel;
 import me.stupideme.embeddedtool.model.NetModelImpl;
 import me.stupideme.embeddedtool.view.IMainView;
+import me.stupideme.embeddedtool.view.custom.StupidButton;
+import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
+import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 /**
  * Created by StupidL on 2016/9/30.
@@ -55,28 +57,23 @@ public class MainPresenter {
         iNetModel.sendDataOverButton(s);
     }
 
-    public void sendDataOverTextView(String s) {
-        iNetModel.sendDataOverTextView(s);
-    }
-
     public String receiveDataOverButton() {
         return iNetModel.receiveDataOverButton();
     }
 
-    public String receiveDataOverTextView() {
-        return iNetModel.receiveDataOverTextView();
+    public int bindTextViewById(int other, int self) {
+        StupidButton button = (StupidButton) iMainView.getViewById(other);
+        button.setBindTextView((StupidTextView) iMainView.getViewById(self));
+        return 1;
     }
 
-    public void sendDataOverEditText(String s) {
-        iNetModel.sendDataOverEditText(s);
-    }
-
-    public String receiveDataOverEditText() {
-        return iNetModel.receiveDataOverEditText();
-    }
-
-    public View bindViewById(int id){
-        return iMainView.getViewById(id);
+    public int bindEditTextById(int other, int self) {
+        if (iMainView.getViewById(other) instanceof StupidButtonSend) {
+            StupidButton button = (StupidButton) iMainView.getViewById(other);
+            button.setBindEditText((StupidEditText) iMainView.getViewById(self));
+            return 1;
+        }
+        return 0;
     }
 
 }

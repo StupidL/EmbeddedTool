@@ -1,13 +1,9 @@
 package me.stupideme.embeddedtool.view.custom;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -16,6 +12,7 @@ import android.widget.TextView;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
+import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
@@ -26,8 +23,6 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
 
     private StupidTextViewDialog mDialog;
     private MainPresenter mPresenter;
-    private View mBindView;
-    public MyReceiver receiver;
 
     public StupidTextView(Context context, MainPresenter presenter) {
         super(context);
@@ -39,6 +34,8 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
         setTextColor(Color.WHITE);
         setWidth(1400);
         setHeight(250);
+        setTextSize(18);
+        setBackgroundColor(getResources().getColor(R.color.Gray));
         setLayoutParams(new LinearLayoutCompat.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ));
@@ -62,10 +59,6 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
 
     @Override
     public void onDelete() {
-        if (receiver != null) {
-            getContext().unregisterReceiver(receiver);
-            receiver = null;
-        }
         mDialog.dismiss();
         mPresenter.removeTextView(this);
     }
@@ -91,33 +84,11 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
             setLayoutParams(params);
         }
         setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
-        mPresenter.sendDataOverTextView(toString());
     }
 
     @Override
-    public void bindViewById(int id) {
-        mBindView = mPresenter.bindViewById(id);
-        Log.v("StupidTextView ", "bind view success and ready to show data");
-        if (receiver != null) {
-            getContext().unregisterReceiver(receiver);
-            receiver = null;
-        }
-        receiver = new MyReceiver();
-        IntentFilter filter = new IntentFilter(Constants.ACTION_BUTTON_CLICKED + mBindView.getId());
-        getContext().registerReceiver(receiver, filter);
+    public void bindTextViewById(int id) {
+        mPresenter.bindTextViewById(id, getId());
     }
 
-    @Override
-    public String toString() {
-        return "I am Stupid Text View.";
-    }
-
-    private class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (mBindView != null)
-                append("\n" + mBindView.toString());
-            Log.v("Receiver ", "receiver run");
-        }
-    }
 }

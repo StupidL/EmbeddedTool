@@ -1,14 +1,11 @@
 package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.Map;
@@ -22,18 +19,11 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
  * Created by StupidL on 2016/9/28.
  */
 
-public class StupidButtonSend extends Button implements StupidButtonDialog.StupidButtonDialogListener {
+public class StupidButtonSend extends StupidButton implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
     private DataType mDataType;
     private StupidButtonDialog mDialog;
-    private DataType[] mButtonTypes = {DataType.BUTTON_0, DataType.BUTTON_1, DataType.BUTTON_2,
-            DataType.BUTTON_3, DataType.BUTTON_4};
-
-    public StupidButtonSend(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
 
     public StupidButtonSend(final Context context, MainPresenter presenter) {
         super(context);
@@ -64,10 +54,14 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
             @Override
             public void onClick(View view) {
                 mPresenter.sendDataOverButton(toString());
-                Intent intent = new Intent();
-                intent.setAction(Constants.ACTION_BUTTON_CLICKED + getId());
-                intent.putExtra("type",Constants.BUTTON_TYPE_SEND);
-                context.sendBroadcast(intent);
+                if (mBindTextView != null) {
+                    Log.v("StupidButton", "Button ID: " + getId() + " TextView ID: " + mBindTextView.getId());
+                    mBindTextView.append("\n" + "Hello I am TextView " + getId());
+                }
+                if (mBindEditText != null) {
+                    Log.v("StupidButton", "Button ID: " + getId() + " EditText ID: " + mBindEditText.getId());
+                }
+
             }
         });
     }
@@ -83,12 +77,14 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     @Override
     public void setViewType(int type) {
-        mDataType = mButtonTypes[type];
+        mDataType = Constants.mButtonTypes[type];
     }
 
     @Override
     public void onDelete() {
         mDialog.dismiss();
+        mBindTextView = null;
+        mBindEditText = null;
         mPresenter.removeButton(this);
         Log.v("StupidSendButton ", "button removed");
     }

@@ -1,14 +1,11 @@
 package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import java.util.Map;
@@ -22,7 +19,7 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
  * Created by StupidL on 2016/9/30.
  */
 
-public class StupidButtonReceive extends Button implements StupidButtonDialog.StupidButtonDialogListener {
+public class StupidButtonReceive extends StupidButton implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
     private DataType mDataType;
@@ -62,15 +59,15 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
             @Override
             public void onClick(View view) {
                 data = mPresenter.receiveDataOverButton();  // receive data over wifi or bluetooth and save
-                Intent intent = new Intent();
-                intent.setAction(Constants.ACTION_BUTTON_CLICKED + getId());
-                context.sendBroadcast(intent);
+                if (mBindTextView != null) {
+                    Log.v("StupidButton", "Button ID: " + getId() + " TextView ID: " + mBindTextView.getId());
+                    mBindTextView.append("\n" + "Hello I am TextView " + getId());
+                }
+                if (mBindEditText != null) {
+                    Log.v("StupidButton", "Button ID: " + getId() + " EditText ID: " + mBindEditText.getId());
+                }
             }
         });
-    }
-
-    public StupidButtonReceive(Context context, AttributeSet attrs) {
-        super(context, attrs);
     }
 
     public DataType getViewType() {
@@ -85,6 +82,8 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
     @Override
     public void onDelete() {
         mDialog.dismiss();
+        mBindEditText = null;
+        mBindTextView = null;
         mPresenter.removeButton(this);
         Log.v("StupidReceiveButton ", "button removed");
     }

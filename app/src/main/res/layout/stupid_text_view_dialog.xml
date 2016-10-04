@@ -18,7 +18,7 @@
             android:layout_width="35dp"
             android:layout_height="40dp"
             android:gravity="center_vertical|end"
-            android:text="ID: " />
+            android:text="标识: " />
 
         <EditText
             android:id="@+id/stupid_text_view_dialog_et_id"
@@ -26,7 +26,7 @@
             android:layout_height="40dp"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
-            android:hint="文本框的id"
+            android:hint=""
             android:maxLength="10"
             android:maxLines="1"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />

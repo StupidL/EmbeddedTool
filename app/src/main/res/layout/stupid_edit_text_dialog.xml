@@ -14,18 +14,24 @@
         android:gravity="center_vertical|start">
 
         <TextView
-            android:id="@+id/stupid_et_dialog_text_color"
+            android:id="@+id/stupid_et_dialog_text_id"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:gravity="center_vertical|start"
-            android:text="颜色: " />
+            android:gravity="center_vertical|end"
+            android:text="标识: " />
 
-        <Spinner
-            android:id="@+id/stupid_et_dialog_spinner_color"
+        <EditText
+            android:id="@+id/stupid_et_dialog_et_id"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:entries="@array/StupidTextViewColors"
-            android:gravity="center_vertical|start" />
+            android:ellipsize="end"
+            android:gravity="center_vertical|start"
+            android:hint="ID"
+            android:maxLength="10"
+            android:maxLines="1"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+
         <TextView
             android:id="@+id/stupid_et_dialog_text_width"
             android:layout_width="wrap_content"
@@ -53,19 +59,19 @@
         android:layout_below="@id/row_1">
 
         <TextView
-            android:id="@+id/stupid_et_dialog_text_type"
+            android:id="@+id/stupid_et_dialog_text_color"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_below="@id/row_1"
             android:gravity="center_vertical|start"
-            android:text="类型: " />
+            android:text="颜色: " />
 
         <Spinner
-            android:id="@+id/stupid_et_dialog_spinner_type"
+            android:id="@+id/stupid_et_dialog_spinner_color"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:entries="@array/StupidButtonType"
+            android:entries="@array/StupidTextViewColors"
             android:gravity="center_vertical|start" />
+
 
         <TextView
             android:id="@+id/stupid_et_dialog_text_height"
@@ -86,6 +92,7 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
     </TableRow>
+
     <TableRow
         android:id="@+id/row_3"
         android:layout_width="wrap_content"

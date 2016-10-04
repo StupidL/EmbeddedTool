@@ -1,23 +1,19 @@
 package me.stupideme.embeddedtool.view.custom;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
@@ -29,12 +25,6 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
 
     private MainPresenter mPresenter;
     private StupidEditTextDialog mDialog;
-    private View bindView;
-    private MyReceiver receiver;
-
-    private DataType mDataType;
-    private DataType[] mButtonTypes = {DataType.BUTTON_0, DataType.BUTTON_1, DataType.BUTTON_2,
-            DataType.BUTTON_3, DataType.BUTTON_4};
 
     public StupidEditText(final Context context, MainPresenter presenter) {
         super(context);
@@ -42,11 +32,11 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
         mDialog = new StupidEditTextDialog(context, this);
 
         setMaxLines(10);
-        setLines(10);
+        setLines(1);
         setTextColor(Color.WHITE);
         setBackgroundColor(getResources().getColor(R.color.Gray));
         setWidth(800);
-        setHeight(300);
+        setHeight(100);
         setTextSize(18);
         setPadding(16, 16, 16, 16);
         setGravity(Gravity.NO_GRAVITY);
@@ -59,6 +49,7 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
             public boolean onLongClick(View view) {
                 mDialog.showEditTextWidth(getWidth());
                 mDialog.showEditTextHeight(getHeight());
+                mDialog.showEditTextId(getId());
                 mDialog.show();
                 return true;
             }
@@ -70,26 +61,8 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
         super(context, attrs);
     }
 
-    public DataType getViewType() {
-        return mDataType;
-    }
-
-    @Override
-    public String toString() {
-        return "I am Stupid Edit Text";
-    }
-
-    @Override
-    public void setViewType(int i) {
-        mDataType = mButtonTypes[i];
-    }
-
     @Override
     public void onDelete() {
-        if (receiver != null) {
-            getContext().unregisterReceiver(receiver);
-            receiver = null;
-        }
         mDialog.dismiss();
         mPresenter.removeEditText(this);
     }
@@ -110,38 +83,19 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
-        if(map.containsKey("color")){
+        if (map.containsKey("color")) {
             setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
         }
+        if (map.containsKey("id"))
+            setId(Integer.parseInt(map.get("id")));
         mDialog.dismiss();
     }
 
     @Override
-    public void bindViewById(int id) {
-        bindView = mPresenter.bindViewById(id);
-        Log.v("StupidEditText ", "bind view success and ready to show data");
-        if (receiver != null) {
-            getContext().unregisterReceiver(receiver);
-            receiver = null;
+    public void bindEditTextById(int id) {
+        if (0 == mPresenter.bindEditTextById(id, getId())) {
+            Toast.makeText(getContext(), "编辑框只能绑定发送按钮", Toast.LENGTH_SHORT).show();
         }
-        receiver = new MyReceiver();
-        IntentFilter filter = new IntentFilter(Constants.ACTION_BUTTON_CLICKED + bindView.getId());
-        getContext().registerReceiver(receiver, filter);
     }
 
-    private class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int type = intent.getIntExtra("type", 0);
-            Log.v("button type ", type + "");
-            if (type == Constants.BUTTON_TYPE_SEND)
-                if (bindView != null) {
-                    append("\n" + bindView.toString());
-                    mPresenter.sendDataOverEditText(StupidEditText.this.toString());
-                    Log.v("receiver ", "data has been send");
-                    append("\n" + StupidEditText.this.getText().toString());
-                }
-            Log.v("Receiver ", "receiver run");
-        }
-    }
 }

@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 
 /**
@@ -70,10 +69,6 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         height.setText(h + "");
     }
 
-    public StupidTextViewDialog(Context context, int themeResId) {
-        super(context, themeResId);
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -92,7 +87,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
                 if (!height.getText().toString().isEmpty())
                     map.put("height", height.getText().toString());
                 if (!bindId.getText().toString().isEmpty()) {
-                    mListener.bindViewById(Integer.parseInt(bindId.getText().toString()));
+                    mListener.bindTextViewById(Integer.parseInt(bindId.getText().toString()));
                 }
                 map.put("color", colour + "");
                 mListener.onSave(map);
@@ -107,8 +102,6 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
 
         void onSave(Map<String, String> map);
 
-        void setHeight(int height);
-
-        void bindViewById(int id);
+        void bindTextViewById(int id);
     }
 }

@@ -57,8 +57,4 @@ public interface IMainView {
      */
     View getViewById(int id);
 
-    /**
-     * add a chart view to a view group
-     */
-
 }
