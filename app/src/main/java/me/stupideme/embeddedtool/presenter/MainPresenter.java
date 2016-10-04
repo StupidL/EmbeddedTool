@@ -1,10 +1,12 @@
 package me.stupideme.embeddedtool.presenter;
 
+import android.content.Context;
 import android.widget.Button;
 import android.widget.TextView;
 
-import me.stupideme.embeddedtool.model.INetModel;
-import me.stupideme.embeddedtool.model.NetModelImpl;
+import me.stupideme.embeddedtool.DataType;
+import me.stupideme.embeddedtool.model.IBluetoothModel;
+import me.stupideme.embeddedtool.model.BluetoothModelImpl;
 import me.stupideme.embeddedtool.view.IMainView;
 import me.stupideme.embeddedtool.view.custom.StupidButton;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
@@ -17,12 +19,16 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 public class MainPresenter {
 
-    private INetModel iNetModel;
+    private IBluetoothModel iBluetoothModel;
     private IMainView iMainView;
 
-    public MainPresenter(IMainView view) {
+    public MainPresenter(IMainView view, Context context) {
         iMainView = view;
-        iNetModel = new NetModelImpl();
+        iBluetoothModel = new BluetoothModelImpl(context);
+    }
+
+    public void connectDevice(String address, boolean secure) {
+        iBluetoothModel.connectDevice(address, secure);
     }
 
     public void addSendButton() {
@@ -53,12 +59,12 @@ public class MainPresenter {
         iMainView.removeEditText(view);
     }
 
-    public void sendDataOverButton(String s) {
-        iNetModel.sendDataOverButton(s);
+    public void sendDataOverButton(DataType type, String s) {
+        iBluetoothModel.sendDataOverButton(type, s);
     }
 
-    public String receiveDataOverButton() {
-        return iNetModel.receiveDataOverButton();
+    public String receiveDataOverButton(DataType type) {
+        return iBluetoothModel.receiveDataOverButton(type);
     }
 
     public int bindTextViewById(int other, int self) {

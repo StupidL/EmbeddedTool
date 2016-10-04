@@ -7,11 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
@@ -22,7 +22,6 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 public class StupidButtonSend extends StupidButton implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
-    private DataType mDataType;
     private StupidButtonDialog mDialog;
 
     public StupidButtonSend(final Context context, MainPresenter presenter) {
@@ -53,31 +52,28 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.sendDataOverButton(toString());
-                if (mBindTextView != null) {
-                    Log.v("StupidButton", "Button ID: " + getId() + " TextView ID: " + mBindTextView.getId());
-                    mBindTextView.append("\n" + "Hello I am TextView " + getId());
-                }
-                if (mBindEditText != null) {
-                    Log.v("StupidButton", "Button ID: " + getId() + " EditText ID: " + mBindEditText.getId());
+
+                if (getDataType() != null) {
+                    if (mBindEditText != null) {
+                        mPresenter.sendDataOverButton(getDataType(), mBindEditText.getText().toString());
+                        if (mBindTextView != null) {
+                            mBindTextView.append("\n" + mBindEditText.getText().toString());
+                        }
+                        Toast.makeText(getContext(), "数据发送成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "请设置一个编辑框并且输入要发送的信息", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
     }
 
-    public DataType getViewType() {
-        return mDataType;
-    }
-
     @Override
     public String toString() {
         return "I am Stupid Send Button";
-    }
-
-    @Override
-    public void setViewType(int type) {
-        mDataType = Constants.mButtonTypes[type];
     }
 
     @Override
@@ -105,6 +101,9 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
         }
         if (map.containsKey("id")) {
             setId(Integer.parseInt(map.get("id")));
+        }
+        if(map.containsKey("type")){
+            setDataType(Constants.mButtonTypes[Integer.parseInt(map.get("type"))]);
         }
         setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
 

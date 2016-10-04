@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -22,10 +23,7 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 public class StupidButtonReceive extends StupidButton implements StupidButtonDialog.StupidButtonDialogListener {
 
     private MainPresenter mPresenter;
-    private DataType mDataType;
     private StupidButtonDialog mDialog;
-    private DataType[] mButtonTypes = {DataType.BUTTON_0, DataType.BUTTON_1, DataType.BUTTON_2,
-            DataType.BUTTON_3, DataType.BUTTON_4};
 
     private String data;
 
@@ -58,25 +56,21 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                data = mPresenter.receiveDataOverButton();  // receive data over wifi or bluetooth and save
-                if (mBindTextView != null) {
-                    Log.v("StupidButton", "Button ID: " + getId() + " TextView ID: " + mBindTextView.getId());
-                    mBindTextView.append("\n" + "Hello I am TextView " + getId());
+
+                if (getDataType() != null) {
+                    String s = mPresenter.receiveDataOverButton(getDataType());
+                    if (mBindTextView != null) {
+                        mBindTextView.append("\n" + s);
+                        Toast.makeText(getContext(), "数据接收成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "数据接收成功: " + s, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
                 }
-                if (mBindEditText != null) {
-                    Log.v("StupidButton", "Button ID: " + getId() + " EditText ID: " + mBindEditText.getId());
-                }
+
             }
         });
-    }
-
-    public DataType getViewType() {
-        return mDataType;
-    }
-
-    @Override
-    public void setViewType(int type) {
-        mDataType = mButtonTypes[type];
     }
 
     @Override
@@ -102,8 +96,12 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
-        if (map.containsKey("id"))
+        if (map.containsKey("id")) {
             setId(Integer.parseInt(map.get("id")));
+        }
+        if (map.containsKey("type")) {
+            setDataType(Constants.mButtonTypes[Integer.parseInt(map.get("type"))]);
+        }
         setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
         Log.v("ButtonColor", map.get("color"));
     }

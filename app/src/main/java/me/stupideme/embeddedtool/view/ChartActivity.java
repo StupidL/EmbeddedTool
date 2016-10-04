@@ -88,7 +88,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                
+
             }
 
             @Override

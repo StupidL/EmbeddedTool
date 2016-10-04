@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 
 /**
@@ -29,12 +28,14 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
     private int colour;
     private Map<String, String> map = new HashMap<>();
 
+    private int dataType;
+
     StupidButtonDialog(final Context context, StupidButtonDialogListener listener) {
         super(context);
         mListener = listener;
         setContentView(R.layout.stupid_button_dialog);
         editText = (EditText) findViewById(R.id.stupid_button_dialog_name);
-        Spinner type = (Spinner) findViewById(R.id.stupid_button_dialog_spinner);
+        final Spinner type = (Spinner) findViewById(R.id.stupid_button_dialog_spinner);
         Spinner color = (Spinner) findViewById(R.id.stupid_button_dialog_spinner_color);
         Button cancel = (Button) findViewById(R.id.stupid_button_dialog_cancel);
         Button ok = (Button) findViewById(R.id.stupid_button_dialog_ok);
@@ -46,12 +47,11 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.setViewType(i);
+                dataType = i;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                mListener.setViewType(0);
             }
         });
 
@@ -109,6 +109,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
                 if (!id.getText().toString().isEmpty())
                     map.put("id", id.getText().toString());
                 map.put("color", colour + "");
+                map.put("type", dataType + "");
                 mListener.onSave(map);
                 break;
             case R.id.stupid_button_dialog_delete:
@@ -118,13 +119,6 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
     }
 
     interface StupidButtonDialogListener {
-
-        /**
-         * callback methos. set a view type to button
-         *
-         * @param type the index of DataType array, so we can find out the button's type
-         */
-        void setViewType(int type);
 
         /**
          * callback method. It will be called when the "delete" button in the dialog clicked.

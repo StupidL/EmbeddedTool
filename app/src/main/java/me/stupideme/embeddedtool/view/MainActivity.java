@@ -1,7 +1,11 @@
 package me.stupideme.embeddedtool.view;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +22,7 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
+import me.stupideme.embeddedtool.view.bluetooth.DeviceListActivity;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
@@ -25,7 +30,10 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
 
-    private MainPresenter mPresenter;
+    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    private static final int REQUEST_ENABLE_BT = 3;
+    public static MainPresenter mPresenter;
     private FrameLayout mFrameLayout;
 
     private View.OnTouchListener mTouchListener;
@@ -36,24 +44,45 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPresenter = new MainPresenter(this);
+        mPresenter = new MainPresenter(this, this);
         initView();
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CONNECT_DEVICE_SECURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    String address = data.getStringExtra("device_address");
+                    mPresenter.connectDevice(address, true);
+                    Log.v("MainPresenter ", "connect device secure...");
+                }
+                break;
+            case REQUEST_CONNECT_DEVICE_INSECURE:
+                if (resultCode == Activity.RESULT_OK) {
+                    String address = data.getStringExtra("device_address");
+                    mPresenter.connectDevice(address, false);
+                    Log.v("MainPresenter ", "connect device insecure...");
+                }
+                break;
+            case REQUEST_ENABLE_BT:
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d("MainActivity", "BT enabled");
+                } else {
+                    Log.d("MainActivity", "BT not enabled");
+                    finish();
+                }
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+    public void onStart() {
+        super.onStart();
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -156,10 +185,42 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         chart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,ChartActivity.class));
+                startActivity(new Intent(MainActivity.this, ChartActivity.class));
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_bluetooth_secure) {
+            startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
+                    REQUEST_CONNECT_DEVICE_SECURE);
+        }
+        if (id == R.id.action_bluetooth_insecure) {
+            startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
+                    REQUEST_CONNECT_DEVICE_INSECURE);
+        }
+        if (id == R.id.action_bluetooth_discoverable) {
+            if (BluetoothAdapter.getDefaultAdapter().getScanMode() !=
+                    BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                startActivity(discoverableIntent);
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void setOnTouchListener() {
         mTouchListener = new View.OnTouchListener() {
@@ -187,4 +248,5 @@ public class MainActivity extends AppCompatActivity implements IMainView {
             }
         };
     }
+
 }

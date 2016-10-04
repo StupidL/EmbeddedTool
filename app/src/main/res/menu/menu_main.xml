@@ -2,6 +2,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="me.stupideme.embeddedtool.view.MainActivity">
+
+    <item
+        android:id="@+id/action_bluetooth_secure"
+        android:orderInCategory="80"
+        android:title="@string/bluetooth_secure"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_bluetooth_insecure"
+        android:orderInCategory="90"
+        android:title="@string/bluetooth_insecure"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_bluetooth_discoverable"
+        android:orderInCategory="90"
+        android:title="@string/bluetooth_discoverable"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
