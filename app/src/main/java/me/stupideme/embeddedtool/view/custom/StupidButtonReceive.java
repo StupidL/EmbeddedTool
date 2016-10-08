@@ -30,7 +30,6 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
     public StupidButtonReceive(final Context context, MainPresenter presenter) {
         super(context);
         mPresenter = presenter;
-        mPresenter = presenter;
         mDialog = new StupidButtonDialog(context, this);
 
         setTextColor(Color.WHITE);
@@ -61,12 +60,12 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
                     String s = mPresenter.receiveDataOverButton(getDataType());
                     if (mBindTextView != null) {
                         mBindTextView.append("\n" + s);
-                        Toast.makeText(getContext(), "数据接收成功", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "数据接收成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "数据接收成功: " + s, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "数据接收成功: " + s, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
                 }
 
             }

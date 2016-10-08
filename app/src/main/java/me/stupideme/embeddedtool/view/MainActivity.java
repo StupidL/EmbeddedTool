@@ -30,13 +30,39 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
 
+    /**
+     * request code to start DeviceListActivity to connect bluetooth in secure way
+     */
     private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+
+    /**
+     * request code to start DeviceListActivity to connect bluetooth in insecure way
+     */
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+
+    /**
+     * request code to enable bluetooth
+     */
     private static final int REQUEST_ENABLE_BT = 3;
+
+    /**
+     * the presenter. We are using MVP pattern
+     */
     public static MainPresenter mPresenter;
+
+    /**
+     * a frame layout to container all of the views such as a Send Button, a Receive button
+     */
     private FrameLayout mFrameLayout;
 
+    /**
+     * a touch listener to implements move event
+     */
     private View.OnTouchListener mTouchListener;
+
+    /**
+     * id of every single view added to container
+     */
     private static int viewIndex = 0;
 
     @Override
@@ -44,16 +70,19 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //init presenter
         mPresenter = new MainPresenter(this, this);
+        //init view
         initView();
 
     }
 
-
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CONNECT_DEVICE_SECURE:
                 if (resultCode == Activity.RESULT_OK) {
+                    //use presenter to connect device according to address in secure way
                     String address = data.getStringExtra("device_address");
                     mPresenter.connectDevice(address, true);
                     Log.v("MainPresenter ", "connect device secure...");
@@ -61,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 break;
             case REQUEST_CONNECT_DEVICE_INSECURE:
                 if (resultCode == Activity.RESULT_OK) {
+                    //use presenter to connect device according to address in insecure way
                     String address = data.getStringExtra("device_address");
                     mPresenter.connectDevice(address, false);
                     Log.v("MainPresenter ", "connect device insecure...");
@@ -68,24 +98,31 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 break;
             case REQUEST_ENABLE_BT:
                 if (resultCode == Activity.RESULT_OK) {
+                    //a dialog appears in onStart() method, if click "ok" system will enable bluetooth
+                    // and we need do nothing here
                     Log.d("MainActivity", "BT enabled");
                 } else {
+                    //if click "cancel", application will exit.
                     Log.d("MainActivity", "BT not enabled");
                     finish();
                 }
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+//            // if bluetooth is not enabled, request to enable it.
+//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+//        }
+//    }
 
 
+    /**
+     * create and init a send type button, which will be contained in mFrameLayout.
+     */
     @Override
     public void addSendButton() {
         StupidButtonSend stupidButtonSend = new StupidButtonSend(MainActivity.this, mPresenter);
@@ -96,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         Log.i("StupidSendBtnID: ", stupidButtonSend.getId() + "");
     }
 
+    /**
+     * create and init a receive type button, which will be contained in mFrameLayout.
+     */
     @Override
     public void addReceiveButton() {
         StupidButtonReceive button = new StupidButtonReceive(MainActivity.this, mPresenter);
@@ -106,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         Log.i("StupidReceiveBtnID: ", button.getId() + "");
     }
 
+    /**
+     * remove a button(send or receive type) from mFrameLayout.
+     */
     @Override
     public void removeButton(Button view) {
         mFrameLayout.removeView(view);
@@ -146,6 +189,9 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         return mFrameLayout.findViewById(id);
     }
 
+    /**
+     * init view
+     */
     public void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -190,27 +236,45 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         });
     }
 
+    /**
+     * create option menu
+     * @param menu menu
+     * @return create menu or not
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * handle onClick events on option menu
+     * @param item view be clicked
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            // action settings clicked, do nothing here.
             return true;
         }
         if (id == R.id.action_bluetooth_secure) {
+            // action bluetooth secure clicked,
+            // start DeviceListActivity with request code REQUEST_CONNECT_DEVICE_SECURE.
             startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
                     REQUEST_CONNECT_DEVICE_SECURE);
         }
         if (id == R.id.action_bluetooth_insecure) {
+            // action bluetooth insecure clicked,
+            // start DeviceListActivity with request code REQUEST_CONNECT_DEVICE_INSECURE.
             startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
                     REQUEST_CONNECT_DEVICE_INSECURE);
         }
         if (id == R.id.action_bluetooth_discoverable) {
+            // action bluetooth discoverable clicked, request to be discoverable.
+            // we need do nothing else just start the activity and click "ok",
+            // system will do other things for us
             if (BluetoothAdapter.getDefaultAdapter().getScanMode() !=
                     BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                 Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -222,6 +286,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
 
+    /**
+     * init mTouchListener. A view set this as onTouchListener can be moved freely.
+     * but onTouchListener will trigger onClickListener and onLongClickListener, which is
+     * need to be resolved
+     */
     public void setOnTouchListener() {
         mTouchListener = new View.OnTouchListener() {
             float dX, dY;

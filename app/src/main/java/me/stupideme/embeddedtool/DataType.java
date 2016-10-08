@@ -10,13 +10,4 @@ public enum DataType {
     BUTTON_2,   // B2:
     BUTTON_3,   // B3:
     BUTTON_4,   // B4:
-
-    TEXT_0,     // C0:
-    TEXT_1,     // C1:
-    TEXT_2,     // C2:
-    TEXT_3,     // C3:
-    TEXT_4,     // C4:
-
-    CHART_0,
-    CHART_1
 }
