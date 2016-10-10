@@ -2,7 +2,6 @@ package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,8 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
 
     private StupidTextViewDialog mDialog;
     private MainPresenter mPresenter;
+    private int mBackgroundColor = getResources().getColor(R.color.Gray);
+    private int mBindViewId = -1;
 
     public StupidTextView(Context context, MainPresenter presenter) {
         super(context);
@@ -36,7 +37,7 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
         setHeight(250);
         setTextSize(18);
         setBackgroundColor(getResources().getColor(R.color.Gray));
-        setLayoutParams(new LinearLayoutCompat.LayoutParams(
+        setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
@@ -55,6 +56,18 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
 
     public StupidTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public int getBackgroundColor() {
+        return mBackgroundColor;
+    }
+
+    public boolean hasBindView() {
+        return mBindViewId != -1;
+    }
+
+    public int getBindViewId(){
+        return mBindViewId;
     }
 
     @Override
@@ -83,12 +96,15 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
-        setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
+        int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
+        setBackgroundColor(color);
+        mBackgroundColor = color;
     }
 
     @Override
     public void bindTextViewById(int id) {
         mPresenter.bindTextViewById(id, getId());
+        mBindViewId = id;
     }
 
 }

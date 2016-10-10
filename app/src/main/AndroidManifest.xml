@@ -25,11 +25,11 @@
         <activity
             android:name=".view.ChartActivity"
             android:label="ChartActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".view.bluetooth.DeviceListActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".view.bluetooth.DeviceListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.TemplateActivity"></activity>
     </application>
 
 </manifest>

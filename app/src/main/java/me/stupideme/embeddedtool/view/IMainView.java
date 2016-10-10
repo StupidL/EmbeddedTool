@@ -57,4 +57,5 @@ public interface IMainView {
      */
     View getViewById(int id);
 
+    void clearViews();
 }

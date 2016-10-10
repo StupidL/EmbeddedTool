@@ -80,7 +80,6 @@ public class DeviceNewFragment extends Fragment {
                     mProgressDialog.show();
                     mProgressDialog.setCancelable(false);
                     doDiscovery();
-                    //v.setVisibility(View.GONE);
                 }
             }
         });

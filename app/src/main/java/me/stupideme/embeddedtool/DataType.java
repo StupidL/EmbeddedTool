@@ -5,9 +5,7 @@ package me.stupideme.embeddedtool;
  */
 
 public enum DataType {
-    BUTTON_0,   // B0:
-    BUTTON_1,   // B1:
-    BUTTON_2,   // B2:
-    BUTTON_3,   // B3:
-    BUTTON_4,   // B4:
+    LED,   // B0:
+    BUZZER,   // B1:
+    TEMPERATURE,   // B2:
 }

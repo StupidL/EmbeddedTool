@@ -2,10 +2,14 @@ package me.stupideme.embeddedtool.view;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -44,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
      * request code to enable bluetooth
      */
     private static final int REQUEST_ENABLE_BT = 3;
+
+    /**
+     * request code to select a template for database and create it in MainActivity
+     */
+    private static final int REQUEST_SELECT_TEMPLATE = 4;
 
     /**
      * the presenter. We are using MVP pattern
@@ -106,6 +116,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                     Log.d("MainActivity", "BT not enabled");
                     finish();
                 }
+            case REQUEST_SELECT_TEMPLATE:
+                if (resultCode == Activity.RESULT_OK) {
+                    String name = data.getStringExtra("TemplateName");
+                    mPresenter.loadTemplate(mFrameLayout, name, MainActivity.this, mPresenter);
+                }
         }
     }
 
@@ -158,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     public void addTextView() {
         StupidTextView stupidTextView = new StupidTextView(MainActivity.this, mPresenter);
         stupidTextView.setId(viewIndex++);
-        stupidTextView.setText("id: " + stupidTextView.getId());
+        stupidTextView.setText("ID: " + stupidTextView.getId());
         stupidTextView.setOnTouchListener(mTouchListener);
         mFrameLayout.addView(stupidTextView);
         Log.i("StupidTextViewID ", stupidTextView.getId() + "");
@@ -187,6 +202,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public View getViewById(int id) {
         return mFrameLayout.findViewById(id);
+    }
+
+    @Override
+    public void clearViews() {
+        mFrameLayout.removeAllViews();
     }
 
     /**
@@ -238,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     /**
      * create option menu
+     *
      * @param menu menu
      * @return create menu or not
      */
@@ -249,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     /**
      * handle onClick events on option menu
+     *
      * @param item view be clicked
      * @return
      */
@@ -281,6 +303,38 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
                 startActivity(discoverableIntent);
             }
+        }
+        if (id == R.id.action_save_template) {
+            // create a dialog to save a template
+            // you can add a name for this template
+            TextInputLayout layout = new TextInputLayout(MainActivity.this);
+            layout.setPadding(16, 32, 16, 16);
+            final TextInputEditText editText = new TextInputEditText(MainActivity.this);
+            editText.setHint("保存的模板名称");
+            layout.addView(editText);
+
+            final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                    .setPositiveButton("保存", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //// TODO: 16-10-9 save template to database or file
+                            mPresenter.saveTemplate(mFrameLayout, editText.getText().toString());
+                            Toast.makeText(MainActivity.this, "模板保存成功!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .setTitle("保存为模板")
+                    .setView(layout).create();
+            dialog.show();
+
+        }
+        if (id == R.id.action_select_template) {
+            startActivityForResult(new Intent(MainActivity.this, TemplateActivity.class), REQUEST_SELECT_TEMPLATE);
         }
         return super.onOptionsItemSelected(item);
     }

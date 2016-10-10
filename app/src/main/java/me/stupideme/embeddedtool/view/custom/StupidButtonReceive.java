@@ -2,17 +2,14 @@ package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 
@@ -24,7 +21,7 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
 
     private MainPresenter mPresenter;
     private StupidButtonDialog mDialog;
-
+    private int mBackgroundColor = getResources().getColor(R.color.Gray);
     private String data;
 
     public StupidButtonReceive(final Context context, MainPresenter presenter) {
@@ -36,7 +33,7 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
         setBackgroundColor(getResources().getColor(R.color.Gray));
         setWidth(200);
         setHeight(100);
-        setLayoutParams(new LinearLayoutCompat.LayoutParams(
+        setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
@@ -72,6 +69,10 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
         });
     }
 
+    public int getBackgroundColor() {
+        return mBackgroundColor;
+    }
+
     @Override
     public void onDelete() {
         mDialog.dismiss();
@@ -101,7 +102,9 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
         if (map.containsKey("type")) {
             setDataType(Constants.mButtonTypes[Integer.parseInt(map.get("type"))]);
         }
-        setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
+        int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
+        setBackgroundColor(color);
+        mBackgroundColor = color;
         Log.v("ButtonColor", map.get("color"));
     }
 

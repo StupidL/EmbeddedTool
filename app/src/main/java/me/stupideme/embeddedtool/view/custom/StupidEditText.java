@@ -2,7 +2,6 @@ package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -25,6 +24,8 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
 
     private MainPresenter mPresenter;
     private StupidEditTextDialog mDialog;
+    private int mBackgroundColor = getResources().getColor(R.color.Gray);
+    private int mBindViewId = -1;
 
     public StupidEditText(final Context context, MainPresenter presenter) {
         super(context);
@@ -40,7 +41,7 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
         setTextSize(18);
         setPadding(16, 16, 16, 16);
         setGravity(Gravity.NO_GRAVITY);
-        setLayoutParams(new LinearLayoutCompat.LayoutParams(
+        setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
@@ -59,6 +60,18 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
 
     public StupidEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public boolean hasBindView() {
+        return mBindViewId != -1;
+    }
+
+    public int getBindViewId() {
+        return mBindViewId;
+    }
+
+    public int getBackgroundColor() {
+        return mBackgroundColor;
     }
 
     @Override
@@ -84,7 +97,9 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
             setLayoutParams(params);
         }
         if (map.containsKey("color")) {
-            setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
+            int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
+            setBackgroundColor(color);
+            mBackgroundColor = color;
         }
         if (map.containsKey("id"))
             setId(Integer.parseInt(map.get("id")));

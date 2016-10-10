@@ -2,7 +2,6 @@ package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
 
     private MainPresenter mPresenter;
     private StupidButtonDialog mDialog;
+    private int mBackgroundColor = getResources().getColor(R.color.Gray);
 
     public StupidButtonSend(final Context context, MainPresenter presenter) {
         super(context);
@@ -33,7 +33,7 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
         setBackgroundColor(getResources().getColor(R.color.Gray));
         setWidth(200);
         setHeight(100);
-        setLayoutParams(new LinearLayoutCompat.LayoutParams(
+        setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
@@ -71,6 +71,10 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
         });
     }
 
+    public StupidButtonSend(Context context){
+        super(context);
+    }
+
     @Override
     public String toString() {
         return "I am Stupid Send Button";
@@ -102,11 +106,18 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
         if (map.containsKey("id")) {
             setId(Integer.parseInt(map.get("id")));
         }
-        if(map.containsKey("type")){
+        if (map.containsKey("type")) {
             setDataType(Constants.mButtonTypes[Integer.parseInt(map.get("type"))]);
         }
-        setBackgroundColor(getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]));
+        int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
+        setBackgroundColor(color);
 
+        mBackgroundColor = color;
+
+    }
+
+    public int getBackgroundColor() {
+        return mBackgroundColor;
     }
 
     @Override
