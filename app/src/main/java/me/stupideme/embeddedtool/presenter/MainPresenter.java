@@ -113,6 +113,12 @@ public class MainPresenter {
     }
 
     /**
+     * remove all the views of container
+     */
+    public void removeAllViews(){
+        iMainView.clearViews();
+    }
+    /**
      * send data by a send type button
      *
      * @param type data's type

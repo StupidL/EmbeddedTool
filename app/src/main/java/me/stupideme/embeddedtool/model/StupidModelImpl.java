@@ -11,6 +11,9 @@ import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.db.DBManager;
@@ -44,6 +47,9 @@ public class StupidModelImpl implements IStupidModel {
      * manage database operations
      */
     private DBManager mManager;
+
+    private Map<String, String> mTextViewMap = new HashMap<>();
+    private Map<String, String> mEditTextMap = new HashMap<>();
 
     private String tmpReadMessage;
     private String tmpWriteMessage;
@@ -110,6 +116,24 @@ public class StupidModelImpl implements IStupidModel {
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         mService.connect(device, secure);
     }
+
+    @Override
+    public void sendDataOverButton(DataType type, String s) {
+        switch (type) {
+            case LED:
+
+                break;
+            case BUZZER:
+
+                break;
+        }
+    }
+
+    @Override
+    public String receiveDataOverButton(DataType type) {
+        return "";
+    }
+
 
     @Override
     public void saveStupidSendButtonInfo(String name, StupidButtonSend view) {
@@ -199,11 +223,35 @@ public class StupidModelImpl implements IStupidModel {
                 case Constants.VIEW_TYPE_EDIT_TEXT:
                     frameLayout.addView(createEditText(cursor, context, presenter));
                     break;
-
             }
             cursor.moveToNext();
         }
+        bindViewByMap(presenter);
         cursor.close();
+    }
+
+    /**
+     * bind view by id after all views are created to avoid null pointer exception
+     * @param presenter
+     */
+    private void bindViewByMap(MainPresenter presenter) {
+
+        for (Map.Entry entry : mEditTextMap.entrySet()) {
+            int other = Integer.parseInt(entry.getKey().toString());
+            int self = Integer.parseInt(entry.getValue().toString());
+            Log.v(TAG, "other id: " + other + " self id : " + self);
+            presenter.bindEditTextById(other, self);
+        }
+
+        for (Map.Entry entry : mTextViewMap.entrySet()) {
+            int other = Integer.parseInt(entry.getKey().toString());
+            int self = Integer.parseInt(entry.getValue().toString());
+            Log.v(TAG, "other id: " + other + " self id : " + self);
+            presenter.bindTextViewById(other, self);
+        }
+
+        mEditTextMap.clear();   //map need to clear after finishing create views
+        mTextViewMap.clear();
     }
 
     /**
@@ -217,12 +265,11 @@ public class StupidModelImpl implements IStupidModel {
     private StupidEditText createEditText(Cursor cursor, Context context, MainPresenter presenter) {
         StupidEditText view = new StupidEditText(context, presenter);
         int view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_ID)));
-//        int view_type = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE)));
         boolean has_bind_view = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Constants.HAS_BIND_VIEW)));
         Log.d(TAG, has_bind_view + "");
         int bind_view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.BIND_VIEW_ID)));
         if (bind_view_id != -1) {
-            view.bindEditTextById(bind_view_id);
+            mEditTextMap.put(bind_view_id + "", view_id + "");
         }
         String view_text = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TEXT));
         int view_width = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_WIDTH)));
@@ -253,14 +300,11 @@ public class StupidModelImpl implements IStupidModel {
     private StupidTextView createTextView(Cursor cursor, Context context, MainPresenter presenter) {
         StupidTextView view = new StupidTextView(context, presenter);
         int view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_ID)));
-//        int view_type = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE)));
         boolean has_bind_view = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(Constants.HAS_BIND_VIEW)));
         Log.d(TAG, has_bind_view + "");
         int bind_view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.BIND_VIEW_ID)));
         if (bind_view_id != -1) {
-            //null pointer exception
-            //because the bind view may be have not been created.
-            view.bindTextViewById(bind_view_id);
+            mTextViewMap.put(bind_view_id + "", view_id + "");
         }
         String view_text = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TEXT));
         int view_width = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_WIDTH)));
@@ -291,7 +335,6 @@ public class StupidModelImpl implements IStupidModel {
     private StupidButtonReceive createButtonReceive(Cursor cursor, Context context, MainPresenter presenter) {
         StupidButtonReceive button = new StupidButtonReceive(context, presenter);
         int view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_ID)));
-//        int view_type = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE)));
         String view_text = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TEXT));
         int view_width = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_WIDTH)));
         int view_height = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_HEIGHT)));
@@ -321,7 +364,6 @@ public class StupidModelImpl implements IStupidModel {
     private StupidButtonSend createButtonSend(Cursor cursor, Context context, MainPresenter presenter) {
         StupidButtonSend button = new StupidButtonSend(context, presenter);
         int view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_ID)));
-//        int view_type = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE)));
         String view_text = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TEXT));
         int view_width = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_WIDTH)));
         int view_height = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_HEIGHT)));
@@ -339,23 +381,5 @@ public class StupidModelImpl implements IStupidModel {
         button.setLayoutParams(params);
         return button;
     }
-
-    @Override
-    public void sendDataOverButton(DataType type, String s) {
-        switch (type) {
-            case LED:
-
-                break;
-            case BUZZER:
-
-                break;
-        }
-    }
-
-    @Override
-    public String receiveDataOverButton(DataType type) {
-        return "";
-    }
-
 
 }

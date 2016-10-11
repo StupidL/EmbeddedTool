@@ -4,6 +4,11 @@
     tools:context="me.stupideme.embeddedtool.view.MainActivity">
 
     <item
+        android:id="@+id/action_clear"
+        android:orderInCategory="80"
+        android:title="@string/clear_all"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_save_template"
         android:icon="@drawable/ic_save_white_24dp"
         android:orderInCategory="80"

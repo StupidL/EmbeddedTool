@@ -1,23 +1,29 @@
 # EmbeddedTool
 This is an tool for embedded devices developers.  
-You can easily communicate with embedded devices over bluetooth or wifi.  
-This project using the MVP pattern and you can easily add new features.  
+You can easily communicate with embedded devices over bluetooth.
 
 ## Progress
 * Add button(send type) from menu.
 * Add button(receive type) from menu.
 * Add TextView from menu.
 * Add EditText from menu.
+* Open chart view from menu.
+* Save current views as template so that you can pick one directly next time rather than recreate it.
+* Add bluetooth service(with some unknown bugs).
+* Add database to save template. Database can be also used in other ways.
 
 All of these view can be moved by your finger.
 All of these views can be remove or reshaped by performing long click.
 
 ## Todo
-* Add ChartView
-* Add Progressbar
+* Fix bugs when create view from template
+* Fix bugs when connect bluetooth device
 
 ## Screenshots
-![Main](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.PNG)  
+![Main](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.PNG)
+![Main2](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.png)
+![Chart](https://github.com/StupidL/EmbeddedTool/blob/master/art/chart.png)
+
 
 ## License
 Copyright 2016 ZhouYang Luo

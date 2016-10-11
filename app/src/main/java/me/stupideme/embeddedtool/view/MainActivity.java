@@ -120,6 +120,10 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 if (resultCode == Activity.RESULT_OK) {
                     String name = data.getStringExtra("TemplateName");
                     mPresenter.loadTemplate(mFrameLayout, name, MainActivity.this, mPresenter);
+                    for (int i = 0; i < mFrameLayout.getChildCount(); i++) {
+                        View view = mFrameLayout.getChildAt(i);
+                        view.setOnTouchListener(mTouchListener);
+                    }
                 }
         }
     }
@@ -303,6 +307,9 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
                 startActivity(discoverableIntent);
             }
+        }
+        if (id == R.id.action_clear) {
+            mPresenter.removeAllViews();
         }
         if (id == R.id.action_save_template) {
             // create a dialog to save a template

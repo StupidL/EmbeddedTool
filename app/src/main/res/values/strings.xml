@@ -12,4 +12,5 @@
     <string name="bluetooth_discoverable">可被发现</string>
     <string name="action_settings">设置</string>
     <string name="save_template">保存模板</string>
+    <string name="clear_all">清空</string>
 </resources>
