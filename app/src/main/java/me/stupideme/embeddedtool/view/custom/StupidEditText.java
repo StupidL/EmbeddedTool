@@ -8,13 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
  * Created by StupidL on 2016/10/1.
@@ -22,14 +20,14 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 public class StupidEditText extends EditText implements StupidEditTextDialog.StupidEditTextDialogListener {
 
-    private MainPresenter mPresenter;
     private StupidEditTextDialog mDialog;
+    private OnBindViewIdChangedListener mBindViewListener;
     private int mBackgroundColor = getResources().getColor(R.color.Gray);
     private int mBindViewId = -1;
 
-    public StupidEditText(final Context context, MainPresenter presenter) {
+    public StupidEditText(Context context) {
         super(context);
-        mPresenter = presenter;
+
         mDialog = new StupidEditTextDialog(context, this);
 
         setMaxLines(10);
@@ -58,6 +56,10 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
 
     }
 
+    public void setBindViewListener(OnBindViewIdChangedListener listener){
+        mBindViewListener = listener;
+    }
+
     public StupidEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -77,7 +79,7 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
     @Override
     public void onDelete() {
         mDialog.dismiss();
-        mPresenter.removeEditText(this);
+        ((FrameLayout) getParent()).removeView(this);
     }
 
     @Override
@@ -103,14 +105,11 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
         }
         if (map.containsKey("id"))
             setId(Integer.parseInt(map.get("id")));
-        mDialog.dismiss();
-    }
-
-    @Override
-    public void bindEditTextById(int id) {
-        if (0 == mPresenter.bindEditTextById(id, getId())) {
-            Toast.makeText(getContext(), "编辑框只能绑定发送按钮", Toast.LENGTH_SHORT).show();
+        if (map.containsKey("bind_view_id")) {
+            mBindViewId = Integer.parseInt(map.get("bind_view_id"));
+            mBindViewListener.onBindViewIdChanged(mBindViewId, getId());
         }
+        mDialog.dismiss();
     }
 
 }

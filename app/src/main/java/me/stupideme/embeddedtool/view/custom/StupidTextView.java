@@ -2,7 +2,6 @@ package me.stupideme.embeddedtool.view.custom;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -12,7 +11,6 @@ import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
  * Created by StupidL on 2016/9/28.
@@ -21,14 +19,14 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 public class StupidTextView extends TextView implements StupidTextViewDialog.StupidTextViewListener {
 
     private StupidTextViewDialog mDialog;
-    private MainPresenter mPresenter;
+    private OnBindViewIdChangedListener mBindViewListener;
     private int mBackgroundColor = getResources().getColor(R.color.Gray);
     private int mBindViewId = -1;
 
-    public StupidTextView(Context context, MainPresenter presenter) {
+    public StupidTextView(Context context) {
         super(context);
+
         setClickable(true);
-        mPresenter = presenter;
         mDialog = new StupidTextViewDialog(context, this);
 
         setMaxLines(10);
@@ -54,8 +52,8 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
         setPadding(16, 16, 16, 16);
     }
 
-    public StupidTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public void setBindviewListener(OnBindViewIdChangedListener listener){
+        mBindViewListener = listener;
     }
 
     public int getBackgroundColor() {
@@ -66,14 +64,14 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
         return mBindViewId != -1;
     }
 
-    public int getBindViewId(){
+    public int getBindViewId() {
         return mBindViewId;
     }
 
     @Override
     public void onDelete() {
         mDialog.dismiss();
-        mPresenter.removeTextView(this);
+        ((FrameLayout) getParent()).removeView(this);
     }
 
     @Override
@@ -96,15 +94,13 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
             params.height = Integer.parseInt(map.get("height"));
             setLayoutParams(params);
         }
+        if (map.containsKey("bind_view_id")) {
+            mBindViewId = Integer.parseInt(map.get("bind_view_id"));
+            mBindViewListener.onBindViewIdChanged(mBindViewId, getId());
+        }
         int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
         setBackgroundColor(color);
         mBackgroundColor = color;
-    }
-
-    @Override
-    public void bindTextViewById(int id) {
-        mPresenter.bindTextViewById(id, getId());
-        mBindViewId = id;
     }
 
 }

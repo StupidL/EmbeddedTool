@@ -1,10 +1,8 @@
 package me.stupideme.embeddedtool.model;
 
-import android.content.Context;
-import android.widget.FrameLayout;
+import android.database.Cursor;
 
 import me.stupideme.embeddedtool.DataType;
-import me.stupideme.embeddedtool.presenter.MainPresenter;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
@@ -73,11 +71,9 @@ public interface IStupidModel {
     void saveStupidEditTextInfo(String name, StupidEditText view);
 
     /**
-     * create view from database by template name
-     *
-     * @param frameLayout  container
-     * @param templateName template name
+     * query template by name from database
+     * @param templateName name of template
+     * @return cursor
      */
-    void createFromTemplate(FrameLayout frameLayout, String templateName,
-                            Context context, MainPresenter presenter);
+    Cursor queryTemplate(String templateName);
 }

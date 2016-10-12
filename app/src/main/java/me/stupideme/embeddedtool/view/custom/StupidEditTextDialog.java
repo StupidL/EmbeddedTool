@@ -84,7 +84,7 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
                 if (!height.getText().toString().isEmpty())
                     map.put("height", height.getText().toString());
                 if (!bindId.getText().toString().isEmpty())
-                    mListener.bindEditTextById(Integer.parseInt(bindId.getText().toString()));
+                    map.put("bind_view_id", bindId.getText().toString());
                 if (!id.getText().toString().isEmpty())
                     map.put("id", id.getText().toString());
                 map.put("color", colour + "");
@@ -101,6 +101,5 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
 
         void onSave(Map<String, String> map);
 
-        void bindEditTextById(int id);
     }
 }

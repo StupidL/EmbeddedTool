@@ -6,13 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 /**
  * Created by StupidL on 2016/9/28.
@@ -20,13 +18,11 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 public class StupidButtonSend extends StupidButton implements StupidButtonDialog.StupidButtonDialogListener {
 
-    private MainPresenter mPresenter;
     private StupidButtonDialog mDialog;
     private int mBackgroundColor = getResources().getColor(R.color.Gray);
 
-    public StupidButtonSend(final Context context, MainPresenter presenter) {
+    public StupidButtonSend(Context context) {
         super(context);
-        mPresenter = presenter;
         mDialog = new StupidButtonDialog(context, this);
 
         setTextColor(Color.WHITE);
@@ -49,30 +45,6 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
             }
         });
 
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (getDataType() != null) {
-                    if (mBindEditText != null) {
-                        mPresenter.sendDataOverButton(getDataType(), mBindEditText.getText().toString());
-                        if (mBindTextView != null) {
-                            mBindTextView.append("\n" + mBindEditText.getText().toString());
-                        }
-                        Toast.makeText(getContext(), "数据发送成功", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "请设置一个编辑框并且输入要发送的信息", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(getContext(), "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-    }
-
-    public StupidButtonSend(Context context){
-        super(context);
     }
 
     @Override
@@ -85,7 +57,8 @@ public class StupidButtonSend extends StupidButton implements StupidButtonDialog
         mDialog.dismiss();
         mBindTextView = null;
         mBindEditText = null;
-        mPresenter.removeButton(this);
+        FrameLayout frameLayout = (FrameLayout) getParent();
+        frameLayout.removeView(this);
         Log.v("StupidSendButton ", "button removed");
     }
 

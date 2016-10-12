@@ -87,7 +87,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
                 if (!height.getText().toString().isEmpty())
                     map.put("height", height.getText().toString());
                 if (!bindId.getText().toString().isEmpty()) {
-                    mListener.bindTextViewById(Integer.parseInt(bindId.getText().toString()));
+                    map.put("bind_view_id", bindId.getText().toString());
                 }
                 map.put("color", colour + "");
                 mListener.onSave(map);
@@ -101,7 +101,5 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         void onCancel();
 
         void onSave(Map<String, String> map);
-
-        void bindTextViewById(int id);
     }
 }

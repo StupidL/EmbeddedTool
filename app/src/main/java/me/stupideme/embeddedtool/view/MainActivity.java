@@ -5,8 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -28,12 +26,13 @@ import com.github.clans.fab.FloatingActionMenu;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 import me.stupideme.embeddedtool.view.bluetooth.DeviceListActivity;
+import me.stupideme.embeddedtool.view.custom.OnBindViewIdChangedListener;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
-public class MainActivity extends AppCompatActivity implements IMainView {
+public class MainActivity extends AppCompatActivity implements IMainView, OnBindViewIdChangedListener {
 
     /**
      * request code to start DeviceListActivity to connect bluetooth in secure way
@@ -69,6 +68,17 @@ public class MainActivity extends AppCompatActivity implements IMainView {
      * a touch listener to implements move event
      */
     private View.OnTouchListener mTouchListener;
+
+    /**
+     * onclick listener to send type button
+     */
+    private View.OnClickListener mButtonSendListener;
+
+    /**
+     * onclick listener to receive type button
+     */
+    private View.OnClickListener mButtonReceiveListener;
+
 
     /**
      * id of every single view added to container
@@ -119,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
             case REQUEST_SELECT_TEMPLATE:
                 if (resultCode == Activity.RESULT_OK) {
                     String name = data.getStringExtra("TemplateName");
-                    mPresenter.loadTemplate(mFrameLayout, name, MainActivity.this, mPresenter);
+                    mPresenter.loadTemplate(mFrameLayout, name, MainActivity.this);
                     for (int i = 0; i < mFrameLayout.getChildCount(); i++) {
                         View view = mFrameLayout.getChildAt(i);
                         view.setOnTouchListener(mTouchListener);
@@ -144,10 +154,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
      */
     @Override
     public void addSendButton() {
-        StupidButtonSend stupidButtonSend = new StupidButtonSend(MainActivity.this, mPresenter);
+        StupidButtonSend stupidButtonSend = new StupidButtonSend(MainActivity.this);
         stupidButtonSend.setId(viewIndex++);
         stupidButtonSend.setText("Button" + stupidButtonSend.getId());
         stupidButtonSend.setOnTouchListener(mTouchListener);
+        stupidButtonSend.setOnClickListener(mButtonSendListener);
         mFrameLayout.addView(stupidButtonSend);
         Log.i("StupidSendBtnID: ", stupidButtonSend.getId() + "");
     }
@@ -157,50 +168,35 @@ public class MainActivity extends AppCompatActivity implements IMainView {
      */
     @Override
     public void addReceiveButton() {
-        StupidButtonReceive button = new StupidButtonReceive(MainActivity.this, mPresenter);
+        StupidButtonReceive button = new StupidButtonReceive(MainActivity.this);
         button.setId(viewIndex++);
         button.setText("Button" + button.getId());
         button.setOnTouchListener(mTouchListener);
+        button.setOnClickListener(mButtonReceiveListener);
         mFrameLayout.addView(button);
         Log.i("StupidReceiveBtnID: ", button.getId() + "");
     }
 
-    /**
-     * remove a button(send or receive type) from mFrameLayout.
-     */
-    @Override
-    public void removeButton(Button view) {
-        mFrameLayout.removeView(view);
-    }
-
     @Override
     public void addTextView() {
-        StupidTextView stupidTextView = new StupidTextView(MainActivity.this, mPresenter);
+        StupidTextView stupidTextView = new StupidTextView(this);
         stupidTextView.setId(viewIndex++);
         stupidTextView.setText("ID: " + stupidTextView.getId());
         stupidTextView.setOnTouchListener(mTouchListener);
+        stupidTextView.setBindviewListener(this);
         mFrameLayout.addView(stupidTextView);
         Log.i("StupidTextViewID ", stupidTextView.getId() + "");
     }
 
     @Override
-    public void removeTextView(TextView view) {
-        mFrameLayout.removeView(view);
-    }
-
-    @Override
     public void addEditText() {
-        StupidEditText editText = new StupidEditText(this, mPresenter);
+        StupidEditText editText = new StupidEditText(this);
         editText.setOnTouchListener(mTouchListener);
+        editText.setBindViewListener(this);
         editText.setId(viewIndex++);
         editText.setText("ID: " + editText.getId());
         mFrameLayout.addView(editText);
         Log.v("StupidEditTextID ", editText.getId() + "");
-    }
-
-    @Override
-    public void removeEditText(StupidEditText view) {
-        mFrameLayout.removeView(view);
     }
 
     @Override
@@ -213,13 +209,24 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         mFrameLayout.removeAllViews();
     }
 
+
+    @Override
+    public void onBindViewIdChanged(int other, int self) {
+        View view = getViewById(self);
+        if (view instanceof StupidTextView) {
+            mPresenter.bindTextViewById(other, self);
+        } else if (view instanceof StupidEditText) {
+            mPresenter.bindEditTextById(other, self);
+        }
+    }
+
     /**
      * init view
      */
     public void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setOnTouchListener();
+        initListeners();
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_main);
         FloatingActionMenu menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         FloatingActionButton sendButton = (FloatingActionButton) findViewById(R.id.fab_send_button);
@@ -348,11 +355,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
 
     /**
-     * init mTouchListener. A view set this as onTouchListener can be moved freely.
+     * init listeners. A view set mTouchListener as onTouchListener can be moved freely.
      * but onTouchListener will trigger onClickListener and onLongClickListener, which is
      * need to be resolved
      */
-    public void setOnTouchListener() {
+    public void initListeners() {
+        // onTouchListener
         mTouchListener = new View.OnTouchListener() {
             float dX, dY;
 
@@ -377,6 +385,49 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 return false;
             }
         };
+
+        // send type button onClickListener
+        mButtonSendListener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                StupidButtonSend button = (StupidButtonSend) view;
+
+                if (button.getDataType() != null) {
+                    if (button.getBindEditText() != null) {
+                        mPresenter.sendDataOverButton(button.getDataType(), button.getBindEditText().getText().toString());
+                        if (button.getBindTextView() != null) {
+                            button.getBindTextView().append("\n" + button.getBindEditText().getText().toString());
+                        }
+                        Toast.makeText(MainActivity.this, "数据发送成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "请设置一个编辑框并且输入要发送的信息", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        // receive type button onClickListener
+        mButtonReceiveListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StupidButtonReceive button = (StupidButtonReceive) view;
+                if (button.getDataType() != null) {
+                    String s = mPresenter.receiveDataOverButton(button.getDataType());
+                    if (button.getBindTextView() != null) {
+                        button.getBindTextView().append("\n" + s);
+                        Toast.makeText(MainActivity.this, "数据接收成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "数据接收成功: " + s, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
     }
 
 }

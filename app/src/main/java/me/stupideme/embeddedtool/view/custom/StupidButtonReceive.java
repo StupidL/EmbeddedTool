@@ -19,14 +19,13 @@ import me.stupideme.embeddedtool.presenter.MainPresenter;
 
 public class StupidButtonReceive extends StupidButton implements StupidButtonDialog.StupidButtonDialogListener {
 
-    private MainPresenter mPresenter;
     private StupidButtonDialog mDialog;
     private int mBackgroundColor = getResources().getColor(R.color.Gray);
     private String data;
 
-    public StupidButtonReceive(final Context context, MainPresenter presenter) {
+    public StupidButtonReceive(Context context) {
         super(context);
-        mPresenter = presenter;
+
         mDialog = new StupidButtonDialog(context, this);
 
         setTextColor(Color.WHITE);
@@ -49,24 +48,6 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
             }
         });
 
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (getDataType() != null) {
-                    String s = mPresenter.receiveDataOverButton(getDataType());
-                    if (mBindTextView != null) {
-                        mBindTextView.append("\n" + s);
-//                        Toast.makeText(getContext(), "数据接收成功", Toast.LENGTH_SHORT).show();
-                    } else {
-//                        Toast.makeText(getContext(), "数据接收成功: " + s, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-//                    Toast.makeText(getContext(), "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
     }
 
     public int getBackgroundColor() {
@@ -78,7 +59,7 @@ public class StupidButtonReceive extends StupidButton implements StupidButtonDia
         mDialog.dismiss();
         mBindEditText = null;
         mBindTextView = null;
-        mPresenter.removeButton(this);
+        ((FrameLayout) getParent()).removeView(this);
         Log.v("StupidReceiveButton ", "button removed");
     }
 
