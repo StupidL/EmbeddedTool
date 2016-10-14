@@ -39,6 +39,8 @@ public class Constants {
     public static final String VIEW_X = "view_x";
     public static final String VIEW_Y = "view_y";
     public static final String VIEW_COLOR = "view_color";
+    public static final String SPINNER_COLOR_POS = "spinner_color_pos";
+    public static final String VIEW_TYPE_POS = "view_type_pos";
 
     public static final int VIEW_TYPE_BUTTON_SEND = 1;
     public static final int VIEW_TYPE_BUTTON_RECEIVE = 2;
@@ -46,5 +48,14 @@ public class Constants {
     public static final int VIEW_TYPE_EDIT_TEXT = 4;
 
     public static final int HAS_BIND_VIEW_INVALID = -1;
+
+
+    public static final String KEY_NAME = "name";
+    public static final String KEY_WIDTH = "width";
+    public static final String KEY_HEIGHT = "height";
+    public static final String KEY_ID = "id";
+    public static final String KEY_TYPE_POS = "type";
+    public static final String KEY_COLOR_POS = "color";
+    public static final String KEY_BIND_VIEW_ID = "bind_view_id";
 
 }

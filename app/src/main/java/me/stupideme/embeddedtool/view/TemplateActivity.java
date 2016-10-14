@@ -6,9 +6,11 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -18,13 +20,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.stupideme.embeddedtool.App;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.db.DBManager;
 
 public class TemplateActivity extends AppCompatActivity {
 
+    private static final String TAG = TemplateActivity.class.getSimpleName();
     private List<String> mTemplateNames;
-    private DBManager manager;
+    private DBManager mManager;
+    private MyAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +47,54 @@ public class TemplateActivity extends AppCompatActivity {
 
         mTemplateNames = new ArrayList<>();
 
-        manager = DBManager.getInstance(TemplateActivity.this);
+        mManager = App.manager;
 
         ListView mListView = (ListView) findViewById(R.id.template_list);
         //fill list view
-        Cursor cursor = manager.queryAllTemplateName();
+        Cursor cursor = mManager.queryAllTemplateName();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            mTemplateNames.add(cursor.getString(cursor.getColumnIndex("template_name")));
+            String name = cursor.getString(cursor.getColumnIndex("template_name"));
+            mTemplateNames.add(name);
+            Log.v(TAG, name);
             cursor.moveToNext();
         }
 
         TextView empty = (TextView) findViewById(R.id.empty_view);
         mListView.setEmptyView(empty);
-        mListView.setAdapter(new MyAdapter());
+        mAdapter = new MyAdapter();
+        mListView.setAdapter(mAdapter);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_template, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_clear:
+                mTemplateNames.clear();
+                mAdapter.notifyDataSetChanged();
+                mManager.deleteAllTemplates();
+                break;
+            case R.id.action_settings:
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mTemplateNames.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -96,7 +134,7 @@ public class TemplateActivity extends AppCompatActivity {
             holder.mDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    manager.deleteTemplate(name);
+                    mManager.deleteTemplate(name);
                     // remove from list view
                     mTemplateNames.remove(i);
                     notifyDataSetChanged();

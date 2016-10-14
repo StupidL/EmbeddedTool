@@ -73,7 +73,7 @@ public class DeviceNewFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //mBtAdapter.cancelDiscovery();
-                setUpBluetooth();
+                setupBluetooth();
                 if (mBtAdapter.isEnabled()) {
                     mProgressDialog.setTitle("扫描设备");
                     mProgressDialog.setMessage("扫描设备中，请稍等...");
@@ -98,7 +98,7 @@ public class DeviceNewFragment extends Fragment {
     }
 
 
-    private void setUpBluetooth() {
+    private void setupBluetooth() {
         if (mBtAdapter == null) {
             Toast.makeText(getActivity(), "设备不支持蓝牙！", Toast.LENGTH_SHORT).show();
         } else {
@@ -153,6 +153,7 @@ public class DeviceNewFragment extends Fragment {
             String address = info.substring(info.length() - 17);
             Intent intent = new Intent();
             intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+            //back to MainActivity and try to connect device
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         }

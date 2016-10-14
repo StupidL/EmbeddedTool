@@ -27,8 +27,8 @@ class DBHelper extends SQLiteOpenHelper {
      */
     private static final String CREATE_TABLE_TEMPLATES = "CREATE TABLE templates(_id INTEGER PRIMARY KEY AUTOINCREMENT," +
             " template_name, view_id , " +
-            "view_type, has_bind_view, bind_view_id, view_text, view_width, view_height, " +
-            "view_x, view_y, view_color" + ")";
+            "view_type, view_type_pos, has_bind_view, bind_view_id, view_text, view_width, view_height, " +
+            "view_x, view_y, view_color, spinner_color_pos" + ")";
 
     DBHelper(Context context) {
         super(context, DB_NAME, null, VERSION);

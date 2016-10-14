@@ -14,7 +14,6 @@ import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.model.IStupidModel;
 import me.stupideme.embeddedtool.model.StupidModelImpl;
 import me.stupideme.embeddedtool.view.IMainView;
-import me.stupideme.embeddedtool.view.custom.StupidButton;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
@@ -127,8 +126,8 @@ public class MainPresenter {
      */
     public int bindTextViewById(int other, int self) {
         Log.i(TAG, "bind text view by id " + "(other: " + other + ", self: " + self + ")");
-        StupidButton button = (StupidButton) iMainView.getViewById(other);
-        button.setBindTextView((StupidTextView) iMainView.getViewById(self));
+        StupidButtonReceive button = (StupidButtonReceive) iMainView.getViewById(other);
+        button.setBindView((StupidTextView) iMainView.getViewById(self));
         return 1;
     }
 
@@ -143,8 +142,8 @@ public class MainPresenter {
     public int bindEditTextById(int other, int self) {
         Log.i(TAG, "bind edit text by id " + "(other: " + other + ", self: " + self + ")");
         if (iMainView.getViewById(other) instanceof StupidButtonSend) {
-            StupidButton button = (StupidButton) iMainView.getViewById(other);
-            button.setBindEditText((StupidEditText) iMainView.getViewById(self));
+            StupidButtonSend button = (StupidButtonSend) iMainView.getViewById(other);
+            button.setBindView((StupidEditText) iMainView.getViewById(self));
             return 1;
         }
         Log.v(TAG, "StupidEditText only can bind StupidButtonSend");
@@ -250,6 +249,7 @@ public class MainPresenter {
         int bind_view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.BIND_VIEW_ID)));
         if (bind_view_id != -1) {
             mEditTextMap.put(bind_view_id + "", view_id + "");
+            view.setBindViewId(bind_view_id);
         }
         String view_text = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TEXT));
         int view_width = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_WIDTH)));
@@ -257,11 +257,13 @@ public class MainPresenter {
         float view_x = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_X)));
         float view_y = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_Y)));
         int color = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_COLOR)));
+        int colorPos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.SPINNER_COLOR_POS)));
         view.setId(view_id);
         view.setText(view_text);
         view.setX(view_x);
         view.setY(view_y);
         view.setBackgroundColor(color);
+        view.setColorPos(colorPos);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.width = view_width;
         params.height = view_height;
@@ -284,6 +286,7 @@ public class MainPresenter {
         int bind_view_id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.BIND_VIEW_ID)));
         if (bind_view_id != -1) {
             mTextViewMap.put(bind_view_id + "", view_id + "");
+            view.setBindViewId(bind_view_id);
         }
         String view_text = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TEXT));
         int view_width = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_WIDTH)));
@@ -291,11 +294,13 @@ public class MainPresenter {
         float view_x = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_X)));
         float view_y = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_Y)));
         int color = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_COLOR)));
+        int colorPos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.SPINNER_COLOR_POS)));
         view.setId(view_id);
         view.setText(view_text);
         view.setX(view_x);
         view.setY(view_y);
         view.setBackgroundColor(color);
+        view.setColorPos(colorPos);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
         params.width = view_width;
         params.height = view_height;
@@ -319,11 +324,15 @@ public class MainPresenter {
         float view_x = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_X)));
         float view_y = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_Y)));
         int color = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_COLOR)));
+        int colorPos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.SPINNER_COLOR_POS)));
+        int typePos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE_POS)));
         button.setId(view_id);
         button.setText(view_text);
         button.setX(view_x);
         button.setY(view_y);
         button.setBackgroundColor(color);
+        button.setColorPos(colorPos);
+        button.setTypePos(typePos);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) button.getLayoutParams();
         params.width = view_width;
         params.height = view_height;
@@ -347,11 +356,15 @@ public class MainPresenter {
         float view_x = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_X)));
         float view_y = Float.parseFloat(cursor.getString(cursor.getColumnIndex(Constants.VIEW_Y)));
         int color = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_COLOR)));
+        int colorPos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.SPINNER_COLOR_POS)));
+        int typePos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE_POS)));
         button.setId(view_id);
         button.setText(view_text);
         button.setX(view_x);
         button.setY(view_y);
         button.setBackgroundColor(color);
+        button.setColorPos(colorPos);
+        button.setTypePos(typePos);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) button.getLayoutParams();
         params.width = view_width;
         params.height = view_height;

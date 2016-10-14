@@ -15,9 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -34,6 +32,7 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 public class MainActivity extends AppCompatActivity implements IMainView, OnBindViewIdChangedListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     /**
      * request code to start DeviceListActivity to connect bluetooth in secure way
      */
@@ -133,6 +132,15 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     for (int i = 0; i < mFrameLayout.getChildCount(); i++) {
                         View view = mFrameLayout.getChildAt(i);
                         view.setOnTouchListener(mTouchListener);
+                        if(view instanceof StupidButtonSend){
+                            view.setOnClickListener(mButtonSendListener);
+                        }else if(view instanceof StupidButtonReceive){
+                            view.setOnClickListener(mButtonReceiveListener);
+                        }else if(view instanceof StupidTextView){
+                            ((StupidTextView) view).setBindViewListener(MainActivity.this);
+                        }else if(view instanceof StupidEditText){
+                            ((StupidEditText) view).setBindViewListener(MainActivity.this);
+                        }
                     }
                 }
         }
@@ -183,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         stupidTextView.setId(viewIndex++);
         stupidTextView.setText("ID: " + stupidTextView.getId());
         stupidTextView.setOnTouchListener(mTouchListener);
-        stupidTextView.setBindviewListener(this);
+        stupidTextView.setBindViewListener(this);
         mFrameLayout.addView(stupidTextView);
         Log.i("StupidTextViewID ", stupidTextView.getId() + "");
     }
@@ -213,10 +221,19 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     @Override
     public void onBindViewIdChanged(int other, int self) {
         View view = getViewById(self);
+        View view1 = getViewById(other);
         if (view instanceof StupidTextView) {
-            mPresenter.bindTextViewById(other, self);
+            if (view1 instanceof StupidButtonReceive) {
+                mPresenter.bindTextViewById(other, self);
+                Log.v(TAG, "bind text view success");
+            } else
+                Toast.makeText(MainActivity.this, "文本框只能绑定接收类型的按钮～", Toast.LENGTH_SHORT).show();
         } else if (view instanceof StupidEditText) {
-            mPresenter.bindEditTextById(other, self);
+            if (view1 instanceof StupidButtonSend) {
+                mPresenter.bindEditTextById(other, self);
+                Log.v(TAG, "bind edit text success");
+            } else
+                Toast.makeText(MainActivity.this, "编辑框只能绑定发送类型的按钮～", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -394,18 +411,19 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                 StupidButtonSend button = (StupidButtonSend) view;
 
                 if (button.getDataType() != null) {
-                    if (button.getBindEditText() != null) {
-                        mPresenter.sendDataOverButton(button.getDataType(), button.getBindEditText().getText().toString());
-                        if (button.getBindTextView() != null) {
-                            button.getBindTextView().append("\n" + button.getBindEditText().getText().toString());
-                        }
-                        Toast.makeText(MainActivity.this, "数据发送成功", Toast.LENGTH_SHORT).show();
+                    StupidEditText v = button.getBindView();
+                    if (v != null) {
+                        mPresenter.sendDataOverButton(button.getDataType(), v.getText().toString());
+                        v.setText(null);
+
                     } else {
-                        Toast.makeText(MainActivity.this, "请设置一个编辑框并且输入要发送的信息", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "该按钮需要绑定一个编辑框～", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(MainActivity.this, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
                 }
+
+                Log.v(TAG, "Button Send Clicked, ID: " + view.getId());
             }
         };
 
@@ -415,16 +433,19 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             public void onClick(View view) {
                 StupidButtonReceive button = (StupidButtonReceive) view;
                 if (button.getDataType() != null) {
-                    String s = mPresenter.receiveDataOverButton(button.getDataType());
-                    if (button.getBindTextView() != null) {
-                        button.getBindTextView().append("\n" + s);
-                        Toast.makeText(MainActivity.this, "数据接收成功", Toast.LENGTH_SHORT).show();
+                    StupidTextView v = button.getBindView();
+                    if (v != null) {
+
+                        String s = mPresenter.receiveDataOverButton(button.getDataType());
+                        v.append("\n" + s);
+
                     } else {
-                        Toast.makeText(MainActivity.this, "数据接收成功: " + s, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "该按钮需要绑定一个文本框～", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(MainActivity.this, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
                 }
+                Log.v(TAG, "Button Receive Clicked, ID: " + view.getId());
             }
         };
 

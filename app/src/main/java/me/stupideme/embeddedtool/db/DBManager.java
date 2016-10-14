@@ -79,8 +79,14 @@ public class DBManager {
         db.delete(TABLE_TEMPLATES, "template_name = ?", new String[]{templateName});
     }
 
+    public void deleteAllTemplates() {
+        db.execSQL("DELETE FROM " + TABLE_TEMPLATES);
+        String sql = "UPDATE SQLITE_SEQUENCE SET SEQ = 0 WHERE NAME = '" + TABLE_TEMPLATES + "\'";
+        db.execSQL(sql);
+    }
+
     public Cursor queryAllTemplateName() {
-        return db.rawQuery("SELECT template_name FROM " + TABLE_TEMPLATES + " where _id >= ?", new String[]{"0"});
+        return db.rawQuery("SELECT DISTINCT template_name FROM " + TABLE_TEMPLATES + " where _id >= ?", new String[]{"0"});
     }
 
     /**

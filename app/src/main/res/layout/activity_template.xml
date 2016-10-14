@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_template"
     android:layout_width="match_parent"
@@ -10,12 +10,13 @@
     <include layout="@layout/toolbar" />
 
     <ListView
-        android:dividerHeight="3dp"
-        android:footerDividersEnabled="true"
         android:id="@+id/template_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_marginTop="?attr/actionBarSize"
+        android:dividerHeight="3dp"
+        android:footerDividersEnabled="true"
+        >
 
     </ListView>
 
@@ -24,9 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:text="这里看起来\n似乎空空如也～"
+        android:text="@string/template_list_empty_text"
         android:textSize="24sp" />
 
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 
 /**
@@ -24,7 +25,8 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
     private EditText width;
     private EditText height;
     private EditText bindId;
-    private int colour;
+    private Spinner color;
+    private int mColorPos;
 
     private Map<String, String> map = new HashMap<>();
 
@@ -36,7 +38,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         width = (EditText) findViewById(R.id.stupid_text_view_dialog_et_width);
         height = (EditText) findViewById(R.id.stupid_text_view_dialog_et_height);
         bindId = (EditText) findViewById(R.id.stupid_text_view_dialog_et_bind);
-        Spinner color = (Spinner) findViewById(R.id.stupid_text_view_dialog_spinner_color);
+        color = (Spinner) findViewById(R.id.stupid_text_view_dialog_spinner_color);
         Button delete = (Button) findViewById(R.id.stupid_text_view_dialog_button_delete);
         Button cancel = (Button) findViewById(R.id.stupid_text_view_dialog_button_cancel);
         Button ok = (Button) findViewById(R.id.stupid_text_view_dialog_button_ok);
@@ -48,7 +50,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                colour = i;
+                mColorPos = i;
             }
 
             @Override
@@ -57,16 +59,24 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         });
     }
 
-    public void showTextViewId(int viewId) {
+    void showTextViewId(int viewId) {
         id.setText(viewId + "");
     }
 
-    public void showTextViewWidth(int w) {
+    void showTextViewWidth(int w) {
         width.setText(w + "");
     }
 
-    public void showTextViewHeight(int h) {
+    void showTextViewHeight(int h) {
         height.setText(h + "");
+    }
+
+    void showBindViewId(int id) {
+        bindId.setText(id + "");
+    }
+
+    void showSpinnerColor(int i) {
+        color.setSelection(i, true);
     }
 
     @Override
@@ -80,16 +90,16 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
                 break;
             case R.id.stupid_text_view_dialog_button_ok:
                 if (!id.getText().toString().isEmpty()) {
-                    map.put("id", id.getText().toString());
+                    map.put(Constants.KEY_ID, id.getText().toString());
                 }
                 if (!width.getText().toString().isEmpty())
-                    map.put("width", width.getText().toString());
+                    map.put(Constants.KEY_WIDTH, width.getText().toString());
                 if (!height.getText().toString().isEmpty())
-                    map.put("height", height.getText().toString());
+                    map.put(Constants.KEY_HEIGHT, height.getText().toString());
                 if (!bindId.getText().toString().isEmpty()) {
-                    map.put("bind_view_id", bindId.getText().toString());
+                    map.put(Constants.KEY_BIND_VIEW_ID, bindId.getText().toString());
                 }
-                map.put("color", colour + "");
+                map.put(Constants.KEY_COLOR_POS, mColorPos + "");
                 mListener.onSave(map);
                 break;
         }

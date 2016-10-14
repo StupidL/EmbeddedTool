@@ -14,7 +14,7 @@ public class DevicePagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragmentList;
     private String[] tabTitles = new String[]{"已配对设备","未配对设备"};
 
-    public DevicePagerAdapter(FragmentManager fm, List<Fragment> list) {
+    DevicePagerAdapter(FragmentManager fm, List<Fragment> list) {
         super(fm);
         fragmentList = list;
     }

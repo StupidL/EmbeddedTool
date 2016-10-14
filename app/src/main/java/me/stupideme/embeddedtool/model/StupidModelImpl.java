@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import me.stupideme.embeddedtool.App;
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.db.DBManager;
@@ -100,7 +101,8 @@ public class StupidModelImpl implements IStupidModel {
     public StupidModelImpl(Context context) {
         mService = new BluetoothService(mHandler);
         mContext = context;
-        mManager = DBManager.getInstance(context);
+//        mManager = DBManager.getInstance(context);
+        mManager = App.manager;
     }
 
     @Override
@@ -133,6 +135,7 @@ public class StupidModelImpl implements IStupidModel {
         values.put(Constants.TEMPLATE_NAME, name);
         values.put(Constants.VIEW_ID, view.getId());
         values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_BUTTON_SEND);
+        values.put(Constants.VIEW_TYPE_POS,view.getTypePos());
         values.put(Constants.HAS_BIND_VIEW, Constants.HAS_BIND_VIEW_INVALID);
         values.put(Constants.BIND_VIEW_ID, Constants.HAS_BIND_VIEW_INVALID);
         values.put(Constants.VIEW_TEXT, view.getText().toString());
@@ -141,6 +144,7 @@ public class StupidModelImpl implements IStupidModel {
         values.put(Constants.VIEW_X, view.getX());
         values.put(Constants.VIEW_Y, view.getY());
         values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS,view.getColorPos());
         mManager.insertSendButton(values);
     }
 
@@ -150,6 +154,7 @@ public class StupidModelImpl implements IStupidModel {
         values.put(Constants.TEMPLATE_NAME, name);
         values.put(Constants.VIEW_ID, view.getId());
         values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_BUTTON_RECEIVE);
+        values.put(Constants.VIEW_TYPE_POS,view.getTypePos());
         values.put(Constants.HAS_BIND_VIEW, Constants.HAS_BIND_VIEW_INVALID);
         values.put(Constants.BIND_VIEW_ID, Constants.HAS_BIND_VIEW_INVALID);
         values.put(Constants.VIEW_TEXT, view.getText().toString());
@@ -158,6 +163,7 @@ public class StupidModelImpl implements IStupidModel {
         values.put(Constants.VIEW_X, view.getX());
         values.put(Constants.VIEW_Y, view.getY());
         values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS,view.getColorPos());
         mManager.insertReceiveButton(values);
     }
 
@@ -175,6 +181,7 @@ public class StupidModelImpl implements IStupidModel {
         values.put(Constants.VIEW_X, view.getX());
         values.put(Constants.VIEW_Y, view.getY());
         values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS,view.getColorPos());
         mManager.insertReceiveButton(values);
     }
 
@@ -192,6 +199,7 @@ public class StupidModelImpl implements IStupidModel {
         values.put(Constants.VIEW_X, view.getX());
         values.put(Constants.VIEW_Y, view.getY());
         values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS,view.getColorPos());
         mManager.insertReceiveButton(values);
     }
 

@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 
 /**
@@ -25,7 +26,8 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
     private EditText height;
     private EditText bindId;
     private EditText id;
-    private int colour;
+    private Spinner color;
+    private int mColorPos;
 
     public StupidEditTextDialog(final Context context, StupidEditTextDialogListener listener) {
         super(context);
@@ -35,12 +37,12 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
         height = (EditText) findViewById(R.id.stupid_et_dialog_et_height);
         bindId = (EditText) findViewById(R.id.stupid_et_dialog_et_bind);
         id = (EditText) findViewById(R.id.stupid_et_dialog_et_id);
-        final Spinner color = (Spinner) findViewById(R.id.stupid_et_dialog_spinner_color);
+        color = (Spinner) findViewById(R.id.stupid_et_dialog_spinner_color);
 
         color.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                colour = i;
+                mColorPos = i;
             }
 
             @Override
@@ -69,6 +71,14 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
         id.setText(i + "");
     }
 
+    void showSpinnerColor(int i) {
+        color.setSelection(i, true);
+    }
+
+    void showBindViewId(int id) {
+        bindId.setText(id + "");
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -80,14 +90,14 @@ public class StupidEditTextDialog extends Dialog implements View.OnClickListener
                 break;
             case R.id.stupid_et_dialog_button_ok:
                 if (!width.getText().toString().isEmpty())
-                    map.put("width", width.getText().toString());
+                    map.put(Constants.KEY_WIDTH, width.getText().toString());
                 if (!height.getText().toString().isEmpty())
-                    map.put("height", height.getText().toString());
+                    map.put(Constants.KEY_HEIGHT, height.getText().toString());
                 if (!bindId.getText().toString().isEmpty())
-                    map.put("bind_view_id", bindId.getText().toString());
+                    map.put(Constants.KEY_BIND_VIEW_ID, bindId.getText().toString());
                 if (!id.getText().toString().isEmpty())
-                    map.put("id", id.getText().toString());
-                map.put("color", colour + "");
+                    map.put(Constants.KEY_ID, id.getText().toString());
+                map.put(Constants.KEY_COLOR_POS, mColorPos + "");
                 mListener.onSave(map);
                 break;
         }

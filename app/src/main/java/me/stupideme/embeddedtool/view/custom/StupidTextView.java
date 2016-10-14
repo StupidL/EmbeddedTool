@@ -22,6 +22,7 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
     private OnBindViewIdChangedListener mBindViewListener;
     private int mBackgroundColor = getResources().getColor(R.color.Gray);
     private int mBindViewId = -1;
+    private int mColorPos = -1;
 
     public StupidTextView(Context context) {
         super(context);
@@ -45,6 +46,8 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
                 mDialog.showTextViewId(getId());
                 mDialog.showTextViewWidth(getWidth());
                 mDialog.showTextViewHeight(getHeight());
+                mDialog.showBindViewId(mBindViewId);
+                mDialog.showSpinnerColor(mColorPos);
                 mDialog.show();
                 return false;
             }
@@ -52,7 +55,7 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
         setPadding(16, 16, 16, 16);
     }
 
-    public void setBindviewListener(OnBindViewIdChangedListener listener){
+    public void setBindViewListener(OnBindViewIdChangedListener listener) {
         mBindViewListener = listener;
     }
 
@@ -66,6 +69,18 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
 
     public int getBindViewId() {
         return mBindViewId;
+    }
+
+    public void setBindViewId(int id){
+        mBindViewId = id;
+    }
+
+    public int getColorPos() {
+        return mColorPos;
+    }
+
+    public void setColorPos(int i) {
+        mColorPos = i;
     }
 
     @Override
@@ -83,24 +98,29 @@ public class StupidTextView extends TextView implements StupidTextViewDialog.Stu
     public void onSave(Map<String, String> map) {
         mDialog.dismiss();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
-        if (map.containsKey("id")) {
-            setId(Integer.parseInt(map.get("id")));
+        if (map.containsKey(Constants.KEY_ID)) {
+            setId(Integer.parseInt(map.get(Constants.KEY_ID)));
         }
-        if (map.containsKey("width")) {
-            params.width = Integer.parseInt(map.get("width"));
+        if (map.containsKey(Constants.KEY_WIDTH)) {
+            params.width = Integer.parseInt(map.get(Constants.KEY_WIDTH));
             setLayoutParams(params);
         }
-        if (map.containsKey("height")) {
-            params.height = Integer.parseInt(map.get("height"));
+        if (map.containsKey(Constants.KEY_HEIGHT)) {
+            params.height = Integer.parseInt(map.get(Constants.KEY_HEIGHT));
             setLayoutParams(params);
         }
-        if (map.containsKey("bind_view_id")) {
-            mBindViewId = Integer.parseInt(map.get("bind_view_id"));
-            mBindViewListener.onBindViewIdChanged(mBindViewId, getId());
+        if (map.containsKey(Constants.KEY_BIND_VIEW_ID)) {
+            mBindViewId = Integer.parseInt(map.get(Constants.KEY_BIND_VIEW_ID));
+            if (mBindViewId != -1) {
+                mBindViewListener.onBindViewIdChanged(mBindViewId, getId());
+            }
         }
-        int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
-        setBackgroundColor(color);
-        mBackgroundColor = color;
+        if(map.containsKey(Constants.KEY_COLOR_POS)) {
+            mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));
+            int color = getResources().getColor(Constants.mColors[mColorPos]);
+            setBackgroundColor(color);
+            mBackgroundColor = color;
+        }
     }
 
 }
