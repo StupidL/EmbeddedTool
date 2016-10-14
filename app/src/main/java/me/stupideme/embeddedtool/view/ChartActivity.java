@@ -29,13 +29,15 @@ import java.util.Map;
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
+import me.stupideme.embeddedtool.model.StupidObserver;
 import me.stupideme.embeddedtool.view.custom.StupidChartViewDialog;
 
 /**
  * Created by StupidL on 2016/10/3.
  */
 
-public class ChartActivity extends AppCompatActivity implements OnChartValueSelectedListener, StupidChartViewDialog.StupidChartDialogListener {
+public class ChartActivity extends AppCompatActivity implements OnChartValueSelectedListener,
+        StupidChartViewDialog.StupidChartDialogListener,StupidObserver {
 
     private StupidChartViewDialog mDialog;
     private FrameLayout mFrameLayout;
@@ -298,16 +300,21 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
         mChart.setBackgroundColor(color);
         mFrameLayout.setBackgroundColor(color);
-        if (map.containsKey("MaxX"))
-            xAxis.setAxisMaxValue(Integer.parseInt(map.get("MaxX")));
-        if (map.containsKey("MaxY"))
-            yAxis.setAxisMaxValue(Integer.parseInt(map.get("MaxY")));
-        if (map.containsKey("MinX"))
-            xAxis.setAxisMinValue(Integer.parseInt(map.get("MinX")));
-        if (map.containsKey("MinY"))
-            yAxis.setAxisMinValue(Integer.parseInt(map.get("MinY")));
+        if (map.containsKey(Constants.KEY_MAX_X))
+            xAxis.setAxisMaxValue(Integer.parseInt(map.get(Constants.KEY_MAX_X)));
+        if (map.containsKey(Constants.KEY_MAX_Y))
+            yAxis.setAxisMaxValue(Integer.parseInt(map.get(Constants.KEY_MAX_Y)));
+        if (map.containsKey(Constants.KEY_MIN_X))
+            xAxis.setAxisMinValue(Integer.parseInt(map.get(Constants.KEY_MIN_X)));
+        if (map.containsKey(Constants.KEY_MIN_Y))
+            yAxis.setAxisMinValue(Integer.parseInt(map.get(Constants.KEY_MIN_Y)));
         mChart.notifyDataSetChanged();
         // todo: handle type
+
+    }
+
+    @Override
+    public void receiveMessage(String msg) {
 
     }
 }

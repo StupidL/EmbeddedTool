@@ -2,6 +2,7 @@ package me.stupideme.embeddedtool.presenter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -10,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.model.IStupidModel;
+import me.stupideme.embeddedtool.model.MessageObservable;
 import me.stupideme.embeddedtool.model.StupidModelImpl;
 import me.stupideme.embeddedtool.view.IMainView;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
@@ -27,24 +28,46 @@ public class MainPresenter {
 
     //debug
     private static final String TAG = MainPresenter.class.getSimpleName();
+
+    /**
+     * a reference of IStupidModel(StupidModelImpl)
+     */
     private IStupidModel iStupidModel;
+
+    /**
+     * a reference of IMainView(MainActivity)
+     */
     private IMainView iMainView;
 
-
+    /**
+     * a map to save text views' id pairs, so we can
+     * bind view by id after all of the views are created.
+     */
     private Map<String, String> mTextViewMap = new HashMap<>();
+
+    /**
+     * a map to save edit text views' id pairs, so we can
+     * bind view by id after all of the views are created.
+     */
     private Map<String, String> mEditTextMap = new HashMap<>();
 
     /**
      * constructor
      *
      * @param view    MainActivity
-     * @param context context passed to IStupidModel
      */
-    public MainPresenter(IMainView view, Context context) {
+    public MainPresenter(IMainView view) {
         iMainView = view;
-        iStupidModel = new StupidModelImpl(context);
+        iStupidModel = new StupidModelImpl();
     }
 
+    /**
+     * set handler for bluetooth service in model
+     * @param handler handler
+     */
+    public void setHandler(Handler handler){
+        ((StupidModelImpl)iStupidModel).setHandler(handler);
+    }
     /**
      * connect device by bluetooth address in the secure or insecure way
      *
@@ -96,27 +119,44 @@ public class MainPresenter {
     }
 
     /**
-     * send data by a send type button
-     *
-     * @param type data's type
-     * @param s    string data to be send
+     * set listener for button to listen button's onclick event
+     * @param view button
      */
-    public void sendDataOverButton(DataType type, String s) {
-        iStupidModel.sendDataOverButton(type, s);
-        Log.i(TAG, "send data over button " + "(" + type + ", " + s + ")");
+    public void setSendMessageListenerForButton(StupidButtonSend view) {
+        view.setSendMessageListener((StupidModelImpl) iStupidModel);
     }
 
     /**
-     * receive data over a receive type button
-     *
-     * @param type data's type
-     * @return string data that received
+     * set listener for button to listen button's onclick event
+     * @param view button
      */
-    public String receiveDataOverButton(DataType type) {
-        Log.i(TAG, "receive data over button " + "(" + type + ")");
-        return iStupidModel.receiveDataOverButton(type);
+    public void setSendMessageListenerForButton(StupidButtonReceive view) {
+        view.setSendMessageListener((StupidModelImpl) iStupidModel);
     }
 
+    /**
+     * attach observer
+     * @param view observer
+     */
+    public void attachObserver(StupidButtonReceive view) {
+        ((MessageObservable) iStupidModel).attach(view);
+    }
+
+    /**
+     * detach observer
+     * @param view observer
+     */
+    public void detachObserver(StupidButtonReceive view) {
+        ((MessageObservable) iStupidModel).detach(view);
+    }
+
+    /**
+     * notify observers
+     * @param msg msg received from bluetooth
+     */
+    public void notifyObservers(String msg){
+        ((MessageObservable)iStupidModel).notifyObservers(msg);
+    }
     /**
      * button bind a text view by id
      *
@@ -126,8 +166,13 @@ public class MainPresenter {
      */
     public int bindTextViewById(int other, int self) {
         Log.i(TAG, "bind text view by id " + "(other: " + other + ", self: " + self + ")");
-        StupidButtonReceive button = (StupidButtonReceive) iMainView.getViewById(other);
-        button.setBindView((StupidTextView) iMainView.getViewById(self));
+        View view = iMainView.getViewById(other);
+        StupidTextView v = (StupidTextView) iMainView.getViewById(self);
+        if (view instanceof StupidButtonSend) {
+            ((StupidButtonSend) view).setBindTextView(v);
+        } else if (view instanceof StupidButtonReceive) {
+            ((StupidButtonReceive) view).setBindView(v);
+        }
         return 1;
     }
 
@@ -185,7 +230,12 @@ public class MainPresenter {
         createFromTemplate(layout, templateName, context);
     }
 
-
+    /**
+     * create views from template
+     * @param frameLayout container to contain views
+     * @param templateName name of template
+     * @param context context
+     */
     private void createFromTemplate(FrameLayout frameLayout, String templateName, Context context) {
         Cursor cursor = iStupidModel.queryTemplate(templateName);
         cursor.moveToFirst();

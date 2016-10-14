@@ -87,7 +87,7 @@ public class BluetoothService {
         Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
 
-        // Give the new state to the Handler so the UI Activity can update
+        // Give the new state to the Handler so the UI Activity can receiveMessage
         mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
 

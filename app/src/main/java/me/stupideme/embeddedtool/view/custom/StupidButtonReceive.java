@@ -6,18 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
+import me.stupideme.embeddedtool.model.StupidObserver;
+import me.stupideme.embeddedtool.view.MainActivity;
 
 /**
  * Created by StupidL on 2016/9/30.
  */
 
-public class StupidButtonReceive extends Button implements StupidButtonDialog.StupidButtonDialogListener {
+public class StupidButtonReceive extends Button implements
+        StupidButtonDialog.StupidButtonDialogListener, StupidObserver {
 
     //debug
     private static final String TAG = StupidButtonReceive.class.getSimpleName();
@@ -52,7 +56,9 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
      */
     private int mColorPos = -1;
 
-    public StupidButtonReceive(Context context) {
+    private OnSendMessageListener mSendMessageListener;
+
+    public StupidButtonReceive(final Context context) {
         super(context);
 
         mDialog = new StupidButtonDialog(context, this);
@@ -79,10 +85,41 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
             }
         });
 
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getDataType() != null) {
+                    if (getBindView() != null) {
+                        //============================================================
+                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_RECEIVE,
+                                getDataType(), String.valueOf(Constants.MESSAGE_BODY_EMPTY));
+                        getBindView().append("\n" + "Waiting...");
+                        //============================================================
+                    } else {
+                        Toast.makeText(context, "该按钮需要绑定一个文本框～", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    public void setSendMessageListener(OnSendMessageListener listener) {
+        mSendMessageListener = listener;
+    }
+
+    @Override
+    public void receiveMessage(String msg) {
+        if (mBindView != null) {
+            mBindView.append("\n" + msg);
+        }
     }
 
     /**
      * getter of background color
+     *
      * @return background color
      */
     public int getBackgroundColor() {
@@ -91,6 +128,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * setter of color position
+     *
      * @param i position
      */
     public void setColorPos(int i) {
@@ -99,6 +137,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * getter of color position
+     *
      * @return position
      */
     public int getColorPos() {
@@ -107,6 +146,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * setter of type position
+     *
      * @param pos position
      */
     public void setTypePos(int pos) {
@@ -118,6 +158,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * getter of type position
+     *
      * @return position
      */
     public int getTypePos() {
@@ -126,6 +167,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * getter of data type
+     *
      * @return data type
      */
     public DataType getDataType() {
@@ -134,6 +176,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * setter of data type
+     *
      * @param mDataType data type
      */
     public void setDataType(DataType mDataType) {
@@ -142,6 +185,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * getter of bind view
+     *
      * @return the bind view
      */
     public StupidTextView getBindView() {
@@ -150,6 +194,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
 
     /**
      * setter of bind view
+     *
      * @param mBindView the view to bind
      */
     public void setBindView(StupidTextView mBindView) {
@@ -160,6 +205,7 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
     public void onDelete() {
         mDialog.dismiss();
         mBindView = null;
+        mSendMessageListener = null;
         ((FrameLayout) getParent()).removeView(this);
     }
 
@@ -195,11 +241,6 @@ public class StupidButtonReceive extends Button implements StupidButtonDialog.St
     @Override
     public void onCancel() {
         mDialog.dismiss();
-    }
-
-    @Override
-    public String toString() {
-        return "Iam Stupid Receive Button";
     }
 
 }

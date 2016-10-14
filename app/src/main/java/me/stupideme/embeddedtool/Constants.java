@@ -15,6 +15,10 @@ public class Constants {
     public static final int BUTTON_TYPE_SEND = 0x10;
     public static final int BUTTON_TYPE_RECEIVE = 0x11;
 
+    public static final int REQUEST_CODE_SEND = 0x01;
+    public static final int REQUEST_CODE_RECEIVE = 0x10;
+    public static final int MESSAGE_BODY_EMPTY = 0x00000000;
+
     // Message types sent from the BluetoothService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;
@@ -57,5 +61,9 @@ public class Constants {
     public static final String KEY_TYPE_POS = "type";
     public static final String KEY_COLOR_POS = "color";
     public static final String KEY_BIND_VIEW_ID = "bind_view_id";
+    public static final String KEY_MAX_X = "MaxX";
+    public static final String KEY_MAX_Y = "MaxY";
+    public static final String KEY_MIN_X = "MinX";
+    public static final String KEY_MIN_Y = "MinY";
 
 }

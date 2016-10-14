@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -21,7 +23,9 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
+import me.stupideme.embeddedtool.net.BluetoothService;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 import me.stupideme.embeddedtool.view.bluetooth.DeviceListActivity;
 import me.stupideme.embeddedtool.view.custom.OnBindViewIdChangedListener;
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
      */
     public static MainPresenter mPresenter;
 
+    private Handler mHandler;
+
     /**
      * a frame layout to container all of the views such as a Send Button, a Receive button
      */
@@ -67,17 +73,6 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
      * a touch listener to implements move event
      */
     private View.OnTouchListener mTouchListener;
-
-    /**
-     * onclick listener to send type button
-     */
-    private View.OnClickListener mButtonSendListener;
-
-    /**
-     * onclick listener to receive type button
-     */
-    private View.OnClickListener mButtonReceiveListener;
-
 
     /**
      * id of every single view added to container
@@ -90,9 +85,11 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         setContentView(R.layout.activity_main);
 
         //init presenter
-        mPresenter = new MainPresenter(this, this);
+        mPresenter = new MainPresenter(this);
         //init view
         initView();
+        //set handler for bluetooth service in model
+        mPresenter.setHandler(mHandler);
 
     }
 
@@ -132,13 +129,13 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     for (int i = 0; i < mFrameLayout.getChildCount(); i++) {
                         View view = mFrameLayout.getChildAt(i);
                         view.setOnTouchListener(mTouchListener);
-                        if(view instanceof StupidButtonSend){
-                            view.setOnClickListener(mButtonSendListener);
-                        }else if(view instanceof StupidButtonReceive){
-                            view.setOnClickListener(mButtonReceiveListener);
-                        }else if(view instanceof StupidTextView){
+                        if (view instanceof StupidButtonSend) {
+                            mPresenter.setSendMessageListenerForButton((StupidButtonSend) view);
+                        } else if (view instanceof StupidButtonReceive) {
+                            mPresenter.setSendMessageListenerForButton((StupidButtonReceive) view);
+                        } else if (view instanceof StupidTextView) {
                             ((StupidTextView) view).setBindViewListener(MainActivity.this);
-                        }else if(view instanceof StupidEditText){
+                        } else if (view instanceof StupidEditText) {
                             ((StupidEditText) view).setBindViewListener(MainActivity.this);
                         }
                     }
@@ -146,15 +143,15 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-//            // if bluetooth is not enabled, request to enable it.
-//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-//        }
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            // if bluetooth is not enabled, request to enable it.
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
+    }
 
 
     /**
@@ -166,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         stupidButtonSend.setId(viewIndex++);
         stupidButtonSend.setText("Button" + stupidButtonSend.getId());
         stupidButtonSend.setOnTouchListener(mTouchListener);
-        stupidButtonSend.setOnClickListener(mButtonSendListener);
+        mPresenter.setSendMessageListenerForButton(stupidButtonSend);
         mFrameLayout.addView(stupidButtonSend);
         Log.i("StupidSendBtnID: ", stupidButtonSend.getId() + "");
     }
@@ -180,7 +177,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         button.setId(viewIndex++);
         button.setText("Button" + button.getId());
         button.setOnTouchListener(mTouchListener);
-        button.setOnClickListener(mButtonReceiveListener);
+        mPresenter.setSendMessageListenerForButton(button);
+        mPresenter.attachObserver(button);
         mFrameLayout.addView(button);
         Log.i("StupidReceiveBtnID: ", button.getId() + "");
     }
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     public void addTextView() {
         StupidTextView stupidTextView = new StupidTextView(this);
         stupidTextView.setId(viewIndex++);
-        stupidTextView.setText("ID: " + stupidTextView.getId());
+        stupidTextView.setText("TextView ID: " + stupidTextView.getId());
         stupidTextView.setOnTouchListener(mTouchListener);
         stupidTextView.setBindViewListener(this);
         mFrameLayout.addView(stupidTextView);
@@ -202,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         editText.setOnTouchListener(mTouchListener);
         editText.setBindViewListener(this);
         editText.setId(viewIndex++);
-        editText.setText("ID: " + editText.getId());
+        editText.setText("EditText ID: " + editText.getId());
         mFrameLayout.addView(editText);
         Log.v("StupidEditTextID ", editText.getId() + "");
     }
@@ -223,11 +221,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         View view = getViewById(self);
         View view1 = getViewById(other);
         if (view instanceof StupidTextView) {
-            if (view1 instanceof StupidButtonReceive) {
-                mPresenter.bindTextViewById(other, self);
-                Log.v(TAG, "bind text view success");
-            } else
-                Toast.makeText(MainActivity.this, "文本框只能绑定接收类型的按钮～", Toast.LENGTH_SHORT).show();
+            mPresenter.bindTextViewById(other, self);
+            Log.v(TAG, "bind text view success");
         } else if (view instanceof StupidEditText) {
             if (view1 instanceof StupidButtonSend) {
                 mPresenter.bindEditTextById(other, self);
@@ -243,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     public void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        initListeners();
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_main);
         FloatingActionMenu menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
         FloatingActionButton sendButton = (FloatingActionButton) findViewById(R.id.fab_send_button);
@@ -282,6 +276,77 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                 startActivity(new Intent(MainActivity.this, ChartActivity.class));
             }
         });
+
+        // onTouchListener
+        mTouchListener = new View.OnTouchListener() {
+            float dX, dY;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        dX = view.getX() - event.getRawX();
+                        dY = view.getY() - event.getRawY();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        view.animate()
+                                .x(event.getRawX() + dX)
+                                .y(event.getRawY() + dY)
+                                .setDuration(0)
+                                .start();
+                        break;
+                    default:
+                        return false;
+                }
+                return false;
+            }
+        };
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+
+                switch (msg.what) {
+                    case Constants.MESSAGE_STATE_CHANGE:
+                        //receive this message when the connection status changed
+                        switch (msg.arg1) {
+                            case BluetoothService.STATE_CONNECTED:
+                                getSupportActionBar().setTitle("已连接设备" + mConnectedDeviceName);
+                                break;
+                            case BluetoothService.STATE_CONNECTING:
+                                getSupportActionBar().setTitle("正在连接设备......");
+                                break;
+                            case BluetoothService.STATE_LISTEN:
+                            case BluetoothService.STATE_NONE:
+                                getSupportActionBar().setTitle("嵌入式助手");
+                                break;
+                        }
+                        break;
+                    case Constants.MESSAGE_WRITE:
+
+                        break;
+                    case Constants.MESSAGE_READ:
+                        //receive this message when connected thread runs method run() successfully
+                        byte[] readBuf = (byte[]) msg.obj;
+                        //construct a string from the valid bytes in the buffer
+                        mPresenter.notifyObservers(new String(readBuf, 0, msg.arg1));
+
+                        break;
+                    case Constants.MESSAGE_DEVICE_NAME:
+                        //receive this message when connected a device
+                        Toast.makeText(MainActivity.this, "Connected to " + mConnectedDeviceName,
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case Constants.MESSAGE_TOAST:
+                        //receive this message when the connection failed or lost
+                        Toast.makeText(MainActivity.this, msg.getData().getString(Constants.TOAST),
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        };
     }
 
     /**
@@ -339,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             // create a dialog to save a template
             // you can add a name for this template
             TextInputLayout layout = new TextInputLayout(MainActivity.this);
-            layout.setPadding(16, 32, 16, 16);
+            layout.setPadding(32, 32, 32, 0);
             final TextInputEditText editText = new TextInputEditText(MainActivity.this);
             editText.setHint("保存的模板名称");
             layout.addView(editText);
@@ -348,7 +413,6 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     .setPositiveButton("保存", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            //// TODO: 16-10-9 save template to database or file
                             mPresenter.saveTemplate(mFrameLayout, editText.getText().toString());
                             Toast.makeText(MainActivity.this, "模板保存成功!", Toast.LENGTH_SHORT).show();
                         }
@@ -368,87 +432,6 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             startActivityForResult(new Intent(MainActivity.this, TemplateActivity.class), REQUEST_SELECT_TEMPLATE);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    /**
-     * init listeners. A view set mTouchListener as onTouchListener can be moved freely.
-     * but onTouchListener will trigger onClickListener and onLongClickListener, which is
-     * need to be resolved
-     */
-    public void initListeners() {
-        // onTouchListener
-        mTouchListener = new View.OnTouchListener() {
-            float dX, dY;
-
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        dX = view.getX() - event.getRawX();
-                        dY = view.getY() - event.getRawY();
-                        break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        view.animate()
-                                .x(event.getRawX() + dX)
-                                .y(event.getRawY() + dY)
-                                .setDuration(0)
-                                .start();
-                        break;
-                    default:
-                        return false;
-                }
-                return false;
-            }
-        };
-
-        // send type button onClickListener
-        mButtonSendListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                StupidButtonSend button = (StupidButtonSend) view;
-
-                if (button.getDataType() != null) {
-                    StupidEditText v = button.getBindView();
-                    if (v != null) {
-                        mPresenter.sendDataOverButton(button.getDataType(), v.getText().toString());
-                        v.setText(null);
-
-                    } else {
-                        Toast.makeText(MainActivity.this, "该按钮需要绑定一个编辑框～", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
-                }
-
-                Log.v(TAG, "Button Send Clicked, ID: " + view.getId());
-            }
-        };
-
-        // receive type button onClickListener
-        mButtonReceiveListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StupidButtonReceive button = (StupidButtonReceive) view;
-                if (button.getDataType() != null) {
-                    StupidTextView v = button.getBindView();
-                    if (v != null) {
-
-                        String s = mPresenter.receiveDataOverButton(button.getDataType());
-                        v.append("\n" + s);
-
-                    } else {
-                        Toast.makeText(MainActivity.this, "该按钮需要绑定一个文本框～", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
-                }
-                Log.v(TAG, "Button Receive Clicked, ID: " + view.getId());
-            }
-        };
-
     }
 
 }

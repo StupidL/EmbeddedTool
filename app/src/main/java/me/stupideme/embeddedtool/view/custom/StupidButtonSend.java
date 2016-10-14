@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -33,6 +34,8 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
      */
     private StupidEditText mBindView;
 
+    private StupidTextView mBindTextView;
+
     /**
      * data type to operate
      */
@@ -53,8 +56,11 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
      */
     private int mColorPos = -1;
 
-    public StupidButtonSend(Context context) {
+    private OnSendMessageListener mSendMessageListener;
+
+    public StupidButtonSend(final Context context) {
         super(context);
+
         mDialog = new StupidButtonDialog(context, this);
 
         setTextColor(Color.WHITE);
@@ -79,10 +85,34 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
             }
         });
 
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (getDataType() != null) {
+                    if (getBindView() != null) {
+                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND,
+                                getDataType(), getBindView().getText().toString());
+                        if (getBindTextView() != null)
+                            getBindTextView().append("\n" + getBindView().getText().toString());
+                        getBindView().setText(null);
+
+                    } else {
+                        Toast.makeText(context, "该按钮需要绑定一个编辑框～", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, "请先设置要操作的类型", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void setSendMessageListener(OnSendMessageListener listener) {
+        mSendMessageListener = listener;
     }
 
     /**
      * set color position in spinner
+     *
      * @param i position
      */
     public void setColorPos(int i) {
@@ -91,6 +121,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * get color position in spinner
+     *
      * @return position
      */
     public int getColorPos() {
@@ -99,6 +130,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * set data type position in spinner
+     *
      * @param pos position
      */
     public void setTypePos(int pos) {
@@ -109,6 +141,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * get data type position in spinner
+     *
      * @return data type position
      */
     public int getTypePos() {
@@ -117,6 +150,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * get data type
+     *
      * @return data type
      */
     public DataType getDataType() {
@@ -125,6 +159,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * set data type
+     *
      * @param mDataType data type
      */
     public void setDataType(DataType mDataType) {
@@ -134,6 +169,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * get bind view
+     *
      * @return the bind view
      */
     public StupidEditText getBindView() {
@@ -142,6 +178,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * set bind view
+     *
      * @param mBindView the view to bind
      */
     public void setBindView(StupidEditText mBindView) {
@@ -150,21 +187,26 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * get background color
+     *
      * @return background color
      */
     public int getBackgroundColor() {
         return mBackgroundColor;
     }
 
-    @Override
-    public String toString() {
-        return "I am Stupid Send Button";
+    public void setBindTextView(StupidTextView view) {
+        mBindTextView = view;
+    }
+
+    public StupidTextView getBindTextView() {
+        return mBindTextView;
     }
 
     @Override
     public void onDelete() {
         mDialog.dismiss();
         mBindView = null;
+        mSendMessageListener = null;
         FrameLayout frameLayout = (FrameLayout) getParent();
         frameLayout.removeView(this);
         Log.v("StupidSendButton ", "button removed");

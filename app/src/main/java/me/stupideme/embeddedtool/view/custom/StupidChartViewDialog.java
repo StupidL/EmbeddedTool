@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 
 /**
@@ -24,14 +25,13 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
     private EditText yMax;
     private EditText xMin;
     private EditText yMin;
-    private int type;
-    private int color;
+    private int typePos;
+    private int colorPos;
 
     public StupidChartViewDialog(Context context, StupidChartDialogListener listener) {
         super(context);
         mListener = listener;
         initView();
-
     }
 
     private void initView() {
@@ -50,7 +50,7 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
         mType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                type = i;
+                typePos = i;
             }
 
             @Override
@@ -61,7 +61,7 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
         mColor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                color = i;
+                colorPos = i;
             }
 
             @Override
@@ -80,16 +80,16 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
                 break;
             case R.id.stupid_chart_view_dialog_button_ok:
                 Map<String, String> map = new HashMap<>();
-                map.put("type", type + "");
-                map.put("color", color + "");
+                map.put(Constants.KEY_TYPE_POS, typePos + "");
+                map.put(Constants.KEY_COLOR_POS, colorPos + "");
                 if (!xMax.getText().toString().isEmpty())
-                    map.put("MaxX", xMax.getText().toString());
+                    map.put(Constants.KEY_MAX_X, xMax.getText().toString());
                 if (!yMax.getText().toString().isEmpty())
-                    map.put("MaxY", yMax.getText().toString());
+                    map.put(Constants.KEY_MAX_Y, yMax.getText().toString());
                 if (!yMin.getText().toString().isEmpty())
-                    map.put("MinY", yMin.getText().toString());
+                    map.put(Constants.KEY_MIN_Y, yMin.getText().toString());
                 if (!xMin.getText().toString().isEmpty())
-                    map.put("MinX", xMin.getText().toString());
+                    map.put(Constants.KEY_MIN_X, xMin.getText().toString());
                 mListener.onSave(map);
                 break;
         }

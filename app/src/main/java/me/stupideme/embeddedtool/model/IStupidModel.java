@@ -15,22 +15,6 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
 public interface IStupidModel {
 
     /**
-     * send data over send type button
-     *
-     * @param type data type
-     * @param s    content
-     */
-    void sendDataOverButton(DataType type, String s);
-
-    /**
-     * receive data over receive type button
-     *
-     * @param type data type
-     * @return content
-     */
-    String receiveDataOverButton(DataType type);
-
-    /**
      * connect to device by address in secure or insecure way
      *
      * @param address address of bluetooth

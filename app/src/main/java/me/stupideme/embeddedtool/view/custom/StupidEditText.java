@@ -31,12 +31,10 @@ public class StupidEditText extends EditText implements StupidEditTextDialog.Stu
 
         mDialog = new StupidEditTextDialog(context, this);
 
-        setMaxLines(10);
-        setLines(1);
         setTextColor(Color.WHITE);
         setBackgroundColor(getResources().getColor(R.color.Gray));
         setWidth(800);
-        setHeight(100);
+        setHeight(200);
         setTextSize(18);
         setPadding(16, 16, 16, 16);
         setGravity(Gravity.NO_GRAVITY);
