@@ -7,7 +7,7 @@
         android:id="@+id/action_clear"
         android:orderInCategory="80"
         android:title="@string/clear_all"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_save_template"
         android:icon="@drawable/ic_save_white_24dp"
@@ -15,22 +15,29 @@
         android:title="@string/save_template"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_bluetooth_secure"
-        android:orderInCategory="80"
-        android:title="@string/bluetooth_secure"
-        app:showAsAction="never" />
+        android:id="@+id/action_bluetooth"
+        android:title="@string/bluetooth">
+        <menu>
+            <item
+                android:id="@+id/action_bluetooth_secure"
+                android:orderInCategory="80"
+                android:title="@string/bluetooth_secure"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_bluetooth_insecure"
-        android:orderInCategory="90"
-        android:title="@string/bluetooth_insecure"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_bluetooth_insecure"
+                android:orderInCategory="90"
+                android:title="@string/bluetooth_insecure"
+                app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_bluetooth_discoverable"
-        android:orderInCategory="90"
-        android:title="@string/bluetooth_discoverable"
-        app:showAsAction="never" />
+            <item
+                android:id="@+id/action_bluetooth_discoverable"
+                android:orderInCategory="90"
+                android:title="@string/bluetooth_discoverable"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
     <item
         android:id="@+id/action_select_template"
         android:orderInCategory="90"

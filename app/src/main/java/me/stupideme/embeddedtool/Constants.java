@@ -8,15 +8,11 @@ public class Constants {
     public static final int[] mColors = {R.color.Gray, R.color.Purple, R.color.Indigo, R.color.Teal,
             R.color.Orange, R.color.Brown, R.color.BlueGray};
 
-    public static final DataType[] mButtonTypes = {DataType.LED, DataType.BUZZER, DataType.TEMPERATURE};
-
-    public static final String ACTION_BUTTON_CLICKED = "me.stupidme.action.BUTTON_CLICKED";
-
-    public static final int BUTTON_TYPE_SEND = 0x10;
-    public static final int BUTTON_TYPE_RECEIVE = 0x11;
+    public static final DataType[] mDataTypes = {DataType.LED, DataType.BUZZER, DataType.TEMPERATURE};
 
     public static final int REQUEST_CODE_SEND = 0x01;
     public static final int REQUEST_CODE_RECEIVE = 0x10;
+    public static final int REQUEST_CODE_CHART = 0x11;
     public static final int MESSAGE_BODY_EMPTY = 0x00000000;
 
     // Message types sent from the BluetoothService Handler

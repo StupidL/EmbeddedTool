@@ -27,18 +27,16 @@
             </com.github.mikephil.charting.charts.LineChart>
         </FrameLayout>
 
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
-
-        <SeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="16dp" />
+        <ImageButton
+            android:id="@+id/control_button"
+            android:layout_margin="16dp"
+            android:layout_gravity="center"
+            android:layout_width="60dp"
+            android:scaleType="fitCenter"
+            android:layout_height="60dp"
+            android:background="@null"
+            android:src="@drawable/ic_play_circle_filled_teal_500_48dp"
+            />
 
     </LinearLayout>
 

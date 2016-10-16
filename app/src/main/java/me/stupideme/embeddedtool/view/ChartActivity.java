@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -24,12 +25,16 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.model.StupidObserver;
+import me.stupideme.embeddedtool.presenter.ChartPresenter;
+import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 import me.stupideme.embeddedtool.view.custom.StupidChartViewDialog;
 
 /**
@@ -37,17 +42,27 @@ import me.stupideme.embeddedtool.view.custom.StupidChartViewDialog;
  */
 
 public class ChartActivity extends AppCompatActivity implements OnChartValueSelectedListener,
-        StupidChartViewDialog.StupidChartDialogListener,StupidObserver {
+        StupidChartViewDialog.StupidChartDialogListener, IChartView {
 
+    private static final String TAG = ChartActivity.class.getSimpleName();
     private StupidChartViewDialog mDialog;
+    private ImageButton mButton;
+    private boolean isPlaying = true;
     private FrameLayout mFrameLayout;
+    private ChartPresenter mPresenter;
+    private OnSendMessageListener mListener;
+    private int mColorPos = 0;
+    private int mTypePos = 0;
     private DataType mDataType;
 
     private LineChart mChart;
     private XAxis xAxis;
     private YAxis yAxis;
+    private int xMax = 500;
+    private int xMin = 0;
+    private int yMax = 100;
+    private int yMin = 0;
 
-    private static volatile int sSleepTime = 25;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,38 +82,57 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         });
 
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        SeekBar seekBar = (SeekBar) findViewById(R.id.seek_bar);
-        seekBar.setMax(300);
-        seekBar.setProgress(30);
+        mButton = (ImageButton) findViewById(R.id.control_button);
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPlaying) {
+                    mButton.setImageResource(R.drawable.ic_pause_circle_filled_teal_500_48dp);
+                    addEntry();
+                } else {
+                    mButton.setImageResource(R.drawable.ic_play_circle_filled_teal_500_48dp);
+                }
+                isPlaying = !isPlaying;
+            }
+        });
         mDialog = new StupidChartViewDialog(this, this);
         initChart();
 
         mChart.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                mDialog.setColorPos(mColorPos);
+                mDialog.setTypePos(mTypePos);
+                mDialog.showMaxX(xMax);
+                mDialog.showMinX(xMin);
+                mDialog.showMaxY(yMax);
+                mDialog.showMinY(yMin);
                 mDialog.show();
                 return false;
             }
         });
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                seekBar.setProgress(i);
-                sSleepTime = i;
-            }
+        mPresenter = new ChartPresenter(this);
+        mPresenter.setSendMessageListener();
+        mPresenter.attachObserver(this);
+    }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+    @Override
+    public void setOnSendMessageListener(OnSendMessageListener listener) {
+        mListener = listener;
+    }
 
-            }
+    @Override
+    public void receiveMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+    }
 
-            }
-        });
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.detachObserver(this);
     }
 
     void initChart() {
@@ -155,6 +189,46 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setEnabled(false);
+    }
+
+    @Override
+    public void onCancel() {
+        mDialog.dismiss();
+    }
+
+    @Override
+    public void onSave(Map<String, String> map) {
+        mDialog.dismiss();
+        int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
+        mChart.setBackgroundColor(color);
+        mFrameLayout.setBackgroundColor(color);
+        if (map.containsKey(Constants.KEY_COLOR_POS)) {
+            mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));
+        }
+        if (map.containsKey(Constants.KEY_TYPE_POS)) {
+            mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
+            mDataType = Constants.mDataTypes[mTypePos];
+        }
+        if (map.containsKey(Constants.KEY_MAX_X)) {
+            xMax = Integer.parseInt(map.get(Constants.KEY_MAX_X));
+            xAxis.setAxisMaxValue(xMax);
+        }
+        if (map.containsKey(Constants.KEY_MAX_Y)) {
+            yMax = Integer.parseInt(map.get(Constants.KEY_MAX_Y));
+            yAxis.setAxisMaxValue(yMax);
+        }
+        if (map.containsKey(Constants.KEY_MIN_X)) {
+            xMin = Integer.parseInt(map.get(Constants.KEY_MIN_X));
+            xAxis.setAxisMinValue(xMin);
+        }
+        if (map.containsKey(Constants.KEY_MIN_Y)) {
+            yMin = Integer.parseInt(map.get(Constants.KEY_MIN_Y));
+            yAxis.setAxisMinValue(yMin);
+        }
+        mChart.notifyDataSetChanged();
+
+        mListener.onSendMessage(Constants.REQUEST_CODE_CHART, mDataType,
+                String.valueOf(Constants.MESSAGE_BODY_EMPTY));
     }
 
     @Override
@@ -259,7 +333,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
                     runOnUiThread(runnable);
 
                     try {
-                        Thread.sleep(sSleepTime);
+                        Thread.sleep(30);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -289,32 +363,4 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         }
     }
 
-    @Override
-    public void onCancel() {
-        mDialog.dismiss();
-    }
-
-    @Override
-    public void onSave(Map<String, String> map) {
-        mDialog.dismiss();
-        int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
-        mChart.setBackgroundColor(color);
-        mFrameLayout.setBackgroundColor(color);
-        if (map.containsKey(Constants.KEY_MAX_X))
-            xAxis.setAxisMaxValue(Integer.parseInt(map.get(Constants.KEY_MAX_X)));
-        if (map.containsKey(Constants.KEY_MAX_Y))
-            yAxis.setAxisMaxValue(Integer.parseInt(map.get(Constants.KEY_MAX_Y)));
-        if (map.containsKey(Constants.KEY_MIN_X))
-            xAxis.setAxisMinValue(Integer.parseInt(map.get(Constants.KEY_MIN_X)));
-        if (map.containsKey(Constants.KEY_MIN_Y))
-            yAxis.setAxisMinValue(Integer.parseInt(map.get(Constants.KEY_MIN_Y)));
-        mChart.notifyDataSetChanged();
-        // todo: handle type
-
-    }
-
-    @Override
-    public void receiveMessage(String msg) {
-
-    }
 }

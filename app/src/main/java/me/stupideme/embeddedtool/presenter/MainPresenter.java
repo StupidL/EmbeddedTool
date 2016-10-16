@@ -12,9 +12,11 @@ import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.model.IStupidModel;
-import me.stupideme.embeddedtool.model.MessageObservable;
+import me.stupideme.embeddedtool.model.StupidObservable;
 import me.stupideme.embeddedtool.model.StupidModelImpl;
+import me.stupideme.embeddedtool.model.StupidObserver;
 import me.stupideme.embeddedtool.view.IMainView;
+import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
@@ -52,22 +54,44 @@ public class MainPresenter {
     private Map<String, String> mEditTextMap = new HashMap<>();
 
     /**
-     * constructor
-     *
-     * @param view    MainActivity
+     * instance of MainPresenter
      */
-    public MainPresenter(IMainView view) {
+    private static MainPresenter INSTANCE;
+
+    /**
+     * private constructor
+     *
+     * @param view MainActivity
+     */
+    private MainPresenter(IMainView view) {
         iMainView = view;
-        iStupidModel = new StupidModelImpl();
+        iStupidModel = StupidModelImpl.getInstance();
+    }
+
+    /**
+     * singleton pattern
+     * @param view IMainView
+     * @return instance
+     */
+    public static MainPresenter getInstance(IMainView view) {
+        if (INSTANCE == null) {
+            synchronized (MainPresenter.class) {
+                if (INSTANCE == null)
+                    INSTANCE = new MainPresenter(view);
+            }
+        }
+        return INSTANCE;
     }
 
     /**
      * set handler for bluetooth service in model
+     *
      * @param handler handler
      */
-    public void setHandler(Handler handler){
-        ((StupidModelImpl)iStupidModel).setHandler(handler);
+    public void setHandler(Handler handler) {
+        ((StupidModelImpl) iStupidModel).setHandler(handler);
     }
+
     /**
      * connect device by bluetooth address in the secure or insecure way
      *
@@ -120,43 +144,49 @@ public class MainPresenter {
 
     /**
      * set listener for button to listen button's onclick event
+     *
      * @param view button
      */
     public void setSendMessageListenerForButton(StupidButtonSend view) {
-        view.setSendMessageListener((StupidModelImpl) iStupidModel);
+        view.setSendMessageListener((OnSendMessageListener) iStupidModel);
     }
 
     /**
      * set listener for button to listen button's onclick event
+     *
      * @param view button
      */
     public void setSendMessageListenerForButton(StupidButtonReceive view) {
-        view.setSendMessageListener((StupidModelImpl) iStupidModel);
+        view.setSendMessageListener((OnSendMessageListener) iStupidModel);
     }
 
     /**
      * attach observer
+     *
      * @param view observer
      */
-    public void attachObserver(StupidButtonReceive view) {
-        ((MessageObservable) iStupidModel).attach(view);
+    public void attachObserver(StupidObserver view) {
+        ((StupidObservable) iStupidModel).attach(view);
     }
 
     /**
      * detach observer
+     *
      * @param view observer
      */
-    public void detachObserver(StupidButtonReceive view) {
-        ((MessageObservable) iStupidModel).detach(view);
+    public void detachObserver(StupidObserver view) {
+        ((StupidObservable) iStupidModel).detach(view);
     }
 
     /**
      * notify observers
+     *
      * @param msg msg received from bluetooth
      */
-    public void notifyObservers(String msg){
-        ((MessageObservable)iStupidModel).notifyObservers(msg);
+    public void notifyObservers(String msg) {
+        ((StupidObservable) iStupidModel).notifyObservers(msg);
     }
+
     /**
      * button bind a text view by id
      *
@@ -232,9 +262,10 @@ public class MainPresenter {
 
     /**
      * create views from template
-     * @param frameLayout container to contain views
+     *
+     * @param frameLayout  container to contain views
      * @param templateName name of template
-     * @param context context
+     * @param context      context
      */
     private void createFromTemplate(FrameLayout frameLayout, String templateName, Context context) {
         Cursor cursor = iStupidModel.queryTemplate(templateName);

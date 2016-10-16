@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         setContentView(R.layout.activity_main);
 
         //init presenter
-        mPresenter = new MainPresenter(this);
+        mPresenter = MainPresenter.getInstance(this);
         //init view
         initView();
         //set handler for bluetooth service in model
@@ -143,16 +143,15 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            // if bluetooth is not enabled, request to enable it.
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        }
-    }
-
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+//            // if bluetooth is not enabled, request to enable it.
+//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+//        }
+//    }
 
     /**
      * create and init a send type button, which will be contained in mFrameLayout.

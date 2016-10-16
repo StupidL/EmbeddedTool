@@ -136,7 +136,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
     public void setTypePos(int pos) {
         mTypePos = pos;
         if (mTypePos != -1)
-            setDataType(Constants.mButtonTypes[mTypePos]);
+            setDataType(Constants.mDataTypes[mTypePos]);
     }
 
     /**
@@ -231,7 +231,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
         }
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
-            setDataType(Constants.mButtonTypes[mTypePos]);
+            setDataType(Constants.mDataTypes[mTypePos]);
         }
         if (map.containsKey(Constants.KEY_COLOR_POS)) {
             mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));

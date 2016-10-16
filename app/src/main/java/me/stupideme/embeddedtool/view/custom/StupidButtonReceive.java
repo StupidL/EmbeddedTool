@@ -14,7 +14,6 @@ import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.model.StupidObserver;
-import me.stupideme.embeddedtool.view.MainActivity;
 
 /**
  * Created by StupidL on 2016/9/30.
@@ -153,7 +152,7 @@ public class StupidButtonReceive extends Button implements
         mTypePos = pos;
         // if haven't set data type before save as a template
         if (mTypePos != -1)
-            setDataType(Constants.mButtonTypes[mTypePos]);
+            setDataType(Constants.mDataTypes[mTypePos]);
     }
 
     /**
@@ -228,7 +227,7 @@ public class StupidButtonReceive extends Button implements
         }
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
-            setDataType(Constants.mButtonTypes[mTypePos]);
+            setDataType(Constants.mDataTypes[mTypePos]);
         }
         if (map.containsKey(Constants.KEY_COLOR_POS)) {
             mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));

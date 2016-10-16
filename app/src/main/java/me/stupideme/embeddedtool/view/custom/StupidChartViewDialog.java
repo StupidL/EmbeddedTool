@@ -25,6 +25,8 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
     private EditText yMax;
     private EditText xMin;
     private EditText yMin;
+    private Spinner mColor;
+    private Spinner mType;
     private int typePos;
     private int colorPos;
 
@@ -36,8 +38,8 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
 
     private void initView() {
         setContentView(R.layout.stupid_chart_view_dialog);
-        Spinner mType = (Spinner) findViewById(R.id.stupid_chart_view_dialog_spinner_type);
-        Spinner mColor = (Spinner) findViewById(R.id.stupid_chart_view_dialog_spinner_color);
+        mType = (Spinner) findViewById(R.id.stupid_chart_view_dialog_spinner_type);
+        mColor = (Spinner) findViewById(R.id.stupid_chart_view_dialog_spinner_color);
         xMax = (EditText) findViewById(R.id.stupid_chart_view_dialog_et_x_max);
         yMax = (EditText) findViewById(R.id.stupid_chart_view_dialog_et_y_max);
         xMin = (EditText) findViewById(R.id.stupid_chart_view_dialog_et_x_min);
@@ -70,6 +72,30 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
             }
         });
 
+    }
+
+    public void setColorPos(int pos) {
+        mColor.setSelection(pos, true);
+    }
+
+    public void setTypePos(int pos) {
+        mType.setSelection(pos, true);
+    }
+
+    public void showMaxX(int max) {
+        xMax.setText(max + "");
+    }
+
+    public void showMaxY(int max) {
+        yMax.setText(max + "");
+    }
+
+    public void showMinX(int min) {
+        xMin.setText(min + "");
+    }
+
+    public void showMinY(int min) {
+        yMin.setText(min + "");
     }
 
     @Override

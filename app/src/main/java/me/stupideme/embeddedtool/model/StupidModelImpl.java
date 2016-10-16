@@ -25,7 +25,7 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
  * Created by StupidL on 2016/9/30.
  */
 
-public class StupidModelImpl implements IStupidModel, OnSendMessageListener, MessageObservable {
+public class StupidModelImpl implements IStupidModel, OnSendMessageListener, StupidObservable {
 
     //debug
     private static final String TAG = StupidModelImpl.class.getSimpleName();
@@ -50,16 +50,39 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Mes
      */
     private Handler mHandler;
 
-    public StupidModelImpl() {
+    /**
+     * instance of StupidModelImpl
+     */
+    private static StupidModelImpl INSTANCE;
+
+    /**
+     * private constructor
+     */
+    private StupidModelImpl() {
         mManager = App.manager;
         mObservers = new ArrayList<>();
     }
 
     /**
+     * get instance
+     * @return instance
+     */
+    public static StupidModelImpl getInstance() {
+        if (INSTANCE == null) {
+            synchronized (StupidModelImpl.class) {
+                if (INSTANCE == null)
+                    INSTANCE = new StupidModelImpl();
+            }
+        }
+        return INSTANCE;
+    }
+
+    /**
      * set handler for bluetooth service's need
+     *
      * @param handler
      */
-    public void setHandler(Handler handler){
+    public void setHandler(Handler handler) {
         mHandler = handler;
         mService = new BluetoothService(mHandler);
     }
@@ -101,7 +124,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Mes
     @Override
     public void notifyObservers(String message) {
         for (StupidObserver o : mObservers) {
-            o.receiveMessage("Hello From Bluetooth!");
+            o.receiveMessage(message);
         }
     }
 

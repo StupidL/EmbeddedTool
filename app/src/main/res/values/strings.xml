@@ -14,4 +14,5 @@
     <string name="save_template">保存模板</string>
     <string name="clear_all">清空</string>
     <string name="template_list_empty_text">这里看起来\n似乎空空如也～</string>
+    <string name="bluetooth">蓝牙操作</string>
 </resources>
