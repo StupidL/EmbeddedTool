@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.R;
@@ -86,6 +87,11 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     }
 
     @Override
+    public List<Map<String, String>> loadAllProtocol() {
+        return mPresenter.getDataProtocol();
+    }
+
+    @Override
     public void addDataType(Map<String, String> map) {
         mPresenter.addDataType(map);
     }
@@ -96,9 +102,14 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     }
 
     @Override
-    public void recoveryDefault(Map<String, String> map) {
-        mTypeFragment.recoveryDefault(map);
-        mProtocolFragment.recoveryDefault(map);
+    public List<Map<String, String>> loadAllTypes() {
+        return mPresenter.getAllDataType();
+    }
+
+    @Override
+    public void recoveryDefault(List<Map<String, String>> list) {
+        mTypeFragment.recoveryDefault(list);
+        mProtocolFragment.recoveryDefault(list);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

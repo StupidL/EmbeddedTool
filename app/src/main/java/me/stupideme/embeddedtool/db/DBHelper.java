@@ -30,6 +30,35 @@ class DBHelper extends SQLiteOpenHelper {
             "view_type, view_type_pos, has_bind_view, bind_view_id, view_text, view_width, view_height, " +
             "view_x, view_y, view_color, spinner_color_pos" + ")";
 
+    /**
+     * create table default data type
+     */
+    private static final String CREATE_TABLE_TYPE_DEFAULT = "CREATE TABLE data_type_default(" +
+            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "name, " + "code " + ")";
+
+    /**
+     * create table default data protocol
+     */
+    private static final String CREATE_TABLE_PROTOCOL_DEFAULT = "CREATE TABLE data_protocol_default(" +
+            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "header, " + "tail " + ")";
+
+    /**
+     * create table custom data type
+     */
+    private static final String CREATE_TABLE_TYPE_CUSTOM = "CREATE TABLE data_type_custom(" +
+            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "name, " + "code " + ")";
+
+    /**
+     * create table custom data protocol
+     */
+    private static final String CREATE_TABLE_PROTOCOL_CUSTOM = "CREATE TABLE data_protocol_custom(" +
+            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "header, " + "tail " + ")";
+
+
     DBHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
     }
@@ -38,6 +67,10 @@ class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // create table templates
         sqLiteDatabase.execSQL(CREATE_TABLE_TEMPLATES);
+        sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_DEFAULT);
+        sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_CUSTOM);
+        sqLiteDatabase.execSQL(CREATE_TABLE_PROTOCOL_DEFAULT);
+        sqLiteDatabase.execSQL(CREATE_TABLE_PROTOCOL_CUSTOM);
     }
 
     @Override

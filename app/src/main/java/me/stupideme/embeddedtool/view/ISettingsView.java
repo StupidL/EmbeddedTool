@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.view;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -7,5 +8,5 @@ import java.util.Map;
  */
 
 public interface ISettingsView {
-    void recoveryDefault(Map<String,String> map);
+    void recoveryDefault(List<Map<String, String>> list);
 }

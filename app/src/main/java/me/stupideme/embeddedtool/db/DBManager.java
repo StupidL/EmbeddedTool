@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import me.stupideme.embeddedtool.Constants;
+
 /**
  * Created by stupidl on 16-10-9.
  */
@@ -17,6 +19,10 @@ public class DBManager {
     private SQLiteDatabase db;
 
     private static final String TABLE_TEMPLATES = "templates";
+    private static final String TABLE_TYPE_DEFAULT = "data_type_default";
+    private static final String TABLE_TYPE_CUSTOM = "data_type_custom";
+    private static final String TABLE_PROTOCOL_DEFAULT = "data_protocol_default";
+    private static final String TABLE_PROTOCOL_CUSTOM = "data_protocol_custom";
 
     /**
      * private constructor
@@ -28,6 +34,7 @@ public class DBManager {
         Log.i(TAG, String.valueOf(mHelper.getDatabaseName()));
         Log.i(TAG, String.valueOf(mHelper));
         db = mHelper.getWritableDatabase();
+        initDefault();
     }
 
     /**
@@ -36,9 +43,14 @@ public class DBManager {
      * @param context context
      * @return instance
      */
-    public static synchronized DBManager getInstance(Context context) {
-        if (mInstance == null)
-            mInstance = new DBManager(context);
+    public static DBManager getInstance(Context context) {
+        Log.v(TAG, "DBManager init");
+        if (mInstance == null) {
+            synchronized (DBManager.class) {
+                if (mInstance == null)
+                    mInstance = new DBManager(context);
+            }
+        }
         return mInstance;
     }
 
@@ -108,4 +120,100 @@ public class DBManager {
         return db.rawQuery("SELECT * FROM " + TABLE_TEMPLATES + " WHERE _id >= ?", new String[]{"0"});
     }
 
+    /**
+     * insert a data type
+     *
+     * @param values
+     */
+    public void insertDataType(ContentValues values) {
+        db.insert(TABLE_TYPE_CUSTOM, null, values);
+    }
+
+    /**
+     * insert a custom data protocol
+     *
+     * @param values
+     */
+    public void insertDataProtocol(ContentValues values) {
+        db.insert(TABLE_PROTOCOL_CUSTOM, null, values);
+    }
+
+    /**
+     * delete a custom data type
+     *
+     * @param name
+     */
+    public void deleteDataType(String name) {
+        db.delete(TABLE_TYPE_CUSTOM, "name = ?", new String[]{name});
+    }
+
+    /**
+     * update a custom data protocol
+     *
+     * @param values
+     */
+    public void updateDataProtocol(ContentValues values) {
+        db.delete(TABLE_PROTOCOL_CUSTOM, "_id >= ?", new String[]{"0"});
+        db.insert(TABLE_PROTOCOL_CUSTOM, null, values);
+    }
+
+    /**
+     * query default data type
+     *
+     * @return
+     */
+    public Cursor queryTypeDefault() {
+        return db.rawQuery("SELECT * FROM " + TABLE_TYPE_DEFAULT + " WHERE _id >= ?", new String[]{"0"});
+    }
+
+    /**
+     * query custom data type
+     *
+     * @return
+     */
+    public Cursor queryTypeCustom() {
+        return db.rawQuery("SELECT * FROM " + TABLE_TYPE_CUSTOM + " WHERE _id >= ?", new String[]{"0"});
+    }
+
+    /**
+     * query default data protocol
+     *
+     * @return
+     */
+    public Cursor queryProtocolDefault() {
+        return db.rawQuery("SELECT * FROM " + TABLE_PROTOCOL_DEFAULT + " WHERE _id >= ?", new String[]{"0"});
+    }
+
+    /**
+     * query custom data protocol
+     *
+     * @return
+     */
+    public Cursor queryProtocolCustom() {
+        return db.rawQuery("SELECT * FROM " + TABLE_PROTOCOL_CUSTOM + " WHERE _id >= ?", new String[]{"0"});
+    }
+
+    /**
+     * delete all custom types
+     */
+    public void deleteAllTypeCustom() {
+        db.delete(TABLE_TYPE_CUSTOM, "_id >= ?", new String[]{"0"});
+    }
+
+    /**
+     * delete all custom protocols
+     */
+    public void deleteAllProtocolCustom() {
+        db.delete(TABLE_PROTOCOL_CUSTOM, "_id >= ?", new String[]{"0"});
+    }
+
+    /**
+     * set default types and protocol
+     */
+    private void initDefault() {
+        db.execSQL("INSERT OR REPLACE INTO data_type_default (name, code) VALUES ('LED', 'aa')");
+        db.execSQL("INSERT OR REPLACE INTO data_type_default (name, code) VALUES ('BUZZER', 'ab')");
+        db.execSQL("INSERT OR REPLACE INTO data_type_default (name, code) VALUES ('TEMPERATURE', 'ac')");
+        db.execSQL("INSERT OR REPLACE INTO data_protocol_default (header, tail) VALUES ('FFFFFF','FFFFFF')");
+    }
 }

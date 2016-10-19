@@ -10,6 +10,10 @@ public class Constants {
 
     public static final DataType[] mDataTypes = {DataType.LED, DataType.BUZZER, DataType.TEMPERATURE};
 
+    public static final int DATA_TYPE_DEFAULT_CODE_LED = 0xaa;
+    public static final int DATA_TYPE_DEFAULT_CODE_BUZZER = 0xab;
+    public static final int DATA_TYPE_DEFAULT_CODE_TEMPERATURE = 0xac;
+
     public static final int REQUEST_CODE_SEND = 0x01;
     public static final int REQUEST_CODE_RECEIVE = 0x10;
     public static final int REQUEST_CODE_CHART = 0x11;
@@ -61,5 +65,10 @@ public class Constants {
     public static final String KEY_MAX_Y = "MaxY";
     public static final String KEY_MIN_X = "MinX";
     public static final String KEY_MIN_Y = "MinY";
+
+    public static final String KEY_DATA_HEADER = "header";
+    public static final String KEY_DATA_TAIL = "tail";
+    public static final String KEY_DATA_NAME = "name";
+    public static final String KEY_DATA_CODE = "code";
 
 }

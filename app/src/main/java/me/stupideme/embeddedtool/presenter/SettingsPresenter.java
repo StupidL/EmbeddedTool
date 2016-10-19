@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.presenter;
 
+import java.util.List;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.model.ISettingsModel;
@@ -17,7 +18,7 @@ public class SettingsPresenter {
 
     public SettingsPresenter(ISettingsView view) {
         iSettingsView = view;
-        iSettingsModel = new SettingsModelImpl();
+        iSettingsModel = SettingsModelImpl.getInstance();
     }
 
     public void addDataType(Map<String, String> map) {
@@ -28,7 +29,7 @@ public class SettingsPresenter {
         iSettingsModel.removeDataType(name);
     }
 
-    public Map<String, String> getAllDataType() {
+    public List<Map<String, String>> getAllDataType() {
         return iSettingsModel.getAllDataType();
     }
 
@@ -36,7 +37,7 @@ public class SettingsPresenter {
         iSettingsModel.saveDataProtocol(map);
     }
 
-    public Map<String, String> getDataProtocol() {
+    public List<Map<String, String>> getDataProtocol() {
         return iSettingsModel.getDataProtocol();
     }
 

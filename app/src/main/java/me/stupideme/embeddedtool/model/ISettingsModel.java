@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,11 +12,11 @@ public interface ISettingsModel {
 
     void addDataType(Map<String, String> map);
 
-    Map<String, String> getAllDataType();
+    List<Map<String, String>> getAllDataType();
 
     void saveDataProtocol(Map<String, String> map);
 
-    Map<String, String> getDataProtocol();
+    List<Map<String, String>> getDataProtocol();
 
-    Map<String,String> getDefault();
+    List<Map<String, String>> getDefault();
 }
