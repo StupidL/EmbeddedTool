@@ -33,6 +33,7 @@ import static me.stupideme.embeddedtool.view.bluetooth.DeviceListActivity.EXTRA_
  */
 public class DevicePairedFragment extends Fragment {
 
+    private static final String TAG = DevicePairedFragment.class.getSimpleName();
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private ProgressDialog mProgressDialog;
@@ -117,6 +118,7 @@ public class DevicePairedFragment extends Fragment {
                 Intent intent = new Intent();
                 String address = info.substring(info.length() - 17);
                 intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+                Log.v(TAG, "BT address: " + address);
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
             } else {

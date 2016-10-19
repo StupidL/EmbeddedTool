@@ -236,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
      */
     public void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("嵌入式助手");
         setSupportActionBar(toolbar);
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_main);
         FloatingActionMenu menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
@@ -369,9 +370,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            // action settings clicked, do nothing here.
-            return true;
+        if (id == R.id.action_settings_advanced) {
+            // action settings clicked
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
         if (id == R.id.action_bluetooth_secure) {
             // action bluetooth secure clicked,
@@ -429,6 +430,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
         if (id == R.id.action_select_template) {
             startActivityForResult(new Intent(MainActivity.this, TemplateActivity.class), REQUEST_SELECT_TEMPLATE);
+        }
+        if (id == R.id.action_document) {
+            startActivity(new Intent(MainActivity.this, DocumentActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

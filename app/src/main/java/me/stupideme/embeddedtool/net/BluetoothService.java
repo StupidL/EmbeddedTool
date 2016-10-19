@@ -417,6 +417,8 @@ public class BluetoothService {
                     Log.e(TAG, "unable to close() " + mSocketType +
                             " socket during connection failure", e2);
                 }
+                // read failed socket might closed or timeout, read ret: -1
+                e.printStackTrace();
                 connectionFailed();
                 return;
             }

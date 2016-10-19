@@ -128,10 +128,11 @@ public class DeviceNewFragment extends Fragment {
                     mNewDevicesArrayAdapter.notifyDataSetChanged();
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                mProgressDialog.dismiss();
+                mProgressDialog.cancel();
                 if (mNewDevicesArrayAdapter.getCount() == 0) {
-                    mProgressDialog.dismiss();
-                    mProgressDialog.cancel();
-                    final Snackbar snackbar = Snackbar.make(relativeLayout,"未找到设备", Snackbar.LENGTH_SHORT);
+
+                    final Snackbar snackbar = Snackbar.make(relativeLayout, "未找到设备", Snackbar.LENGTH_SHORT);
                     snackbar.setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -153,6 +154,7 @@ public class DeviceNewFragment extends Fragment {
             String address = info.substring(info.length() - 17);
             Intent intent = new Intent();
             intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+            Log.v(TAG, "BT address: " + address);
             //back to MainActivity and try to connect device
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();

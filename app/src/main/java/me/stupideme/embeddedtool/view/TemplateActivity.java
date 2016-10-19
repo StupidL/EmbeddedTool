@@ -36,6 +36,7 @@ public class TemplateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_template);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("选择模板");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -82,7 +83,7 @@ public class TemplateActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 mManager.deleteAllTemplates();
                 break;
-            case R.id.action_settings:
+            case R.id.action_settings_advanced:
 
                 break;
         }

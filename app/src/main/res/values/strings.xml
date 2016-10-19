@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">EmbeddedTool</string>
 
-
     <string name="none_found">None Found</string>
     <string name="none_paired">None Paired</string>
 
@@ -10,9 +9,15 @@
     <string name="bluetooth_secure">安全连接</string>
     <string name="bluetooth_insecure">非安全连接</string>
     <string name="bluetooth_discoverable">可被发现</string>
-    <string name="action_settings">设置</string>
+    <string name="action_settings">高级设置</string>
+    <string name="action_settings_advanced">设置</string>
     <string name="save_template">保存模板</string>
     <string name="clear_all">清空</string>
     <string name="template_list_empty_text">这里看起来\n似乎空空如也～</string>
     <string name="bluetooth">蓝牙操作</string>
+    <string name="title_activity_advanced_settings">AdvancedSettingsActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="action_recovery">恢复默认</string>
+    <string name="action_choose_template">选择模板</string>
+    <string name="action_document">说明文档</string>
 </resources>
