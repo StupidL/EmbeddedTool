@@ -92,7 +92,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         mHeight = (EditText) findViewById(R.id.stupid_button_dialog_height_et);
 
         mTypeSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mList);
-        mTypeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        mTypeSpinnerAdapter.setDropDownViewResource(R.layout.item_spinner);
         mTypeSpinner.setAdapter(mTypeSpinnerAdapter);
 
         mTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

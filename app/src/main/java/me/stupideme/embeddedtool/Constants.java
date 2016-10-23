@@ -1,6 +1,7 @@
 package me.stupideme.embeddedtool;
 
 import java.lang.*;
+
 /**
  * Created by StupidL on 2016/10/1.
  */
@@ -33,7 +34,7 @@ public class Constants {
     public static final String BIND_VIEW_ID = "bind_view_id";
     public static final String VIEW_TEXT = "view_text";
     public static final String VIEW_WIDTH = "view_width";
-    public static final String VIEW_HEIGHT= "view_height";
+    public static final String VIEW_HEIGHT = "view_height";
     public static final String VIEW_X = "view_x";
     public static final String VIEW_Y = "view_y";
     public static final String VIEW_COLOR = "view_color";
@@ -66,4 +67,6 @@ public class Constants {
     public static final String KEY_DATA_NAME = "name";
     public static final String KEY_DATA_CODE = "code";
 
+
+    public static final String EXTRA_DEVICE_ADDRESS = "address";
 }

@@ -166,7 +166,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     }
 
     @Override
-    public void connectDevice(java.lang.String address, boolean secure) {
+    public void connectDevice(String address, boolean secure) {
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         mService.connect(device, secure);
     }

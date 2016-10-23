@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/data_type_name"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_gravity="center_vertical|start"
         android:layout_weight="1"
         android:ellipsize="end"

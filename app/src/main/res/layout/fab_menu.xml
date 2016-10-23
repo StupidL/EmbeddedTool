@@ -8,16 +8,14 @@
     android:layout_margin="16dp"
     app:menu_animationDelayPerItem="50"
     app:menu_backgroundColor="@android:color/transparent"
-    app:menu_colorNormal="@color/colorAccent2"
-    app:menu_colorPressed="@color/colorPrimary2"
+    app:menu_colorNormal="@color/colorAccent"
+    app:menu_colorPressed="@color/primary"
     app:menu_fab_hide_animation="@anim/fab_slide_out_to_right"
     app:menu_fab_show_animation="@anim/fab_slide_in_from_right"
     app:menu_labels_colorNormal="@color/colorPrimary2"
     app:menu_openDirection="up"
-    app:menu_shadowColor="#938f8f"
+    app:menu_shadowColor="#beb9b9"
     app:menu_shadowRadius="1dp"
-    app:menu_shadowXOffset="1dp"
-    app:menu_shadowYOffset="1dp"
     app:menu_showShadow="true">
 
     <com.github.clans.fab.FloatingActionButton
@@ -28,7 +26,7 @@
         app:fab_size="mini"
         app:fab_colorDisabled="#aabbcc"
         app:fab_colorNormal="#E0E0E0"
-        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_colorPressed="@color/primary"
         app:fab_label="图表工具" />
 
     <com.github.clans.fab.FloatingActionButton
@@ -39,7 +37,7 @@
         app:fab_size="mini"
         app:fab_colorDisabled="#aabbcc"
         app:fab_colorNormal="#43a9ce"
-        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_colorPressed="@color/primary"
         app:fab_label="文本编辑" />
 
     <com.github.clans.fab.FloatingActionButton
@@ -50,7 +48,7 @@
         app:fab_size="mini"
         app:fab_colorDisabled="#aabbcc"
         app:fab_colorNormal="#FF8A65"
-        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_colorPressed="@color/primary"
         app:fab_label="文本显示" />
 
     <com.github.clans.fab.FloatingActionButton
@@ -61,7 +59,7 @@
         app:fab_size="mini"
         app:fab_colorDisabled="#aabbcc"
         app:fab_colorNormal="#7986CB"
-        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_colorPressed="@color/primary"
         app:fab_label="接收按钮" />
 
     <com.github.clans.fab.FloatingActionButton
@@ -72,6 +70,6 @@
         app:fab_size="mini"
         app:fab_colorDisabled="#aabbcc"
         app:fab_colorNormal="#FFB74D"
-        app:fab_colorPressed="@color/colorPrimary2"
+        app:fab_colorPressed="@color/primary"
         app:fab_label="发送按钮" />
 </com.github.clans.fab.FloatingActionMenu>

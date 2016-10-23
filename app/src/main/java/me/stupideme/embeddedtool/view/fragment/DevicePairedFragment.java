@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view.bluetooth;
+package me.stupideme.embeddedtool.view.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -25,7 +25,7 @@ import java.util.Set;
 
 import me.stupideme.embeddedtool.R;
 
-import static me.stupideme.embeddedtool.view.bluetooth.DeviceListActivity.EXTRA_DEVICE_ADDRESS;
+import static me.stupideme.embeddedtool.Constants.EXTRA_DEVICE_ADDRESS;
 
 
 /**

@@ -20,4 +20,5 @@
     <string name="action_recovery">恢复默认</string>
     <string name="action_choose_template">选择模板</string>
     <string name="action_document">说明文档</string>
+    <string name="title_activity_device_list">DeviceListActivity</string>
 </resources>

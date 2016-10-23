@@ -29,7 +29,6 @@ import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.net.BluetoothService;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
-import me.stupideme.embeddedtool.view.bluetooth.DeviceListActivity;
 import me.stupideme.embeddedtool.view.custom.OnBindViewIdChangedListener;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             case REQUEST_CONNECT_DEVICE_SECURE:
                 if (resultCode == Activity.RESULT_OK) {
                     //use presenter to connect device according to address in secure way
-                    String address = data.getStringExtra("device_address");
+                    String address = data.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
                     mPresenter.connectDevice(address, true);
                     Log.v("MainPresenter ", "connect device secure...");
                 }
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             case REQUEST_CONNECT_DEVICE_INSECURE:
                 if (resultCode == Activity.RESULT_OK) {
                     //use presenter to connect device according to address in insecure way
-                    String address = data.getStringExtra("device_address");
+                    String address = data.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
                     mPresenter.connectDevice(address, false);
                     Log.v("MainPresenter ", "connect device insecure...");
                 }

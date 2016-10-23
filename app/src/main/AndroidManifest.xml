@@ -29,15 +29,16 @@
             android:label="ChartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.bluetooth.DeviceListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".view.TemplateActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.DocumentActivity" />
         <activity
             android:name=".view.SettingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".view.DeviceListActivity"
+            android:label="@string/title_activity_device_list"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
