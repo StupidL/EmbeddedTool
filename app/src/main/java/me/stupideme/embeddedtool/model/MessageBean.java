@@ -1,44 +1,42 @@
 package me.stupideme.embeddedtool.model;
 
-import me.stupideme.embeddedtool.DataType;
-
 /**
  * Created by stupidl on 16-10-14.
  */
 
 public class MessageBean {
     //header
-    private String mHeader;
+    private java.lang.String mHeader;
     //tail
-    private String mTail;
+    private java.lang.String mTail;
     //body
-    private String mBody;
+    private java.lang.String mBody;
     //send or receive
     private int mRequestCode;
     //data type
-    private DataType mDataType;
+    private String mDataType;
 
-    public void setHeader(String header) {
+    public void setHeader(java.lang.String header) {
         mHeader = header;
     }
 
-    public String getHeader() {
+    public java.lang.String getHeader() {
         return mHeader;
     }
 
-    public void setTail(String tail) {
+    public void setTail(java.lang.String tail) {
         mTail = tail;
     }
 
-    public String getTail() {
+    public java.lang.String getTail() {
         return mTail;
     }
 
-    public void setBody(String body) {
+    public void setBody(java.lang.String body) {
         mBody = body;
     }
 
-    public String getBody() {
+    public java.lang.String getBody() {
         return mBody;
     }
 
@@ -50,16 +48,16 @@ public class MessageBean {
         return mRequestCode;
     }
 
-    public void setDataType(DataType type) {
+    public void setDataType(String type) {
         mDataType = type;
     }
 
-    public DataType getDataType() {
+    public String getDataType() {
         return mDataType;
     }
 
     @Override
-    public String toString() {
+    public java.lang.String toString() {
         return mHeader + mRequestCode + mDataType + mBody + mTail;
     }
 }

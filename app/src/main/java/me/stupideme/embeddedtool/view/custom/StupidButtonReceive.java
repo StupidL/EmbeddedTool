@@ -8,10 +8,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.model.StupidObserver;
 
@@ -23,7 +23,7 @@ public class StupidButtonReceive extends Button implements
         StupidButtonDialog.StupidButtonDialogListener, StupidObserver {
 
     //debug
-    private static final String TAG = StupidButtonReceive.class.getSimpleName();
+    private static final java.lang.String TAG = StupidButtonReceive.class.getSimpleName();
 
     /**
      * dialog to set attrs
@@ -38,7 +38,7 @@ public class StupidButtonReceive extends Button implements
     /**
      * data type to operate
      */
-    private DataType mDataType;
+    private String mDataType;
 
     /**
      * position of the type array so we can set the correct position when recreated view from template
@@ -91,7 +91,7 @@ public class StupidButtonReceive extends Button implements
                     if (getBindView() != null) {
                         //============================================================
                         mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_RECEIVE,
-                                getDataType(), String.valueOf(Constants.MESSAGE_BODY_EMPTY));
+                                getDataType(), java.lang.String.valueOf(Constants.MESSAGE_BODY_EMPTY));
                         getBindView().append("\n" + "Waiting...");
                         //============================================================
                     } else {
@@ -109,8 +109,12 @@ public class StupidButtonReceive extends Button implements
         mSendMessageListener = listener;
     }
 
+    public void updateSpinnerAdapter(List<java.lang.String> list) {
+        mDialog.updateTypeSpinnerAdapter(list);
+    }
+
     @Override
-    public void receiveMessage(String msg) {
+    public void receiveMessage(java.lang.String msg) {
         if (mBindView != null) {
             mBindView.append("\n" + msg);
         }
@@ -150,9 +154,6 @@ public class StupidButtonReceive extends Button implements
      */
     public void setTypePos(int pos) {
         mTypePos = pos;
-        // if haven't set data type before save as a template
-        if (mTypePos != -1)
-            setDataType(Constants.mDataTypes[mTypePos]);
     }
 
     /**
@@ -169,17 +170,17 @@ public class StupidButtonReceive extends Button implements
      *
      * @return data type
      */
-    public DataType getDataType() {
+    public String getDataType() {
         return mDataType;
     }
 
     /**
      * setter of data type
      *
-     * @param mDataType data type
+     * @param type data type
      */
-    public void setDataType(DataType mDataType) {
-        this.mDataType = mDataType;
+    public void setDataType(String type) {
+        this.mDataType = type;
     }
 
     /**
@@ -209,7 +210,7 @@ public class StupidButtonReceive extends Button implements
     }
 
     @Override
-    public void onSave(Map<String, String> map) {
+    public void onSave(Map<java.lang.String, java.lang.String> map) {
         mDialog.dismiss();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
         if (map.containsKey(Constants.KEY_NAME))
@@ -227,7 +228,9 @@ public class StupidButtonReceive extends Button implements
         }
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
-            setDataType(Constants.mDataTypes[mTypePos]);
+        }
+        if(map.containsKey(Constants.KEY_TYPE_STRING)){
+            setDataType(map.get(Constants.KEY_TYPE_STRING));
         }
         if (map.containsKey(Constants.KEY_COLOR_POS)) {
             mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));

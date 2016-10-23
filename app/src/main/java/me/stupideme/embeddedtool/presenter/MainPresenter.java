@@ -452,4 +452,9 @@ public class MainPresenter {
         button.setLayoutParams(params);
         return button;
     }
+
+    public void updateSpinnerAdapter(){
+        iMainView.updateTypeSpinnerAdapter(iStupidModel.queryDataTypesForSpinner());
+        Log.v(TAG,"updateSpinnerAdapter");
+    }
 }

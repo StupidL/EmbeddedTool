@@ -6,13 +6,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import me.stupideme.embeddedtool.App;
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.db.DBManager;
 import me.stupideme.embeddedtool.net.BluetoothService;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
@@ -28,7 +29,7 @@ import me.stupideme.embeddedtool.view.custom.StupidTextView;
 public class StupidModelImpl implements IStupidModel, OnSendMessageListener, StupidObservable {
 
     //debug
-    private static final String TAG = StupidModelImpl.class.getSimpleName();
+    private static final java.lang.String TAG = StupidModelImpl.class.getSimpleName();
 
     /**
      * bluetooth service
@@ -65,6 +66,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
 
     /**
      * get instance
+     *
      * @return instance
      */
     public static StupidModelImpl getInstance() {
@@ -87,11 +89,20 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         mService = new BluetoothService(mHandler);
     }
 
+    /**
+     * send message to embedded device through bluetooth
+     *
+     * @param requestCode a code to diff request type : send button, receive button or chart
+     * @param type        data type
+     * @param body        content
+     */
     @Override
-    public void onSendMessage(int requestCode, DataType type, String body) {
+    public void onSendMessage(int requestCode, String type, java.lang.String body) {
         MessageBean bean = new MessageBean();
         bean.setRequestCode(requestCode);
-        bean.setDataType(type);
+        String code = mManager.queryTypeCodeByName(type);
+        Log.v("code", code);
+        bean.setDataType(code.toLowerCase());
         bean.setBody(body);
         String msg = bean.toString();
         byte[] buff = msg.getBytes();
@@ -106,9 +117,35 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         }
     }
 
+    /**
+     * query a template by name
+     *
+     * @param templateName name of template
+     * @return a cursor
+     */
     @Override
-    public Cursor queryTemplate(String templateName) {
+    public Cursor queryTemplate(java.lang.String templateName) {
         return mManager.queryTemplate(templateName);
+    }
+
+    /**
+     * query all data types for spinner
+     *
+     * @return a list contains all data types
+     */
+    @Override
+    public List<java.lang.String> queryDataTypesForSpinner() {
+        List<java.lang.String> list = new ArrayList<>();
+        Cursor cursor = mManager.queryDataType();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            list.add(cursor.getString(cursor.getColumnIndex(Constants.KEY_DATA_NAME)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        for (java.lang.String s : list)
+            System.out.println(s);
+        return list;
     }
 
     @Override
@@ -122,20 +159,20 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     }
 
     @Override
-    public void notifyObservers(String message) {
+    public void notifyObservers(java.lang.String message) {
         for (StupidObserver o : mObservers) {
             o.receiveMessage(message);
         }
     }
 
     @Override
-    public void connectDevice(String address, boolean secure) {
+    public void connectDevice(java.lang.String address, boolean secure) {
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
         mService.connect(device, secure);
     }
 
     @Override
-    public void saveStupidSendButtonInfo(String name, StupidButtonSend view) {
+    public void saveStupidSendButtonInfo(java.lang.String name, StupidButtonSend view) {
         ContentValues values = new ContentValues();
         values.put(Constants.TEMPLATE_NAME, name);
         values.put(Constants.VIEW_ID, view.getId());
@@ -154,7 +191,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     }
 
     @Override
-    public void saveStupidButtonReceiveInfo(String name, StupidButtonReceive view) {
+    public void saveStupidButtonReceiveInfo(java.lang.String name, StupidButtonReceive view) {
         ContentValues values = new ContentValues();
         values.put(Constants.TEMPLATE_NAME, name);
         values.put(Constants.VIEW_ID, view.getId());
@@ -173,7 +210,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     }
 
     @Override
-    public void saveStupidTextViewInfo(String name, StupidTextView view) {
+    public void saveStupidTextViewInfo(java.lang.String name, StupidTextView view) {
         ContentValues values = new ContentValues();
         values.put(Constants.TEMPLATE_NAME, name);
         values.put(Constants.VIEW_ID, view.getId());
@@ -191,7 +228,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     }
 
     @Override
-    public void saveStupidEditTextInfo(String name, StupidEditText view) {
+    public void saveStupidEditTextInfo(java.lang.String name, StupidEditText view) {
         ContentValues values = new ContentValues();
         values.put(Constants.TEMPLATE_NAME, name);
         values.put(Constants.VIEW_ID, view.getId());

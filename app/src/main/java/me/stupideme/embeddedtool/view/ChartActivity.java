@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -25,13 +24,9 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.ChartPresenter;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
@@ -44,7 +39,7 @@ import me.stupideme.embeddedtool.view.custom.StupidChartViewDialog;
 public class ChartActivity extends AppCompatActivity implements OnChartValueSelectedListener,
         StupidChartViewDialog.StupidChartDialogListener, IChartView {
 
-    private static final String TAG = ChartActivity.class.getSimpleName();
+    private static final java.lang.String TAG = ChartActivity.class.getSimpleName();
     private StupidChartViewDialog mDialog;
     private ImageButton mButton;
     private boolean isPlaying = true;
@@ -53,7 +48,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     private OnSendMessageListener mListener;
     private int mColorPos = 0;
     private int mTypePos = 0;
-    private DataType mDataType;
+    private String mDataType;
 
     private LineChart mChart;
     private XAxis xAxis;
@@ -124,7 +119,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     }
 
     @Override
-    public void receiveMessage(String msg) {
+    public void receiveMessage(java.lang.String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 
     }
@@ -197,7 +192,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     }
 
     @Override
-    public void onSave(Map<String, String> map) {
+    public void onSave(Map<java.lang.String, java.lang.String> map) {
         mDialog.dismiss();
         int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
         mChart.setBackgroundColor(color);
@@ -207,7 +202,9 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         }
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
-            mDataType = Constants.mDataTypes[mTypePos];
+        }
+        if(map.containsKey(Constants.KEY_TYPE_STRING)){
+            mDataType = map.get(Constants.KEY_TYPE_STRING);
         }
         if (map.containsKey(Constants.KEY_MAX_X)) {
             xMax = Integer.parseInt(map.get(Constants.KEY_MAX_X));
@@ -228,7 +225,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         mChart.notifyDataSetChanged();
 
         mListener.onSendMessage(Constants.REQUEST_CODE_CHART, mDataType,
-                String.valueOf(Constants.MESSAGE_BODY_EMPTY));
+                java.lang.String.valueOf(Constants.MESSAGE_BODY_EMPTY));
     }
 
     @Override

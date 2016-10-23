@@ -32,22 +32,16 @@ public class DataTypeFragment extends Fragment {
 
     private static final String TAG = DataTypeFragment.class.getSimpleName();
     private OnDataTypeChangedListener mListener;
-    private List<String> mDataTypes;
+    private List<String> mDataTypesList;
     private DataTypeAdapter mAdapter;
 
     public DataTypeFragment() {
-        mDataTypes = new ArrayList<>();
+        mDataTypesList = new ArrayList<>();
+        mAdapter = new DataTypeAdapter();
     }
 
     public static DataTypeFragment newInstance() {
         return new DataTypeFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mAdapter = new DataTypeAdapter();
-        setTypes(mListener.loadAllTypes());
     }
 
     @Override
@@ -63,6 +57,8 @@ public class DataTypeFragment extends Fragment {
                 showDialog();
             }
         });
+        mListener = (OnDataTypeChangedListener) getActivity();
+        setTypes(mListener.getDataType());
         return rootView;
     }
 
@@ -87,12 +83,16 @@ public class DataTypeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mDataTypes.clear();
+        mDataTypesList.clear();
     }
 
+    /**
+     * recovery default data types
+     *
+     * @param list a list contains default data types
+     */
     public void recoveryDefault(List<Map<String, String>> list) {
-        mDataTypes.clear();
-        mAdapter.notifyDataSetChanged();
+        mDataTypesList.clear();
         setTypes(list);
     }
 
@@ -110,7 +110,7 @@ public class DataTypeFragment extends Fragment {
                 count++;
             }
             if (count == 2)
-                mDataTypes.add(builder.toString());
+                mDataTypesList.add(builder.toString());
             Log.v(TAG, builder.toString());
         }
         mAdapter.notifyDataSetChanged();
@@ -141,8 +141,9 @@ public class DataTypeFragment extends Fragment {
                             map.put(Constants.KEY_DATA_CODE, editText2.getText().toString());
                             mListener.addDataType(map);
                             String text = editText.getText().toString() + ":0x" + editText2.getText().toString();
-                            mDataTypes.add(text);
+                            mDataTypesList.add(text);
                             mAdapter.notifyDataSetChanged();
+                            Log.v(TAG, "result ok");
                         } else
                             Toast.makeText(getActivity(), "数据类型名称或编码不能为空！", Toast.LENGTH_SHORT).show();
 
@@ -164,19 +165,19 @@ public class DataTypeFragment extends Fragment {
 
         void removeDataType(String name);
 
-        List<Map<String, String>> loadAllTypes();
+        List<Map<String, String>> getDataType();
     }
 
     private class DataTypeAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return mDataTypes.size();
+            return mDataTypesList.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return mDataTypes.get(i);
+            return mDataTypesList.get(i);
         }
 
         @Override
@@ -197,14 +198,16 @@ public class DataTypeFragment extends Fragment {
                 holder = (ViewHolder) view.getTag();
             }
 
-            holder.mTextView.setText(mDataTypes.get(i));
+            holder.mTextView.setText(mDataTypesList.get(i));
+            if (i < 3)
+                holder.mImageButton.setVisibility(View.GONE);
             holder.mImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String[] strings = holder.mTextView.getText().toString().split(":");
                     String name = strings[0];
                     mListener.removeDataType(name);
-                    mDataTypes.remove(i);
+                    mDataTypesList.remove(i);
                     notifyDataSetChanged();
                 }
             });

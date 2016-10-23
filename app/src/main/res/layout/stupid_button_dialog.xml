@@ -71,7 +71,6 @@
             android:layout_height="40dp"
             android:layout_below="@id/row_1"
             android:layout_toEndOf="@id/stupid_button_dialog_type_text"
-            android:entries="@array/StupidButtonType"
             android:gravity="center_vertical|start" />
 
         <TextView

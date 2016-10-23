@@ -21,27 +21,57 @@ public class SettingsPresenter {
         iSettingsModel = SettingsModelImpl.getInstance();
     }
 
+    /**
+     * add a data type
+     * @param map
+     */
     public void addDataType(Map<String, String> map) {
         iSettingsModel.addDataType(map);
     }
 
+    /**
+     * remove a data type
+     * @param name
+     */
     public void removeDataType(String name) {
         iSettingsModel.removeDataType(name);
     }
 
-    public List<Map<String, String>> getAllDataType() {
-        return iSettingsModel.getAllDataType();
-    }
-
+    /**
+     * save the changes when edit protocol
+     * @param map contains header and tail
+     */
     public void saveDataProtocol(Map<String, String> map) {
         iSettingsModel.saveDataProtocol(map);
     }
 
+    /**
+     * get all data types
+     * @return
+     */
+    public List<Map<String, String>> getDataType() {
+        return iSettingsModel.getDataType();
+    }
+
+    /**
+     * get all data types
+     * @return a list contains all data types
+     */
     public List<Map<String, String>> getDataProtocol() {
         return iSettingsModel.getDataProtocol();
     }
 
-    public void recoveryDefault() {
-        iSettingsView.recoveryDefault(iSettingsModel.getDefault());
+    /**
+     * set data types to default
+     */
+    public void recoveryTypeDefault() {
+        iSettingsView.recoveryTypeDefault(iSettingsModel.getDataTypeDefault());
+    }
+
+    /**
+     * set data protocol to default
+     */
+    public void recoveryProtocolDefault(){
+        iSettingsView.recoveryProtocolDefault(iSettingsModel.getProtocolDefault());
     }
 }

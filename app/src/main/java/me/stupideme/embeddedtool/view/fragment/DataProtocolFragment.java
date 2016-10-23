@@ -37,6 +37,10 @@ public class DataProtocolFragment extends Fragment {
         return fragment;
     }
 
+    public void setOnDataProtocolChangedListener(OnDataProtocolChangedListener listener){
+        mListener = listener;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,7 @@ public class DataProtocolFragment extends Fragment {
             }
         });
 
+        //load all data protocol when create view
         setDataProtocol();
 
         return root;
@@ -101,7 +106,7 @@ public class DataProtocolFragment extends Fragment {
     }
 
     private void setDataProtocol() {
-        List<Map<String, String>> list = mListener.loadAllProtocol();
+        List<Map<String, String>> list = mListener.getDataProtocol();
         for (Map<String, String> map : list) {
             if (map.containsKey(Constants.KEY_DATA_HEADER)) {
                 mHeader.setText(map.get(Constants.KEY_DATA_HEADER));
@@ -117,6 +122,6 @@ public class DataProtocolFragment extends Fragment {
     public interface OnDataProtocolChangedListener {
         void onSaveProtocol(Map<String, String> map);
 
-        List<Map<String, String>> loadAllProtocol();
+        List<Map<String, String>> getDataProtocol();
     }
 }

@@ -11,19 +11,19 @@ You can easily communicate with embedded devices over bluetooth.
 * Save current views as template so that you can pick one directly next time rather than recreate it.
 * Add bluetooth service(with some unknown bugs).
 * Add database to save template. Database can be also used in other ways.
+* Custom data type and protocol
 
 All of these view can be moved by your finger.
 All of these views can be remove or reshaped by performing long click.
 
 ## Todo
-* Fix bugs when create view from template
 * Fix bugs when connect bluetooth device
 
 ## Screenshots
 ![Main](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.PNG)
 ![Main2](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.png)
 ![Chart](https://github.com/StupidL/EmbeddedTool/blob/master/art/chart.png)
-
+![Type](https://github.com/StupidL/EmbeddedTool/blob/master/art/type.png)
 
 ## License
 Copyright 2016 ZhouYang Luo

@@ -2,7 +2,8 @@ package me.stupideme.embeddedtool.model;
 
 import android.database.Cursor;
 
-import me.stupideme.embeddedtool.DataType;
+import java.util.List;
+
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
@@ -60,4 +61,10 @@ public interface IStupidModel {
      * @return cursor
      */
     Cursor queryTemplate(String templateName);
+
+    /**
+     * query data type for spinner
+     * @return a list contains all data types
+     */
+    List<String> queryDataTypesForSpinner();
 }

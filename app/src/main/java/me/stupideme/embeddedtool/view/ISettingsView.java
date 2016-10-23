@@ -8,5 +8,7 @@ import java.util.Map;
  */
 
 public interface ISettingsView {
-    void recoveryDefault(List<Map<String, String>> list);
+    void recoveryTypeDefault(List<Map<String, String>> list);
+
+    void recoveryProtocolDefault(List<Map<String, String>> list);
 }

@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import me.stupideme.embeddedtool.Constants;
-
 /**
  * Created by stupidl on 16-10-9.
  */
@@ -19,10 +17,8 @@ public class DBManager {
     private SQLiteDatabase db;
 
     private static final String TABLE_TEMPLATES = "templates";
-    private static final String TABLE_TYPE_DEFAULT = "data_type_default";
-    private static final String TABLE_TYPE_CUSTOM = "data_type_custom";
-    private static final String TABLE_PROTOCOL_DEFAULT = "data_protocol_default";
-    private static final String TABLE_PROTOCOL_CUSTOM = "data_protocol_custom";
+    private static final String TABLE_TYPE = "data_type";
+    private static final String TABLE_PROTOCOL = "data_protocol";
 
     /**
      * private constructor
@@ -126,35 +122,34 @@ public class DBManager {
      * @param values
      */
     public void insertDataType(ContentValues values) {
-        db.insert(TABLE_TYPE_CUSTOM, null, values);
+        db.insert(TABLE_TYPE, null, values);
     }
 
     /**
-     * insert a custom data protocol
+     * insert a data protocol
      *
      * @param values
      */
     public void insertDataProtocol(ContentValues values) {
-        db.insert(TABLE_PROTOCOL_CUSTOM, null, values);
+        db.insert(TABLE_PROTOCOL, null, values);
     }
 
     /**
-     * delete a custom data type
+     * delete a data type
      *
      * @param name
      */
     public void deleteDataType(String name) {
-        db.delete(TABLE_TYPE_CUSTOM, "name = ?", new String[]{name});
+        db.delete(TABLE_TYPE, "name = ?", new String[]{name});
     }
 
     /**
-     * update a custom data protocol
+     * query data type
      *
-     * @param values
+     * @return
      */
-    public void updateDataProtocol(ContentValues values) {
-        db.delete(TABLE_PROTOCOL_CUSTOM, "_id >= ?", new String[]{"0"});
-        db.insert(TABLE_PROTOCOL_CUSTOM, null, values);
+    public Cursor queryDataType() {
+        return db.rawQuery("SELECT * FROM " + TABLE_TYPE + " WHERE _id >= ?", new String[]{"0"});
     }
 
     /**
@@ -162,17 +157,8 @@ public class DBManager {
      *
      * @return
      */
-    public Cursor queryTypeDefault() {
-        return db.rawQuery("SELECT * FROM " + TABLE_TYPE_DEFAULT + " WHERE _id >= ?", new String[]{"0"});
-    }
-
-    /**
-     * query custom data type
-     *
-     * @return
-     */
-    public Cursor queryTypeCustom() {
-        return db.rawQuery("SELECT * FROM " + TABLE_TYPE_CUSTOM + " WHERE _id >= ?", new String[]{"0"});
+    public Cursor queryDataTypeDefault() {
+        return db.rawQuery("SELECT * FROM " + TABLE_TYPE + " WHERE _id <= ?", new String[]{"3"});
     }
 
     /**
@@ -180,40 +166,48 @@ public class DBManager {
      *
      * @return
      */
-    public Cursor queryProtocolDefault() {
-        return db.rawQuery("SELECT * FROM " + TABLE_PROTOCOL_DEFAULT + " WHERE _id >= ?", new String[]{"0"});
+    public Cursor queryDataProtocolDefault() {
+        return db.rawQuery("SELECT * FROM " + TABLE_PROTOCOL + " WHERE _id = ?", new String[]{"1"});
     }
 
     /**
-     * query custom data protocol
+     * query all data protocol
      *
      * @return
      */
-    public Cursor queryProtocolCustom() {
-        return db.rawQuery("SELECT * FROM " + TABLE_PROTOCOL_CUSTOM + " WHERE _id >= ?", new String[]{"0"});
+    public Cursor queryDataProtocol() {
+        return db.rawQuery("SELECT * FROM " + TABLE_PROTOCOL + " WHERE _id >= ?", new String[]{"0"});
     }
 
     /**
      * delete all custom types
      */
-    public void deleteAllTypeCustom() {
-        db.delete(TABLE_TYPE_CUSTOM, "_id >= ?", new String[]{"0"});
+    public void deleteDataTypeCustom() {
+        db.delete(TABLE_TYPE, "_id >= ?", new String[]{"4"});
     }
 
     /**
      * delete all custom protocols
      */
-    public void deleteAllProtocolCustom() {
-        db.delete(TABLE_PROTOCOL_CUSTOM, "_id >= ?", new String[]{"0"});
+    public void deleteDataProtocolCustom() {
+        db.delete(TABLE_PROTOCOL, "_id >= ?", new String[]{"2"});
+    }
+
+    public String queryTypeCodeByName(String name) {
+        Cursor cursor = db.rawQuery("SELECT * FROM data_type WHERE name = ?", new String[]{name});
+        cursor.moveToFirst();
+        String s = cursor.getString(cursor.getColumnIndex("code"));
+        cursor.close();
+        return s;
     }
 
     /**
      * set default types and protocol
      */
     private void initDefault() {
-        db.execSQL("INSERT OR REPLACE INTO data_type_default (name, code) VALUES ('LED', 'aa')");
-        db.execSQL("INSERT OR REPLACE INTO data_type_default (name, code) VALUES ('BUZZER', 'ab')");
-        db.execSQL("INSERT OR REPLACE INTO data_type_default (name, code) VALUES ('TEMPERATURE', 'ac')");
-        db.execSQL("INSERT OR REPLACE INTO data_protocol_default (header, tail) VALUES ('FFFFFF','FFFFFF')");
+        db.execSQL("INSERT OR REPLACE INTO data_type (_id, name, code) VALUES ('1', 'LED', 'aa')");
+        db.execSQL("INSERT OR REPLACE INTO data_type (_id, name, code) VALUES ('2', 'BUZZER', 'ab')");
+        db.execSQL("INSERT OR REPLACE INTO data_type (_id, name, code) VALUES ('3', 'TEMPERATURE', 'ac')");
+        db.execSQL("INSERT OR REPLACE INTO data_protocol (_id, header, tail) VALUES ('1', 'FFFFFF','FFFFFF')");
     }
 }

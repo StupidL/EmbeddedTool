@@ -9,10 +9,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
-import me.stupideme.embeddedtool.DataType;
 import me.stupideme.embeddedtool.R;
 
 /**
@@ -22,7 +22,7 @@ import me.stupideme.embeddedtool.R;
 public class StupidButtonSend extends Button implements StupidButtonDialog.StupidButtonDialogListener {
 
     //debug
-    private static final String TAG = StupidButtonSend.class.getSimpleName();
+    private static final java.lang.String TAG = StupidButtonSend.class.getSimpleName();
 
     /**
      * dialog to set attrs
@@ -39,7 +39,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
     /**
      * data type to operate
      */
-    private DataType mDataType;
+    private String mDataType;
 
     /**
      * position of the type array so we can set the correct position when recreated view from template
@@ -110,6 +110,11 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
         mSendMessageListener = listener;
     }
 
+    public void updateSpinnerAdapter(List<java.lang.String> list) {
+        mDialog.updateTypeSpinnerAdapter(list);
+        Log.v(TAG, java.lang.String.valueOf(list.size()));
+    }
+
     /**
      * set color position in spinner
      *
@@ -135,8 +140,6 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
      */
     public void setTypePos(int pos) {
         mTypePos = pos;
-        if (mTypePos != -1)
-            setDataType(Constants.mDataTypes[mTypePos]);
     }
 
     /**
@@ -153,18 +156,18 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
      *
      * @return data type
      */
-    public DataType getDataType() {
+    public String getDataType() {
         return mDataType;
     }
 
     /**
      * set data type
      *
-     * @param mDataType data type
+     * @param type data type
      */
-    public void setDataType(DataType mDataType) {
-        this.mDataType = mDataType;
-        Log.v(TAG, "DataType:" + mDataType);
+    public void setDataType(String type) {
+        this.mDataType = type;
+        Log.v(TAG, "String:" + type);
     }
 
     /**
@@ -213,7 +216,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
     }
 
     @Override
-    public void onSave(Map<String, String> map) {
+    public void onSave(Map<java.lang.String, java.lang.String> map) {
         mDialog.dismiss();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
         if (map.containsKey(Constants.KEY_NAME))
@@ -231,7 +234,9 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
         }
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
-            setDataType(Constants.mDataTypes[mTypePos]);
+        }
+        if(map.containsKey(Constants.KEY_TYPE_STRING)){
+            setDataType(map.get(Constants.KEY_TYPE_STRING));
         }
         if (map.containsKey(Constants.KEY_COLOR_POS)) {
             mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));

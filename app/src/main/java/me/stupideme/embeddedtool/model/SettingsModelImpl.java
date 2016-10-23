@@ -52,21 +52,18 @@ public class SettingsModelImpl implements ISettingsModel {
     }
 
     @Override
-    public List<Map<String, String>> getAllDataType() {
+    public void saveDataProtocol(Map<String, String> map) {
+        ContentValues values = new ContentValues();
+        values.put(Constants.KEY_DATA_HEADER, map.get(Constants.KEY_DATA_HEADER));
+        values.put(Constants.KEY_DATA_TAIL, map.get(Constants.KEY_DATA_TAIL));
+        mManager.insertDataProtocol(values);
+    }
+
+
+    @Override
+    public List<Map<String, String>> getDataType() {
         List<Map<String, String>> list = new ArrayList<>();
-        //load default types
-        Cursor cursor1 = mManager.queryTypeDefault();
-        cursor1.moveToFirst();
-        while (cursor1.getCount() > 0 && !cursor1.isAfterLast()) {
-            Map<String, String> map = new HashMap<>();
-            map.put(Constants.KEY_DATA_NAME, cursor1.getString(cursor1.getColumnIndex(Constants.KEY_DATA_NAME)));
-            map.put(Constants.KEY_DATA_CODE, cursor1.getString(cursor1.getColumnIndex(Constants.KEY_DATA_CODE)));
-            list.add(map);
-            cursor1.moveToNext();
-        }
-        cursor1.close();
-        //load custom types
-        Cursor cursor = mManager.queryTypeCustom();
+        Cursor cursor = mManager.queryDataType();
         cursor.moveToFirst();
         while (!cursor.isAfterLast() && cursor.getCount() > 0) {
             Map<String, String> map = new HashMap<>();
@@ -80,29 +77,9 @@ public class SettingsModelImpl implements ISettingsModel {
     }
 
     @Override
-    public void saveDataProtocol(Map<String, String> map) {
-        ContentValues values = new ContentValues();
-        values.put(Constants.KEY_DATA_HEADER, map.get(Constants.KEY_DATA_HEADER));
-        values.put(Constants.KEY_DATA_TAIL, map.get(Constants.KEY_DATA_TAIL));
-        mManager.insertDataProtocol(values);
-    }
-
-    @Override
     public List<Map<String, String>> getDataProtocol() {
         List<Map<String, String>> list = new ArrayList<>();
-        //load default protocol
-        Cursor cursor1 = mManager.queryProtocolDefault();
-        cursor1.moveToFirst();
-        while (cursor1.getCount() > 0 && !cursor1.isAfterLast()) {
-            Map<String, String> map = new HashMap<>();
-            map.put(Constants.KEY_DATA_HEADER, cursor1.getString(cursor1.getColumnIndex(Constants.KEY_DATA_HEADER)));
-            map.put(Constants.KEY_DATA_TAIL, cursor1.getString(cursor1.getColumnIndex(Constants.KEY_DATA_TAIL)));
-            list.add(map);
-            cursor1.moveToNext();
-        }
-        cursor1.close();
-        //load custom protocol
-        Cursor cursor = mManager.queryProtocolCustom();
+        Cursor cursor = mManager.queryDataProtocol();
         cursor.moveToFirst();
         while (!cursor.isAfterLast() && cursor.getCount() > 0) {
             Map<String, String> map = new HashMap<>();
@@ -116,11 +93,10 @@ public class SettingsModelImpl implements ISettingsModel {
     }
 
     @Override
-    public List<Map<String, String>> getDefault() {
-        mManager.deleteAllTypeCustom();
-        mManager.deleteAllProtocolCustom();
+    public List<Map<String, String>> getDataTypeDefault() {
+        mManager.deleteDataTypeCustom();
         List<Map<String, String>> list = new ArrayList<>();
-        Cursor cursor = mManager.queryTypeDefault();
+        Cursor cursor = mManager.queryDataTypeDefault();
         cursor.moveToFirst();
         while (cursor.getCount() > 0 && !cursor.isAfterLast()) {
             Map<String, String> map = new HashMap<>();
@@ -130,16 +106,24 @@ public class SettingsModelImpl implements ISettingsModel {
             cursor.moveToNext();
         }
         cursor.close();
-        Cursor cursor1 = mManager.queryProtocolDefault();
-        cursor1.moveToFirst();
-        while (cursor1.getCount() > 0 && !cursor1.isAfterLast()) {
+        Log.v(TAG, String.valueOf(list.size()));
+        return list;
+    }
+
+    @Override
+    public List<Map<String, String>> getProtocolDefault() {
+        mManager.deleteDataProtocolCustom();
+        List<Map<String, String>> list = new ArrayList<>();
+        Cursor cursor = mManager.queryDataProtocolDefault();
+        cursor.moveToFirst();
+        while (cursor.getCount() > 0 && !cursor.isAfterLast()) {
             Map<String, String> map = new HashMap<>();
-            map.put(Constants.KEY_DATA_HEADER, cursor1.getString(cursor1.getColumnIndex(Constants.KEY_DATA_HEADER)));
-            map.put(Constants.KEY_DATA_TAIL, cursor1.getString(cursor1.getColumnIndex(Constants.KEY_DATA_TAIL)));
+            map.put(Constants.KEY_DATA_HEADER, cursor.getString(cursor.getColumnIndex(Constants.KEY_DATA_HEADER)));
+            map.put(Constants.KEY_DATA_TAIL, cursor.getString(cursor.getColumnIndex(Constants.KEY_DATA_TAIL)));
             list.add(map);
-            cursor1.moveToNext();
+            cursor.moveToNext();
         }
-        cursor1.close();
+        cursor.close();
         Log.v(TAG, String.valueOf(list.size()));
         return list;
     }

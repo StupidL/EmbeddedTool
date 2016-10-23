@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.util.List;
+
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.net.BluetoothService;
@@ -58,6 +60,12 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     private static final int REQUEST_SELECT_TEMPLATE = 4;
 
     /**
+     * request code to start settings activity
+     */
+    private static final int REQUEST_SETTINGS_ADVANCED = 5;
+    private static final int REQUEST_DOCUMENT = 6;
+
+    /**
      * the presenter. We are using MVP pattern
      */
     public static MainPresenter mPresenter;
@@ -85,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         setContentView(R.layout.activity_main);
 
         //init presenter
-        mPresenter = MainPresenter.getInstance(this);
+        mPresenter = MainPresenter.getInstance(MainActivity.this);
         //init view
         initView();
         //set handler for bluetooth service in model
@@ -122,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     Log.d("MainActivity", "BT not enabled");
                     finish();
                 }
+                break;
             case REQUEST_SELECT_TEMPLATE:
                 if (resultCode == Activity.RESULT_OK) {
                     String name = data.getStringExtra("TemplateName");
@@ -140,6 +149,14 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                         }
                     }
                 }
+                break;
+            case REQUEST_SETTINGS_ADVANCED:
+                if (resultCode == Activity.RESULT_OK) {
+                    mPresenter.updateSpinnerAdapter();
+                    Log.v(TAG, "Result_OK, updateSpinnerAdapter");
+                }
+                break;
+
         }
     }
 
@@ -164,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         stupidButtonSend.setOnTouchListener(mTouchListener);
         mPresenter.setSendMessageListenerForButton(stupidButtonSend);
         mFrameLayout.addView(stupidButtonSend);
-        Log.i("StupidSendBtnID: ", stupidButtonSend.getId() + "");
+        mPresenter.updateSpinnerAdapter();
     }
 
     /**
@@ -179,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         mPresenter.setSendMessageListenerForButton(button);
         mPresenter.attachObserver(button);
         mFrameLayout.addView(button);
-        Log.i("StupidReceiveBtnID: ", button.getId() + "");
+        mPresenter.updateSpinnerAdapter();
     }
 
     @Override
@@ -212,6 +229,19 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     @Override
     public void clearViews() {
         mFrameLayout.removeAllViews();
+    }
+
+    @Override
+    public void updateTypeSpinnerAdapter(List<String> list) {
+        for (int i = 0; i < mFrameLayout.getChildCount(); i++) {
+            View view = mFrameLayout.getChildAt(i);
+            if (view instanceof StupidButtonSend) {
+                ((StupidButtonSend) view).updateSpinnerAdapter(list);
+            }
+            if (view instanceof StupidButtonReceive) {
+                ((StupidButtonReceive) view).updateSpinnerAdapter(list);
+            }
+        }
     }
 
 
@@ -372,7 +402,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         int id = item.getItemId();
         if (id == R.id.action_settings_advanced) {
             // action settings clicked
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivityForResult(intent, REQUEST_SETTINGS_ADVANCED);
         }
         if (id == R.id.action_bluetooth_secure) {
             // action bluetooth secure clicked,
@@ -432,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             startActivityForResult(new Intent(MainActivity.this, TemplateActivity.class), REQUEST_SELECT_TEMPLATE);
         }
         if (id == R.id.action_document) {
-            startActivity(new Intent(MainActivity.this, DocumentActivity.class));
+            startActivityForResult(new Intent(MainActivity.this, DocumentActivity.class), REQUEST_DOCUMENT);
         }
         return super.onOptionsItemSelected(item);
     }

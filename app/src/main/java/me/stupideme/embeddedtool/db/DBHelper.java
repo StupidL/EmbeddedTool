@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import me.stupideme.embeddedtool.view.custom.StupidTextView;
-
 /**
  * Created by stupidl on 16-10-9.
  */
@@ -33,28 +31,14 @@ class DBHelper extends SQLiteOpenHelper {
     /**
      * create table default data type
      */
-    private static final String CREATE_TABLE_TYPE_DEFAULT = "CREATE TABLE data_type_default(" +
+    private static final String CREATE_TABLE_TYPE = "CREATE TABLE data_type(" +
             "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "name, " + "code " + ")";
 
     /**
      * create table default data protocol
      */
-    private static final String CREATE_TABLE_PROTOCOL_DEFAULT = "CREATE TABLE data_protocol_default(" +
-            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "header, " + "tail " + ")";
-
-    /**
-     * create table custom data type
-     */
-    private static final String CREATE_TABLE_TYPE_CUSTOM = "CREATE TABLE data_type_custom(" +
-            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "name, " + "code " + ")";
-
-    /**
-     * create table custom data protocol
-     */
-    private static final String CREATE_TABLE_PROTOCOL_CUSTOM = "CREATE TABLE data_protocol_custom(" +
+    private static final String CREATE_TABLE_PROTOCOL = "CREATE TABLE data_protocol(" +
             "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "header, " + "tail " + ")";
 
@@ -67,10 +51,8 @@ class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // create table templates
         sqLiteDatabase.execSQL(CREATE_TABLE_TEMPLATES);
-        sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_DEFAULT);
-        sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_CUSTOM);
-        sqLiteDatabase.execSQL(CREATE_TABLE_PROTOCOL_DEFAULT);
-        sqLiteDatabase.execSQL(CREATE_TABLE_PROTOCOL_CUSTOM);
+        sqLiteDatabase.execSQL(CREATE_TABLE_TYPE);
+        sqLiteDatabase.execSQL(CREATE_TABLE_PROTOCOL);
     }
 
     @Override

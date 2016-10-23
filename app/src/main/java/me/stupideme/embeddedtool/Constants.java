@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool;
 
+import java.lang.*;
 /**
  * Created by StupidL on 2016/10/1.
  */
@@ -7,12 +8,6 @@ package me.stupideme.embeddedtool;
 public class Constants {
     public static final int[] mColors = {R.color.Gray, R.color.Purple, R.color.Indigo, R.color.Teal,
             R.color.Orange, R.color.Brown, R.color.BlueGray};
-
-    public static final DataType[] mDataTypes = {DataType.LED, DataType.BUZZER, DataType.TEMPERATURE};
-
-    public static final int DATA_TYPE_DEFAULT_CODE_LED = 0xaa;
-    public static final int DATA_TYPE_DEFAULT_CODE_BUZZER = 0xab;
-    public static final int DATA_TYPE_DEFAULT_CODE_TEMPERATURE = 0xac;
 
     public static final int REQUEST_CODE_SEND = 0x01;
     public static final int REQUEST_CODE_RECEIVE = 0x10;
@@ -29,7 +24,6 @@ public class Constants {
     // Key names received from the BluetoothService Handler
     public static final String DEVICE_NAME = "device_name";
     public static final String TOAST = "toast";
-
 
     // database table templates columns
     public static final String TEMPLATE_NAME = "template_name";
@@ -59,6 +53,7 @@ public class Constants {
     public static final String KEY_HEIGHT = "height";
     public static final String KEY_ID = "id";
     public static final String KEY_TYPE_POS = "type";
+    public static final String KEY_TYPE_STRING = "type_string";
     public static final String KEY_COLOR_POS = "color";
     public static final String KEY_BIND_VIEW_ID = "bind_view_id";
     public static final String KEY_MAX_X = "MaxX";

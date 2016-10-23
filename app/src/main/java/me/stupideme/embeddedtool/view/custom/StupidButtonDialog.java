@@ -2,13 +2,17 @@ package me.stupideme.embeddedtool.view.custom;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
@@ -20,6 +24,7 @@ import me.stupideme.embeddedtool.R;
 
 public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
+    private static final String TAG = StupidButtonDialog.class.getSimpleName();
     /**
      * listener to listen attrs' changes
      */
@@ -64,7 +69,13 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
      */
     private int mDataType;
 
-    StupidButtonDialog(final Context context, StupidButtonDialogListener listener) {
+    private String mDataTypeString;
+
+    private ArrayAdapter<String> mTypeSpinnerAdapter;
+
+    private List<String> mList = new ArrayList<>();
+
+    StupidButtonDialog(Context context, StupidButtonDialogListener listener) {
         super(context);
         //set listener
         mListener = listener;
@@ -80,10 +91,15 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         mWidth = (EditText) findViewById(R.id.stupid_button_dialog_width_et);
         mHeight = (EditText) findViewById(R.id.stupid_button_dialog_height_et);
 
+        mTypeSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mList);
+        mTypeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        mTypeSpinner.setAdapter(mTypeSpinnerAdapter);
+
         mTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mDataType = i;
+                mDataTypeString = (String) mTypeSpinner.getItemAtPosition(i);
             }
 
             @Override
@@ -99,7 +115,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                mDataType = 0;
+
             }
         });
 
@@ -107,6 +123,13 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         ok.setOnClickListener(this);
         delete.setOnClickListener(this);
 
+    }
+
+    public void updateTypeSpinnerAdapter(List<String> list) {
+        mList.clear();
+        mList.addAll(list);
+        mTypeSpinnerAdapter.notifyDataSetChanged();
+        Log.v(TAG, "updateTypeSpinnerAdapter size:" + mTypeSpinnerAdapter.getCount());
     }
 
     /**
@@ -120,6 +143,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
     /**
      * set width for the button in dialog
+     *
      * @param w width of the button
      */
     void showButtonWidth(int w) {
@@ -128,6 +152,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
     /**
      * set height for the button in dialog
+     *
      * @param h height of the button
      */
     void showButtonHeight(int h) {
@@ -136,6 +161,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
     /**
      * set button id in dialog
+     *
      * @param i id of the button
      */
     void showButtonId(int i) {
@@ -144,6 +170,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
     /**
      * set color for button in spinner
+     *
      * @param i position
      */
     void showSpinnerColor(int i) {
@@ -152,10 +179,11 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
 
     /**
      * set data type for button in spinner
+     *
      * @param i position
      */
-    void showSpinnerType(int i){
-        mTypeSpinner.setSelection(i,true);
+    void showSpinnerType(int i) {
+        mTypeSpinner.setSelection(i, true);
     }
 
     @Override
@@ -175,6 +203,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
                     map.put(Constants.KEY_ID, mId.getText().toString());
                 map.put(Constants.KEY_COLOR_POS, mColorPos + "");
                 map.put(Constants.KEY_TYPE_POS, mDataType + "");
+                map.put(Constants.KEY_TYPE_STRING, mDataTypeString);
                 mListener.onSave(map);
                 break;
             case R.id.stupid_button_dialog_delete:

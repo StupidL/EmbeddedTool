@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.view;
 
+import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,7 @@ import me.stupideme.embeddedtool.view.fragment.DataTypeFragment;
 public class SettingsActivity extends AppCompatActivity implements ISettingsView,
         DataProtocolFragment.OnDataProtocolChangedListener, DataTypeFragment.OnDataTypeChangedListener {
 
+    private static final String TAG = SettingsActivity.class.getSimpleName();
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     public SettingsPresenter mPresenter;
@@ -42,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(Activity.RESULT_OK);
                 SettingsActivity.super.onBackPressed();
             }
         });
@@ -75,20 +78,17 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             return true;
         }
         if (id == R.id.action_recovery_advanced) {
-            mPresenter.recoveryDefault();
+            mPresenter.recoveryTypeDefault();
+            mPresenter.recoveryProtocolDefault();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onSaveProtocol(Map<String, String> map) {
-        mPresenter.saveDataProtocol(map);
-    }
-
-    @Override
-    public List<Map<String, String>> loadAllProtocol() {
-        return mPresenter.getDataProtocol();
+    public void onBackPressed() {
+        setResult(Activity.RESULT_OK);
+        super.onBackPressed();
     }
 
     @Override
@@ -102,13 +102,27 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     }
 
     @Override
-    public List<Map<String, String>> loadAllTypes() {
-        return mPresenter.getAllDataType();
+    public void onSaveProtocol(Map<String, String> map) {
+        mPresenter.saveDataProtocol(map);
     }
 
     @Override
-    public void recoveryDefault(List<Map<String, String>> list) {
+    public List<Map<String, String>> getDataProtocol() {
+        return mPresenter.getDataProtocol();
+    }
+
+    @Override
+    public List<Map<String, String>> getDataType() {
+        return mPresenter.getDataType();
+    }
+
+    @Override
+    public void recoveryTypeDefault(List<Map<String, String>> list) {
         mTypeFragment.recoveryDefault(list);
+    }
+
+    @Override
+    public void recoveryProtocolDefault(List<Map<String, String>> list) {
         mProtocolFragment.recoveryDefault(list);
     }
 
@@ -143,4 +157,5 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
             return null;
         }
     }
+
 }

@@ -2,6 +2,8 @@ package me.stupideme.embeddedtool.view;
 
 import android.view.View;
 
+import java.util.List;
+
 /**
  * Created by StupidL on 2016/9/30.
  */
@@ -40,4 +42,9 @@ public interface IMainView {
      */
     void clearViews();
 
+    /**
+     * refresh data type spinner adapter for button
+     * @param list
+     */
+    void updateTypeSpinnerAdapter(List<String> list);
 }
