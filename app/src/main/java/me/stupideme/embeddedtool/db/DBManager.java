@@ -15,6 +15,7 @@ public class DBManager {
     private static final String TAG = DBManager.class.getSimpleName();
     private static DBManager mInstance;
     private SQLiteDatabase db;
+    private static Context mContext;
 
     private static final String TABLE_TEMPLATES = "templates";
     private static final String TABLE_TYPE = "data_type";
@@ -23,28 +24,28 @@ public class DBManager {
     /**
      * private constructor
      *
-     * @param context context
      */
-    private DBManager(Context context) {
-        DBHelper mHelper = new DBHelper(context);
-        Log.i(TAG, String.valueOf(mHelper.getDatabaseName()));
-        Log.i(TAG, String.valueOf(mHelper));
+    private DBManager() {
+        DBHelper mHelper = new DBHelper(mContext);
         db = mHelper.getWritableDatabase();
         initDefault();
+    }
+
+    public static void init(Context context) {
+        mContext = context;
     }
 
     /**
      * single instance pattern
      *
-     * @param context context
      * @return instance
      */
-    public static DBManager getInstance(Context context) {
+    public static DBManager getInstance() {
         Log.v(TAG, "DBManager init");
         if (mInstance == null) {
             synchronized (DBManager.class) {
                 if (mInstance == null)
-                    mInstance = new DBManager(context);
+                    mInstance = new DBManager();
             }
         }
         return mInstance;

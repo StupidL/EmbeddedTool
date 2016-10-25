@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                             ((StupidEditText) view).setBindViewListener(MainActivity.this);
                         }
                     }
+                    mPresenter.updateSpinnerAdapter();
                 }
                 break;
             case REQUEST_SETTINGS_ADVANCED:

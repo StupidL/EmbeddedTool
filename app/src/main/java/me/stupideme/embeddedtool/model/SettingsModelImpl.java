@@ -24,7 +24,7 @@ public class SettingsModelImpl implements ISettingsModel {
     private static SettingsModelImpl INSTANCE;
 
     private SettingsModelImpl() {
-        mManager = App.manager;
+        mManager = DBManager.getInstance();
     }
 
     public static SettingsModelImpl getInstance() {

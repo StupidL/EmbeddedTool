@@ -10,11 +10,9 @@ import me.stupideme.embeddedtool.db.DBManager;
 
 public class App extends Application {
 
-    public static DBManager manager;
-
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
-        manager = DBManager.getInstance(getApplicationContext());
+        DBManager.init(getApplicationContext());
     }
 }

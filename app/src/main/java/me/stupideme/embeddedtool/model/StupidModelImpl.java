@@ -60,7 +60,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
      * private constructor
      */
     private StupidModelImpl() {
-        mManager = App.manager;
+        mManager = DBManager.getInstance();
         mObservers = new ArrayList<>();
     }
 

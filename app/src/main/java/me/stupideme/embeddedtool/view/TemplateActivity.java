@@ -48,7 +48,7 @@ public class TemplateActivity extends AppCompatActivity {
 
         mTemplateNames = new ArrayList<>();
 
-        mManager = App.manager;
+        mManager = DBManager.getInstance();
 
         ListView mListView = (ListView) findViewById(R.id.template_list);
         //fill list view
