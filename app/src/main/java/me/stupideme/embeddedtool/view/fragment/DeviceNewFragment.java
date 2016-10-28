@@ -88,6 +88,7 @@ public class DeviceNewFragment extends Fragment {
                     mProgressDialog.show();
                     mProgressDialog.setCancelable(false);
                     doDiscovery();
+
 //                    mClient.searchDevices(new OnSearchDeviceListener() {
 //                        @Override
 //                        public void onStartDiscovery() {

@@ -21,6 +21,7 @@ import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidTextView;
+import top.wuhaojie.bthelper.BtHelperClient;
 
 /**
  * Created by StupidL on 2016/9/30.
@@ -115,6 +116,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
             message.arg1 = 13;
             mHandler.sendMessage(message);
         }
+
     }
 
     /**

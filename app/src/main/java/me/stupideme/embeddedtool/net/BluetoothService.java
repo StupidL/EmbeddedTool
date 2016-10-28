@@ -20,14 +20,18 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import me.stupideme.embeddedtool.Constants;
@@ -262,6 +266,8 @@ public class BluetoothService {
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
+        Log.v("connectionFailed", "...connection failed");
+
         // Start the service over to restart listening mode
         BluetoothService.this.start();
     }
@@ -383,24 +389,48 @@ public class BluetoothService {
 
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
+            String uuid = "00001101-0000-1000-8000-00805F9B34FB";
             try {
                 if (secure) {
-                    tmp = device.createRfcommSocketToServiceRecord(
-                            MY_UUID_SECURE);
+                    tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
                 } else {
-                    tmp = device.createInsecureRfcommSocketToServiceRecord(
-                            MY_UUID_INSECURE);
+                    tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID_INSECURE);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
+                Method method = null;
+                try {
+                    method = device.getClass().getMethod("createRfcommSocket", int.class);
+                    tmp = (BluetoothSocket) method.invoke(device, 1);
+                } catch (NoSuchMethodException e1) {
+                    e1.printStackTrace();
+                } catch (InvocationTargetException e1) {
+                    e1.printStackTrace();
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                }
+
             }
             mmSocket = tmp;
+
+//            try {
+//                Method method = device.getClass().getMethod("createRfcommSocket", int.class);
+//                tmp = (BluetoothSocket) method.invoke(device,1);
+//            } catch (NoSuchMethodException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
+//
+//            mmSocket = tmp;
         }
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectThread SocketType:" + mSocketType);
             setName("ConnectThread" + mSocketType);
-
+            Log.v("ConnectThread ", "run ...");
             // Always cancel discovery because it will slow down a connection
             mAdapter.cancelDiscovery();
 
@@ -408,9 +438,10 @@ public class BluetoothService {
             try {
                 // This is a blocking call and will only return on a
                 // successful connection or an exception
-                mmSocket.connect();
+                mmSocket.connect();         //crash...
             } catch (IOException e) {
                 // Close the socket
+                Log.v(TAG, "connect exception");
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
