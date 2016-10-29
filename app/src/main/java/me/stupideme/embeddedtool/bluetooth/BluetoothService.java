@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package me.stupideme.embeddedtool.net;
+package me.stupideme.embeddedtool.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
+import android.os.ParcelUuid;
 import android.util.Log;
 
 import java.io.IOException;
@@ -32,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.UUID;
 
 import me.stupideme.embeddedtool.Constants;
@@ -80,6 +80,7 @@ public class BluetoothService {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;
+        Log.v(TAG, "bluetooth service constructed");
     }
 
     /**
@@ -90,7 +91,6 @@ public class BluetoothService {
     private synchronized void setState(int state) {
         Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
-
         // Give the new state to the Handler so the UI Activity can receiveMessage
         mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
@@ -203,6 +203,8 @@ public class BluetoothService {
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.DEVICE_NAME, device.getName());
+        Log.v(TAG, "device name =" + device.getName());
+        Log.v(TAG, "device addr =" + device.getAddress());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -253,6 +255,7 @@ public class BluetoothService {
         }
         // Perform the write unsynchronized
         r.write(out);
+        Log.v(TAG, "write message: " + Arrays.toString(out) + " success");
     }
 
     /**
@@ -326,8 +329,6 @@ public class BluetoothService {
             // Listen to the server socket if we're not connected
             while (mState != STATE_CONNECTED) {
                 try {
-                    // This is a blocking call and will only return on a
-                    // successful connection or an exception
                     socket = mmServerSocket.accept();
                 } catch (IOException e) {
                     Log.e(TAG, "Socket Type: " + mSocketType + "accept() failed", e);
@@ -387,14 +388,13 @@ public class BluetoothService {
             BluetoothSocket tmp = null;
             mSocketType = secure ? "Secure" : "Insecure";
 
-            // Get a BluetoothSocket for a connection with the
-            // given BluetoothDevice
-            String uuid = "00001101-0000-1000-8000-00805F9B34FB";
+            ParcelUuid[] parcelUuids = device.getUuids();
+
             try {
                 if (secure) {
-                    tmp = device.createRfcommSocketToServiceRecord(UUID.fromString(uuid));
+                    tmp = device.createRfcommSocketToServiceRecord(parcelUuids[0].getUuid());
                 } else {
-                    tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID_INSECURE);
+                    tmp = device.createInsecureRfcommSocketToServiceRecord(parcelUuids[0].getUuid());
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
@@ -413,18 +413,6 @@ public class BluetoothService {
             }
             mmSocket = tmp;
 
-//            try {
-//                Method method = device.getClass().getMethod("createRfcommSocket", int.class);
-//                tmp = (BluetoothSocket) method.invoke(device,1);
-//            } catch (NoSuchMethodException e) {
-//                e.printStackTrace();
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-//
-//            mmSocket = tmp;
         }
 
         public void run() {
@@ -434,19 +422,14 @@ public class BluetoothService {
             // Always cancel discovery because it will slow down a connection
             mAdapter.cancelDiscovery();
 
-            // Make a connection to the BluetoothSocket
             try {
-                // This is a blocking call and will only return on a
-                // successful connection or an exception
-                mmSocket.connect();         //crash...
+                mmSocket.connect();
             } catch (IOException e) {
-                // Close the socket
                 Log.v(TAG, "connect exception");
                 try {
                     mmSocket.close();
                 } catch (IOException e2) {
-                    Log.e(TAG, "unable to close() " + mSocketType +
-                            " socket during connection failure", e2);
+                    Log.e(TAG, "unable to close() " + mSocketType + " socket during connection failure", e2);
                 }
                 // read failed socket might closed or timeout, read ret: -1
                 e.printStackTrace();

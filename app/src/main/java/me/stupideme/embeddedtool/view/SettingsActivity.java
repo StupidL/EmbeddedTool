@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.view.View;
 import java.util.List;
 import java.util.Map;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.SettingsPresenter;
 import me.stupideme.embeddedtool.view.fragment.DataProtocolFragment;
@@ -61,6 +63,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
         tabLayout.setupWithViewPager(mViewPager);
 
         mProtocolFragment = DataProtocolFragment.newInstance();
+        mProtocolFragment.setOnDataProtocolChangedListener(this);
         mTypeFragment = DataTypeFragment.newInstance();
 
     }
@@ -104,6 +107,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     @Override
     public void onSaveProtocol(Map<String, String> map) {
         mPresenter.saveDataProtocol(map);
+        Log.v(TAG, "tail: " + map.get(Constants.KEY_DATA_TAIL));
     }
 
     @Override

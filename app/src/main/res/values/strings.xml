@@ -21,4 +21,21 @@
     <string name="action_choose_template">选择模板</string>
     <string name="action_document">说明文档</string>
     <string name="title_activity_device_list">DeviceListActivity</string>
+    <string name="title_devices">设备名称</string>
+    <string name="ble_not_supported">不支持LE</string>
+    <string name="error_bluetooth_not_supported">不支持蓝牙</string>
+    <string name="connected">蓝牙已连接</string>
+    <string name="disconnected">蓝牙未连接</string>
+    <string name="no_data">无数据</string>
+    <string name="string_save_as_template">保存为模板</string>
+    <string name="string_dialog_button_cancel">取消</string>
+    <string name="string_save_as_template_success">模板保存成功!</string>
+    <string name="string_dialog_button_save">保存</string>
+    <string name="string_dialog_template_hint">保存的模板名称</string>
+    <string name="string_toast_connected_device">"连接到设备： "</string>
+    <string name="string_app_name">嵌入式助手</string>
+    <string name="string_connecting_device">正在连接设备......</string>
+    <string name="string_connected_device">已连接设备</string>
+    <string name="string_toast_bind_tips1">编辑框只能绑定发送类型的按钮～</string>
+    <string name="activity_lable_select_template">选择模板</string>
 </resources>

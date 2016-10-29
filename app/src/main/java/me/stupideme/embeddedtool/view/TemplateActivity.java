@@ -3,8 +3,8 @@ package me.stupideme.embeddedtool.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.stupideme.embeddedtool.App;
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.db.DBManager;
 
@@ -36,9 +36,10 @@ public class TemplateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_template);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("选择模板");
+        toolbar.setTitle(R.string.activity_lable_select_template);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +56,7 @@ public class TemplateActivity extends AppCompatActivity {
         Cursor cursor = mManager.queryAllTemplateName();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            String name = cursor.getString(cursor.getColumnIndex("template_name"));
+            String name = cursor.getString(cursor.getColumnIndex(Constants.TEMPLATE_NAME));
             mTemplateNames.add(name);
             Log.v(TAG, name);
             cursor.moveToNext();
@@ -75,9 +76,9 @@ public class TemplateActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.action_clear:
                 mTemplateNames.clear();
                 mAdapter.notifyDataSetChanged();
@@ -151,7 +152,7 @@ public class TemplateActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent();
-                    intent.putExtra("TemplateName", holder.mName.getText().toString());
+                    intent.putExtra(Constants.TEMPLATE_NAME, holder.mName.getText().toString());
                     setResult(Activity.RESULT_OK, intent);
                     TemplateActivity.this.finish();
                 }

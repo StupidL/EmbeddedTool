@@ -56,6 +56,7 @@ public class SettingsModelImpl implements ISettingsModel {
         ContentValues values = new ContentValues();
         values.put(Constants.KEY_DATA_HEADER, map.get(Constants.KEY_DATA_HEADER));
         values.put(Constants.KEY_DATA_TAIL, map.get(Constants.KEY_DATA_TAIL));
+        Log.v(TAG, "tail: " + map.get(Constants.KEY_DATA_TAIL));
         mManager.insertDataProtocol(values);
     }
 

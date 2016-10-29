@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.presenter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Handler;
@@ -70,6 +71,7 @@ public class MainPresenter {
 
     /**
      * singleton pattern
+     *
      * @param view IMainView
      * @return instance
      */
@@ -235,17 +237,113 @@ public class MainPresenter {
         while (number > 0) {
             View view = layout.getChildAt(number - 1);
             if (view instanceof StupidButtonSend) {
-                iStupidModel.saveStupidSendButtonInfo(templateName, (StupidButtonSend) view);
+                iStupidModel.saveViewInfo(saveButtonSendInfo(templateName, (StupidButtonSend) view));
             } else if (view instanceof StupidButtonReceive) {
-                iStupidModel.saveStupidButtonReceiveInfo(templateName, (StupidButtonReceive) view);
+                iStupidModel.saveViewInfo(saveButtonReceiveInfo(templateName, (StupidButtonReceive) view));
             } else if (view instanceof StupidTextView) {
-                iStupidModel.saveStupidTextViewInfo(templateName, (StupidTextView) view);
+                iStupidModel.saveViewInfo(saveTextViewInfo(templateName, (StupidTextView) view));
             } else if (view instanceof StupidEditText) {
-                iStupidModel.saveStupidEditTextInfo(templateName, (StupidEditText) view);
+                iStupidModel.saveViewInfo(saveEditTextInfo(templateName, (StupidEditText) view));
             }
             number--;
         }
         Log.i(TAG, "saved template");
+    }
+
+    /**
+     * save stupid button send's info to db
+     * @param templateName template name
+     * @param view the button
+     * @return content values
+     */
+    private ContentValues saveButtonSendInfo(String templateName, StupidButtonSend view) {
+        ContentValues values = new ContentValues();
+        values.put(Constants.TEMPLATE_NAME, templateName);
+        values.put(Constants.VIEW_ID, view.getId());
+        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_BUTTON_SEND);
+        values.put(Constants.VIEW_TYPE_POS, view.getTypePos());
+        values.put(Constants.VIEW_TYPE_NAME, view.getDataType());
+        values.put(Constants.HAS_BIND_VIEW, Constants.HAS_BIND_VIEW_INVALID);
+        values.put(Constants.BIND_VIEW_ID, Constants.HAS_BIND_VIEW_INVALID);
+        values.put(Constants.VIEW_TEXT, view.getText().toString());
+        values.put(Constants.VIEW_WIDTH, view.getWidth());
+        values.put(Constants.VIEW_HEIGHT, view.getHeight());
+        values.put(Constants.VIEW_X, view.getX());
+        values.put(Constants.VIEW_Y, view.getY());
+        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
+        return values;
+    }
+
+    /**
+     * save a stupid button receive's info to db
+     * @param templateName template name
+     * @param view the button
+     * @return content values
+     */
+    private ContentValues saveButtonReceiveInfo(String templateName, StupidButtonReceive view) {
+        ContentValues values = new ContentValues();
+        values.put(Constants.TEMPLATE_NAME, templateName);
+        values.put(Constants.VIEW_ID, view.getId());
+        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_BUTTON_RECEIVE);
+        values.put(Constants.VIEW_TYPE_POS, view.getTypePos());
+        values.put(Constants.VIEW_TYPE_NAME, view.getDataType());
+        values.put(Constants.HAS_BIND_VIEW, Constants.HAS_BIND_VIEW_INVALID);
+        values.put(Constants.BIND_VIEW_ID, Constants.HAS_BIND_VIEW_INVALID);
+        values.put(Constants.VIEW_TEXT, view.getText().toString());
+        values.put(Constants.VIEW_WIDTH, view.getWidth());
+        values.put(Constants.VIEW_HEIGHT, view.getHeight());
+        values.put(Constants.VIEW_X, view.getX());
+        values.put(Constants.VIEW_Y, view.getY());
+        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
+        return values;
+    }
+
+    /**
+     * save a stupid text view's info to db
+     * @param templateName template name
+     * @param view the text view
+     * @return content values
+     */
+    private ContentValues saveTextViewInfo(String templateName, StupidTextView view) {
+        ContentValues values = new ContentValues();
+        values.put(Constants.TEMPLATE_NAME, templateName);
+        values.put(Constants.VIEW_ID, view.getId());
+        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_TEXT_VIEW);
+        values.put(Constants.HAS_BIND_VIEW, view.hasBindView());
+        values.put(Constants.BIND_VIEW_ID, view.getBindViewId());
+        values.put(Constants.VIEW_TEXT, view.getText().toString());
+        values.put(Constants.VIEW_WIDTH, view.getWidth());
+        values.put(Constants.VIEW_HEIGHT, view.getHeight());
+        values.put(Constants.VIEW_X, view.getX());
+        values.put(Constants.VIEW_Y, view.getY());
+        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
+        return values;
+    }
+
+    /**
+     * save a stupid edit text's info to db
+     * @param templateName template name
+     * @param view the edit text
+     * @return content values
+     */
+    private ContentValues saveEditTextInfo(String templateName, StupidEditText view) {
+        ContentValues values = new ContentValues();
+        values.put(Constants.TEMPLATE_NAME, templateName);
+        values.put(Constants.VIEW_ID, view.getId());
+        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_EDIT_TEXT);
+        values.put(Constants.HAS_BIND_VIEW, view.hasBindView());
+        values.put(Constants.BIND_VIEW_ID, view.getBindViewId());
+        values.put(Constants.VIEW_TEXT, view.getText().toString());
+        values.put(Constants.VIEW_WIDTH, view.getWidth());
+        values.put(Constants.VIEW_HEIGHT, view.getHeight());
+        values.put(Constants.VIEW_X, view.getX());
+        values.put(Constants.VIEW_Y, view.getY());
+        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
+        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
+        return values;
     }
 
     /**
@@ -407,6 +505,7 @@ public class MainPresenter {
         int color = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_COLOR)));
         int colorPos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.SPINNER_COLOR_POS)));
         int typePos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE_POS)));
+        String typeName = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE_NAME));
         button.setId(view_id);
         button.setText(view_text);
         button.setX(view_x);
@@ -414,6 +513,7 @@ public class MainPresenter {
         button.setBackgroundColor(color);
         button.setColorPos(colorPos);
         button.setTypePos(typePos);
+        button.setDataType(typeName);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) button.getLayoutParams();
         params.width = view_width;
         params.height = view_height;
@@ -439,6 +539,7 @@ public class MainPresenter {
         int color = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_COLOR)));
         int colorPos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.SPINNER_COLOR_POS)));
         int typePos = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE_POS)));
+        String typeName = cursor.getString(cursor.getColumnIndex(Constants.VIEW_TYPE_NAME));
         button.setId(view_id);
         button.setText(view_text);
         button.setX(view_x);
@@ -446,6 +547,7 @@ public class MainPresenter {
         button.setBackgroundColor(color);
         button.setColorPos(colorPos);
         button.setTypePos(typePos);
+        button.setDataType(typeName);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) button.getLayoutParams();
         params.width = view_width;
         params.height = view_height;
@@ -453,8 +555,18 @@ public class MainPresenter {
         return button;
     }
 
-    public void updateSpinnerAdapter(){
+    /**
+     * set up spinner adapter when a view created
+     */
+    public void updateSpinnerAdapter() {
         iMainView.updateTypeSpinnerAdapter(iStupidModel.queryDataTypesForSpinner());
-        Log.v(TAG,"updateSpinnerAdapter");
+        Log.v(TAG, "updateSpinnerAdapter");
+    }
+
+    /**
+     * stop bluetooth service when MainActivity destroyed
+     */
+    public void stopBluetoothService() {
+        iStupidModel.stopBluetoothService();
     }
 }

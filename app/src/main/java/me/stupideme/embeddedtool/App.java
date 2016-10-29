@@ -1,7 +1,6 @@
 package me.stupideme.embeddedtool;
 
 import android.app.Application;
-import android.content.Context;
 
 import me.stupideme.embeddedtool.db.DBManager;
 

@@ -27,10 +27,7 @@ import java.util.List;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import top.wuhaojie.bthelper.BtHelperClient;
-import top.wuhaojie.bthelper.OnSearchDeviceListener;
 
-import static me.stupideme.embeddedtool.Constants.EXTRA_DEVICE_ADDRESS;
 
 
 /**
@@ -46,7 +43,6 @@ public class DeviceNewFragment extends Fragment {
 
     private static final int REQUEST_ENABLE_BT = 0x200;
 
-    private BtHelperClient mClient;
 
     public DeviceNewFragment() {
     }
@@ -63,7 +59,6 @@ public class DeviceNewFragment extends Fragment {
         getActivity().registerReceiver(mReceiver, filter);
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         getActivity().registerReceiver(mReceiver, filter);
-        mClient = BtHelperClient.from(getActivity());
     }
 
     @Override

@@ -13,30 +13,32 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.util.Arrays;
 import java.util.List;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.net.BluetoothService;
+import me.stupideme.embeddedtool.bluetooth.BluetoothService;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 import me.stupideme.embeddedtool.view.custom.OnBindViewIdChangedListener;
-import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
+import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 public class MainActivity extends AppCompatActivity implements IMainView, OnBindViewIdChangedListener {
 
+    //debug
     private static final String TAG = MainActivity.class.getSimpleName();
     /**
      * request code to start DeviceListActivity to connect bluetooth in secure way
@@ -62,14 +64,16 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
      * request code to start settings activity
      */
     private static final int REQUEST_SETTINGS_ADVANCED = 5;
+
+    /**
+     * request code to start document activity
+     */
     private static final int REQUEST_DOCUMENT = 6;
 
     /**
      * the presenter. We are using MVP pattern
      */
     public static MainPresenter mPresenter;
-
-    private Handler mHandler;
 
     /**
      * a frame layout to container all of the views such as a Send Button, a Receive button
@@ -91,13 +95,12 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //init presenter
-        mPresenter = MainPresenter.getInstance(MainActivity.this);
         //init view
         initView();
-        //set handler for bluetooth service in model
+        //init presenter
+        mPresenter = MainPresenter.getInstance(MainActivity.this);
+        //set handler for BluetoothService's need
         mPresenter.setHandler(mHandler);
-
     }
 
     @Override
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     Log.v("MainPresenter ", "connect device secure...");
                 }
                 break;
+
             case REQUEST_CONNECT_DEVICE_INSECURE:
                 if (resultCode == Activity.RESULT_OK) {
                     //use presenter to connect device according to address in insecure way
@@ -119,20 +123,16 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     Log.v("MainPresenter ", "connect device insecure...");
                 }
                 break;
+
             case REQUEST_ENABLE_BT:
-                if (resultCode == Activity.RESULT_OK) {
-                    //a dialog appears in onStart() method, if click "ok" system will enable bluetooth
-                    // and we need do nothing here
-                    Log.d("MainActivity", "BT enabled");
-                } else {
-                    //if click "cancel", application will exit.
-                    Log.d("MainActivity", "BT not enabled");
+                if (resultCode != Activity.RESULT_OK) {
                     finish();
                 }
                 break;
+
             case REQUEST_SELECT_TEMPLATE:
                 if (resultCode == Activity.RESULT_OK) {
-                    String name = data.getStringExtra("TemplateName");
+                    String name = data.getStringExtra(Constants.TEMPLATE_NAME);
                     mPresenter.loadTemplate(mFrameLayout, name, MainActivity.this);
                     for (int i = 0; i < mFrameLayout.getChildCount(); i++) {
                         View view = mFrameLayout.getChildAt(i);
@@ -150,25 +150,30 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     mPresenter.updateSpinnerAdapter();
                 }
                 break;
+
             case REQUEST_SETTINGS_ADVANCED:
                 if (resultCode == Activity.RESULT_OK) {
                     mPresenter.updateSpinnerAdapter();
-                    Log.v(TAG, "Result_OK, updateSpinnerAdapter");
                 }
                 break;
-
         }
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-//            // if bluetooth is not enabled, request to enable it.
-//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-//        }
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            // if bluetooth is not enabled, request to enable it.
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.stopBluetoothService();
+    }
 
     /**
      * create and init a send type button, which will be contained in mFrameLayout.
@@ -177,7 +182,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     public void addSendButton() {
         StupidButtonSend stupidButtonSend = new StupidButtonSend(MainActivity.this);
         stupidButtonSend.setId(viewIndex++);
-        stupidButtonSend.setText("Button" + stupidButtonSend.getId());
+        String txt = "Button" + stupidButtonSend.getId();
+        stupidButtonSend.setText(txt);
         stupidButtonSend.setOnTouchListener(mTouchListener);
         mPresenter.setSendMessageListenerForButton(stupidButtonSend);
         mFrameLayout.addView(stupidButtonSend);
@@ -191,7 +197,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     public void addReceiveButton() {
         StupidButtonReceive button = new StupidButtonReceive(MainActivity.this);
         button.setId(viewIndex++);
-        button.setText("Button" + button.getId());
+        String txt = "Button" + button.getId();
+        button.setText(txt);
         button.setOnTouchListener(mTouchListener);
         mPresenter.setSendMessageListenerForButton(button);
         mPresenter.attachObserver(button);
@@ -203,11 +210,11 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     public void addTextView() {
         StupidTextView stupidTextView = new StupidTextView(this);
         stupidTextView.setId(viewIndex++);
-        stupidTextView.setText("TextView ID: " + stupidTextView.getId());
+        String txt = "TextView" + stupidTextView.getId();
+        stupidTextView.setText(txt);
         stupidTextView.setOnTouchListener(mTouchListener);
         stupidTextView.setBindViewListener(this);
         mFrameLayout.addView(stupidTextView);
-        Log.i("StupidTextViewID ", stupidTextView.getId() + "");
     }
 
     @Override
@@ -216,9 +223,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         editText.setOnTouchListener(mTouchListener);
         editText.setBindViewListener(this);
         editText.setId(viewIndex++);
-        editText.setText("EditText ID: " + editText.getId());
+        String txt = "EditText" + editText.getId();
+        editText.setText(txt);
         mFrameLayout.addView(editText);
-        Log.v("StupidEditTextID ", editText.getId() + "");
     }
 
     @Override
@@ -229,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     @Override
     public void clearViews() {
         mFrameLayout.removeAllViews();
+        mFrameLayout.invalidate();
     }
 
     @Override
@@ -244,20 +252,17 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
-
     @Override
     public void onBindViewIdChanged(int other, int self) {
         View view = getViewById(self);
         View view1 = getViewById(other);
         if (view instanceof StupidTextView) {
             mPresenter.bindTextViewById(other, self);
-            Log.v(TAG, "bind text view success");
         } else if (view instanceof StupidEditText) {
             if (view1 instanceof StupidButtonSend) {
                 mPresenter.bindEditTextById(other, self);
-                Log.v(TAG, "bind edit text success");
             } else
-                Toast.makeText(MainActivity.this, "编辑框只能绑定发送类型的按钮～", Toast.LENGTH_SHORT).show();
+                showToastShort(getResources().getString(R.string.string_toast_bind_tips1));
         }
     }
 
@@ -266,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
      */
     public void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("嵌入式助手");
+        toolbar.setTitle(R.string.string_app_name);
         setSupportActionBar(toolbar);
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_main);
         FloatingActionMenu menu = (FloatingActionMenu) findViewById(R.id.fab_menu);
@@ -333,51 +338,54 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             }
         };
 
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
 
-                switch (msg.what) {
-                    case Constants.MESSAGE_STATE_CHANGE:
-                        //receive this message when the connection status changed
-                        switch (msg.arg1) {
-                            case BluetoothService.STATE_CONNECTED:
-                                getSupportActionBar().setTitle("已连接设备" + mConnectedDeviceName);
-                                break;
-                            case BluetoothService.STATE_CONNECTING:
-                                getSupportActionBar().setTitle("正在连接设备......");
-                                break;
-                            case BluetoothService.STATE_LISTEN:
-                            case BluetoothService.STATE_NONE:
-                                getSupportActionBar().setTitle("嵌入式助手");
-                                break;
-                        }
-                        break;
-                    case Constants.MESSAGE_WRITE:
-
-                        break;
-                    case Constants.MESSAGE_READ:
-                        //receive this message when connected thread runs method run() successfully
-                        byte[] readBuf = (byte[]) msg.obj;
-                        //construct a string from the valid bytes in the buffer
-                        mPresenter.notifyObservers(new String(readBuf, 0, msg.arg1));
-
-                        break;
-                    case Constants.MESSAGE_DEVICE_NAME:
-                        //receive this message when connected a device
-                        Toast.makeText(MainActivity.this, "Connected to " + mConnectedDeviceName,
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case Constants.MESSAGE_TOAST:
-                        //receive this message when the connection failed or lost
-                        Toast.makeText(MainActivity.this, msg.getData().getString(Constants.TOAST),
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        };
     }
+
+    /**
+     * handler to handle message from bluetooth service
+     */
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothService.STATE_CONNECTED:
+                            if (getSupportActionBar() != null)
+                                getSupportActionBar().setSubtitle(R.string.string_connected_device);
+                            break;
+                        case BluetoothService.STATE_CONNECTING:
+
+                            if (getSupportActionBar() != null)
+                                getSupportActionBar().setSubtitle(R.string.string_connecting_device);
+                            break;
+                        case BluetoothService.STATE_LISTEN:
+                        case BluetoothService.STATE_NONE:
+                            if (getSupportActionBar() != null)
+                                getSupportActionBar().setTitle(R.string.string_app_name);
+                            break;
+                    }
+                    break;
+                case Constants.MESSAGE_WRITE:
+                    Log.v(TAG, "write data: " + Arrays.toString(((byte[]) msg.obj)));
+                    break;
+                case Constants.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    Log.v(TAG, "read data: " + Arrays.toString(((byte[]) msg.obj)));
+                    mPresenter.notifyObservers(new String(readBuf, 0, msg.arg1));
+
+                    break;
+                case Constants.MESSAGE_DEVICE_NAME:
+                    String mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
+                    showToastShort(getString(R.string.string_toast_connected_device) + mConnectedDeviceName);
+                    break;
+                case Constants.MESSAGE_TOAST:
+                    //receive this message when the connection failed or lost
+                    showToastShort(msg.getData().getString(Constants.TOAST));
+                    break;
+            }
+        }
+    };
 
     /**
      * create option menu
@@ -401,71 +409,84 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings_advanced) {
-            // action settings clicked
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivityForResult(intent, REQUEST_SETTINGS_ADVANCED);
         }
         if (id == R.id.action_bluetooth_secure) {
-            // action bluetooth secure clicked,
-            // start DeviceListActivity with request code REQUEST_CONNECT_DEVICE_SECURE.
             startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
                     REQUEST_CONNECT_DEVICE_SECURE);
         }
         if (id == R.id.action_bluetooth_insecure) {
-            // action bluetooth insecure clicked,
-            // start DeviceListActivity with request code REQUEST_CONNECT_DEVICE_INSECURE.
             startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
                     REQUEST_CONNECT_DEVICE_INSECURE);
         }
         if (id == R.id.action_bluetooth_discoverable) {
-            // action bluetooth discoverable clicked, request to be discoverable.
-            // we need do nothing else just start the activity and click "ok",
-            // system will do other things for us
-            if (BluetoothAdapter.getDefaultAdapter().getScanMode() !=
-                    BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-                Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-                startActivity(discoverableIntent);
-            }
+            setDiscoverable();
         }
         if (id == R.id.action_clear) {
             mPresenter.removeAllViews();
         }
         if (id == R.id.action_save_template) {
-            // create a dialog to save a template
-            // you can add a name for this template
-            TextInputLayout layout = new TextInputLayout(MainActivity.this);
-            layout.setPadding(32, 32, 32, 0);
-            final TextInputEditText editText = new TextInputEditText(MainActivity.this);
-            editText.setHint("保存的模板名称");
-            layout.addView(editText);
-
-            final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                    .setPositiveButton("保存", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            mPresenter.saveTemplate(mFrameLayout, editText.getText().toString());
-                            Toast.makeText(MainActivity.this, "模板保存成功!", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    })
-                    .setTitle("保存为模板")
-                    .setView(layout).create();
-            dialog.show();
-
+            saveAsTemplate();
         }
         if (id == R.id.action_select_template) {
-            startActivityForResult(new Intent(MainActivity.this, TemplateActivity.class), REQUEST_SELECT_TEMPLATE);
+            startActivityForResult(new Intent(MainActivity.this, TemplateActivity.class),
+                    REQUEST_SELECT_TEMPLATE);
         }
         if (id == R.id.action_document) {
-            startActivityForResult(new Intent(MainActivity.this, DocumentActivity.class), REQUEST_DOCUMENT);
+            startActivityForResult(new Intent(MainActivity.this, DocumentActivity.class),
+                    REQUEST_DOCUMENT);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * save current state as a template
+     */
+    private void saveAsTemplate() {
+        TextInputLayout layout = new TextInputLayout(MainActivity.this);
+        layout.setPadding(32, 32, 32, 0);
+        final TextInputEditText editText = new TextInputEditText(MainActivity.this);
+        editText.setHint(R.string.string_dialog_template_hint);
+        layout.addView(editText);
+        final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                .setPositiveButton(R.string.string_dialog_button_save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mPresenter.saveTemplate(mFrameLayout, editText.getText().toString());
+                        showToastShort(getResources().getString(R.string.string_save_as_template_success));
+                    }
+                })
+                .setNegativeButton(R.string.string_dialog_button_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setTitle(R.string.string_save_as_template)
+                .setView(layout).create();
+        dialog.show();
+    }
+
+    /**
+     * action bluetooth discoverable clicked, request to be discoverable.
+     */
+    private void setDiscoverable() {
+        if (BluetoothAdapter.getDefaultAdapter().getScanMode() !=
+                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+        }
+    }
+
+    /**
+     * toast a message
+     *
+     * @param msg msg
+     */
+    private void showToastShort(String msg) {
+        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 
 }

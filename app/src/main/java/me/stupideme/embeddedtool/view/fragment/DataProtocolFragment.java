@@ -37,7 +37,7 @@ public class DataProtocolFragment extends Fragment {
         return fragment;
     }
 
-    public void setOnDataProtocolChangedListener(OnDataProtocolChangedListener listener){
+    public void setOnDataProtocolChangedListener(OnDataProtocolChangedListener listener) {
         mListener = listener;
     }
 
@@ -60,6 +60,7 @@ public class DataProtocolFragment extends Fragment {
                 if (!mHeader.getText().toString().isEmpty() && !mTail.getText().toString().isEmpty()) {
                     map.put(Constants.KEY_DATA_HEADER, mHeader.getText().toString());
                     map.put(Constants.KEY_DATA_TAIL, mTail.getText().toString());
+                    Log.v(TAG, "tail: " + mTail.getText().toString());
                     mListener.onSaveProtocol(map);
                     Toast.makeText(getActivity(), "数据已保存！", Toast.LENGTH_SHORT).show();
                 } else

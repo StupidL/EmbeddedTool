@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import me.stupideme.embeddedtool.Constants;
+
 /**
  * Created by stupidl on 16-10-9.
  */
@@ -23,7 +25,6 @@ public class DBManager {
 
     /**
      * private constructor
-     *
      */
     private DBManager() {
         DBHelper mHelper = new DBHelper(mContext);
@@ -52,31 +53,11 @@ public class DBManager {
     }
 
     /**
-     * insert data from a send type button
+     * insert a view
+     * @param values content values
      */
-    public void insertSendButton(ContentValues sendButton) {
-        db.insert(TABLE_TEMPLATES, null, sendButton);
-    }
-
-    /**
-     * insert data from a receive type button
-     */
-    public void insertReceiveButton(ContentValues receiveButton) {
-        db.insert(TABLE_TEMPLATES, null, receiveButton);
-    }
-
-    /**
-     * insert data from a text view
-     */
-    public void insertTextView(ContentValues textView) {
-        db.insert(TABLE_TEMPLATES, null, textView);
-    }
-
-    /**
-     * insert data from edit text
-     */
-    public void insertEditText(ContentValues editText) {
-        db.insert(TABLE_TEMPLATES, null, editText);
+    public void insertView(ContentValues values) {
+        db.insert(TABLE_TEMPLATES, null, values);
     }
 
     /**
@@ -133,6 +114,7 @@ public class DBManager {
      */
     public void insertDataProtocol(ContentValues values) {
         db.insert(TABLE_PROTOCOL, null, values);
+        Log.v(TAG, "tail: " + values.get(Constants.KEY_DATA_TAIL));
     }
 
     /**

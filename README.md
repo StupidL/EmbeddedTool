@@ -9,15 +9,17 @@ You can easily communicate with embedded devices over bluetooth.
 * Add EditText from menu.
 * Open chart view from menu.
 * Save current views as template so that you can pick one directly next time rather than recreate it.
-* Add bluetooth service(with some unknown bugs).
-* Add database to save template. Database can be also used in other ways.
-* Custom data type and protocol
+* Add bluetooth service.
+* Add database to save template.
+* Add a document activity to show docs.
+* Custom data type and protocol.
+* Fixed bluetooth connection bugs.
 
 All of these view can be moved by your finger.
 All of these views can be remove or reshaped by performing long click.
 
 ## Todo
-* Fix bugs when connect bluetooth device
+* Test in embedded device
 
 ## Screenshots
 ![Main](https://github.com/StupidL/EmbeddedTool/blob/master/art/main.PNG)

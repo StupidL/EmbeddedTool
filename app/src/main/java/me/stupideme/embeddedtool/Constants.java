@@ -40,6 +40,7 @@ public class Constants {
     public static final String VIEW_COLOR = "view_color";
     public static final String SPINNER_COLOR_POS = "spinner_color_pos";
     public static final String VIEW_TYPE_POS = "view_type_pos";
+    public static final String VIEW_TYPE_NAME = "view_type_name";
 
     public static final int VIEW_TYPE_BUTTON_SEND = 1;
     public static final int VIEW_TYPE_BUTTON_RECEIVE = 2;
@@ -69,4 +70,5 @@ public class Constants {
 
 
     public static final String EXTRA_DEVICE_ADDRESS = "address";
+
 }

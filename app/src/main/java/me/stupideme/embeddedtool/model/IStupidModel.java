@@ -1,13 +1,9 @@
 package me.stupideme.embeddedtool.model;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.util.List;
-
-import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
-import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
-import me.stupideme.embeddedtool.view.custom.StupidEditText;
-import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 /**
  * Created by StupidL on 2016/9/30.
@@ -24,36 +20,10 @@ public interface IStupidModel {
     void connectDevice(String address, boolean secure);
 
     /**
-     * save send type button information
-     *
-     * @param name template name
-     * @param view button
+     * save a view's info
+     * @param values content values
      */
-    void saveStupidSendButtonInfo(String name, StupidButtonSend view);
-
-    /**
-     * save receive type button information
-     *
-     * @param name template name
-     * @param view button
-     */
-    void saveStupidButtonReceiveInfo(String name, StupidButtonReceive view);
-
-    /**
-     * save text view information
-     *
-     * @param name template name
-     * @param view button
-     */
-    void saveStupidTextViewInfo(String name, StupidTextView view);
-
-    /**
-     * save edit text information
-     *
-     * @param name template name
-     * @param view button
-     */
-    void saveStupidEditTextInfo(String name, StupidEditText view);
+    void saveViewInfo(ContentValues values);
 
     /**
      * query template by name from database
@@ -67,4 +37,9 @@ public interface IStupidModel {
      * @return a list contains all data types
      */
     List<String> queryDataTypesForSpinner();
+
+    /**
+     * stop bluetooth service when MainActivity destroyed
+     */
+    void stopBluetoothService();
 }

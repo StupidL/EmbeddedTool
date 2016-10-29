@@ -5,23 +5,21 @@ import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.ConcurrentNavigableMap;
 
-import me.stupideme.embeddedtool.App;
 import me.stupideme.embeddedtool.Constants;
+import me.stupideme.embeddedtool.bluetooth.BluetoothService;
 import me.stupideme.embeddedtool.db.DBManager;
-import me.stupideme.embeddedtool.net.BluetoothService;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidTextView;
-import top.wuhaojie.bthelper.BtHelperClient;
 
 /**
  * Created by StupidL on 2016/9/30.
@@ -83,7 +81,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     /**
      * set handler for bluetooth service's need
      *
-     * @param handler
+     * @param handler handler from MainActivity
      */
     public void setHandler(Handler handler) {
         mHandler = handler;
@@ -98,24 +96,26 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
      * @param body        content
      */
     @Override
-    public void onSendMessage(int requestCode, String type, java.lang.String body) {
+    public void onSendMessage(int requestCode, String type, String body) {
         MessageBean bean = new MessageBean();
         bean.setRequestCode(requestCode);
         String code = mManager.queryTypeCodeByName(type);
         Log.v("code", code);
+        Log.v(TAG, "body: " + body);
         bean.setDataType(code.toLowerCase());
         bean.setBody(body);
+        Cursor cursor = mManager.queryDataProtocol();
+        cursor.moveToLast();
+        String header = cursor.getString(cursor.getColumnIndex(Constants.KEY_DATA_HEADER));
+        String tail = cursor.getString(cursor.getColumnIndex(Constants.KEY_DATA_TAIL));
+        bean.setHeader(header);
+        Log.v(TAG, "header: " + header);
+        Log.v(TAG, "tail: " + tail);
+        bean.setTail(tail);
         String msg = bean.toString();
         byte[] buff = msg.getBytes();
         mService.write(buff);
-        //just for a test
-        for (int i = 0; i < 3; i++) {
-            Message message = new Message();
-            message.what = Constants.MESSAGE_READ;
-            message.obj = ("hello from bt").getBytes();
-            message.arg1 = 13;
-            mHandler.sendMessage(message);
-        }
+        Log.v(TAG, "write buff: " + Arrays.toString(buff));
 
     }
 
@@ -150,23 +150,52 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         return list;
     }
 
+    /**
+     * stop bluetooth service
+     */
+    @Override
+    public void stopBluetoothService() {
+        mService.stop();
+    }
+
+    /**
+     * an observer attach subject
+     *
+     * @param observer observer
+     */
     @Override
     public void attach(StupidObserver observer) {
         mObservers.add(observer);
     }
 
+    /**
+     * an observer detach subject
+     *
+     * @param observer observer
+     */
     @Override
     public void detach(StupidObserver observer) {
         mObservers.remove(observer);
     }
 
+    /**
+     * notify all observers
+     *
+     * @param message message to be sent to observers
+     */
     @Override
-    public void notifyObservers(java.lang.String message) {
+    public void notifyObservers(String message) {
         for (StupidObserver o : mObservers) {
             o.receiveMessage(message);
         }
     }
 
+    /**
+     * connect a device
+     *
+     * @param address address of bluetooth
+     * @param secure  secure or not
+     */
     @Override
     public void connectDevice(String address, boolean secure) {
         BluetoothDevice device = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address);
@@ -174,77 +203,8 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     }
 
     @Override
-    public void saveStupidSendButtonInfo(java.lang.String name, StupidButtonSend view) {
-        ContentValues values = new ContentValues();
-        values.put(Constants.TEMPLATE_NAME, name);
-        values.put(Constants.VIEW_ID, view.getId());
-        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_BUTTON_SEND);
-        values.put(Constants.VIEW_TYPE_POS, view.getTypePos());
-        values.put(Constants.HAS_BIND_VIEW, Constants.HAS_BIND_VIEW_INVALID);
-        values.put(Constants.BIND_VIEW_ID, Constants.HAS_BIND_VIEW_INVALID);
-        values.put(Constants.VIEW_TEXT, view.getText().toString());
-        values.put(Constants.VIEW_WIDTH, view.getWidth());
-        values.put(Constants.VIEW_HEIGHT, view.getHeight());
-        values.put(Constants.VIEW_X, view.getX());
-        values.put(Constants.VIEW_Y, view.getY());
-        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
-        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
-        mManager.insertSendButton(values);
-    }
-
-    @Override
-    public void saveStupidButtonReceiveInfo(java.lang.String name, StupidButtonReceive view) {
-        ContentValues values = new ContentValues();
-        values.put(Constants.TEMPLATE_NAME, name);
-        values.put(Constants.VIEW_ID, view.getId());
-        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_BUTTON_RECEIVE);
-        values.put(Constants.VIEW_TYPE_POS, view.getTypePos());
-        values.put(Constants.HAS_BIND_VIEW, Constants.HAS_BIND_VIEW_INVALID);
-        values.put(Constants.BIND_VIEW_ID, Constants.HAS_BIND_VIEW_INVALID);
-        values.put(Constants.VIEW_TEXT, view.getText().toString());
-        values.put(Constants.VIEW_WIDTH, view.getWidth());
-        values.put(Constants.VIEW_HEIGHT, view.getHeight());
-        values.put(Constants.VIEW_X, view.getX());
-        values.put(Constants.VIEW_Y, view.getY());
-        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
-        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
-        mManager.insertReceiveButton(values);
-    }
-
-    @Override
-    public void saveStupidTextViewInfo(java.lang.String name, StupidTextView view) {
-        ContentValues values = new ContentValues();
-        values.put(Constants.TEMPLATE_NAME, name);
-        values.put(Constants.VIEW_ID, view.getId());
-        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_TEXT_VIEW);
-        values.put(Constants.HAS_BIND_VIEW, view.hasBindView());
-        values.put(Constants.BIND_VIEW_ID, view.getBindViewId());
-        values.put(Constants.VIEW_TEXT, view.getText().toString());
-        values.put(Constants.VIEW_WIDTH, view.getWidth());
-        values.put(Constants.VIEW_HEIGHT, view.getHeight());
-        values.put(Constants.VIEW_X, view.getX());
-        values.put(Constants.VIEW_Y, view.getY());
-        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
-        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
-        mManager.insertTextView(values);
-    }
-
-    @Override
-    public void saveStupidEditTextInfo(java.lang.String name, StupidEditText view) {
-        ContentValues values = new ContentValues();
-        values.put(Constants.TEMPLATE_NAME, name);
-        values.put(Constants.VIEW_ID, view.getId());
-        values.put(Constants.VIEW_TYPE, Constants.VIEW_TYPE_EDIT_TEXT);
-        values.put(Constants.HAS_BIND_VIEW, view.hasBindView());
-        values.put(Constants.BIND_VIEW_ID, view.getBindViewId());
-        values.put(Constants.VIEW_TEXT, view.getText().toString());
-        values.put(Constants.VIEW_WIDTH, view.getWidth());
-        values.put(Constants.VIEW_HEIGHT, view.getHeight());
-        values.put(Constants.VIEW_X, view.getX());
-        values.put(Constants.VIEW_Y, view.getY());
-        values.put(Constants.VIEW_COLOR, view.getBackgroundColor());
-        values.put(Constants.SPINNER_COLOR_POS, view.getColorPos());
-        mManager.insertEditText(values);
+    public void saveViewInfo(ContentValues values) {
+        mManager.insertView(values);
     }
 
 }
