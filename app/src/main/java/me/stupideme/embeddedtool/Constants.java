@@ -10,10 +10,10 @@ public class Constants {
     public static final int[] mColors = {R.color.Gray, R.color.Purple, R.color.Indigo, R.color.Teal,
             R.color.Orange, R.color.Brown, R.color.BlueGray};
 
-    public static final int REQUEST_CODE_SEND = 0x01;
-    public static final int REQUEST_CODE_RECEIVE = 0x10;
-    public static final int REQUEST_CODE_CHART = 0x11;
-    public static final int MESSAGE_BODY_EMPTY = 0xff;
+    public static final String REQUEST_CODE_SEND = "10";
+    public static final String REQUEST_CODE_RECEIVE = "11";
+    public static final String REQUEST_CODE_CHART = "12";
+    public static final String MESSAGE_BODY_EMPTY = "00";
 
     // Message types sent from the BluetoothService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;

@@ -87,8 +87,6 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     public void setHandler(Handler handler) {
         mHandler = handler;
         mService = BluetoothService.getInstance(handler);
-
-
     }
 
     /**
@@ -99,7 +97,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
      * @param body        content
      */
     @Override
-    public void onSendMessage(int requestCode, String type, String body) {
+    public void onSendMessage(String requestCode, String type, String body) {
         MessageBean bean = new MessageBean();
         bean.setRequestCode(requestCode);
         String code = mManager.queryTypeCodeByName(type);
@@ -119,17 +117,44 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
 
         Log.v(TAG, "write string: " + msg);
         Log.v(TAG, "write string: " + Arrays.toString(msg.getBytes()));
-        try {
-            byte[] bytes = msg.getBytes("UTF-8");
-            mService.write(bytes);
-            Log.v(TAG, "write string: " + Arrays.toString(bytes));
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        byte[] re = hexStringToByte(msg);
+        Log.v(TAG, "hexStringToBytes:" + Arrays.toString(re));
+        mService.write(re);
 
         Log.v(TAG, "send message success");
 
+    }
+//
+//    public static final String bytesToHexString(byte[] bArray) {
+//        StringBuffer sb = new StringBuffer(bArray.length);
+//        String sTemp;
+//        for (int i = 0; i < bArray.length; i++) {
+//            sTemp = Integer.toHexString(0xFF & bArray[i]);
+//            if (sTemp.length() < 2)
+//                sb.append(0);
+//            sb.append(sTemp.toUpperCase());
+//        }
+//        return sb.toString();
+//    }
+
+    private static byte[] hexStringToByte(String hexString) {
+        if (hexString == null || hexString.equals("")) {
+            return null;
+        }
+        hexString = hexString.toUpperCase();
+        int length = hexString.length() / 2;
+        char[] hexChars = hexString.toCharArray();
+        byte[] d = new byte[length];
+        for (int i = 0; i < length; i++) {
+            int pos = i * 2;
+            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+        }
+        return d;
+    }
+
+    private static byte charToByte(char c) {
+        return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
     /**

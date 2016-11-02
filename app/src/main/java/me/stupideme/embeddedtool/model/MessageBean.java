@@ -12,7 +12,7 @@ public class MessageBean {
     //body
     private java.lang.String mBody;
     //send or receive
-    private int mRequestCode;
+    private String mRequestCode;
     //data type
     private String mDataType;
 
@@ -40,11 +40,11 @@ public class MessageBean {
         return mBody;
     }
 
-    public void setRequestCode(int type) {
+    public void setRequestCode(String type) {
         mRequestCode = type;
     }
 
-    public int getRequestCode() {
+    public String getRequestCode() {
         return mRequestCode;
     }
 

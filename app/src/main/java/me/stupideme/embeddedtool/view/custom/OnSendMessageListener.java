@@ -5,5 +5,5 @@ package me.stupideme.embeddedtool.view.custom;
  */
 
 public interface OnSendMessageListener {
-    void onSendMessage(int requestCode, String type, java.lang.String msg);
+    void onSendMessage(String requestCode, String type, java.lang.String msg);
 }
