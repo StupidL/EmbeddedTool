@@ -3,23 +3,23 @@ package me.stupideme.embeddedtool.model;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ConcurrentNavigableMap;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.bluetooth.BluetoothService;
+import me.stupideme.embeddedtool.bluetooth.library.BluetoothSPP;
+import me.stupideme.embeddedtool.bluetooth.library.BluetoothState;
 import me.stupideme.embeddedtool.db.DBManager;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
-import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
-import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
-import me.stupideme.embeddedtool.view.custom.StupidEditText;
-import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
 /**
  * Created by StupidL on 2016/9/30.
@@ -55,6 +55,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
      */
     private static StupidModelImpl INSTANCE;
 
+
     /**
      * private constructor
      */
@@ -85,7 +86,9 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
      */
     public void setHandler(Handler handler) {
         mHandler = handler;
-        mService = new BluetoothService(mHandler);
+        mService = BluetoothService.getInstance(handler);
+
+
     }
 
     /**
@@ -113,9 +116,19 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         Log.v(TAG, "tail: " + tail);
         bean.setTail(tail);
         String msg = bean.toString();
-        byte[] buff = msg.getBytes();
-        mService.write(buff);
-        Log.v(TAG, "write buff: " + Arrays.toString(buff));
+
+        Log.v(TAG, "write string: " + msg);
+        Log.v(TAG, "write string: " + Arrays.toString(msg.getBytes()));
+        try {
+            byte[] bytes = msg.getBytes("UTF-8");
+            mService.write(bytes);
+            Log.v(TAG, "write string: " + Arrays.toString(bytes));
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "send message success");
 
     }
 
@@ -185,6 +198,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
      */
     @Override
     public void notifyObservers(String message) {
+        Log.v(TAG, "notify observers: " + message);
         for (StupidObserver o : mObservers) {
             o.receiveMessage(message);
         }

@@ -2,6 +2,7 @@ package me.stupideme.embeddedtool.presenter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.util.Log;
@@ -187,6 +188,7 @@ public class MainPresenter {
      */
     public void notifyObservers(String msg) {
         ((StupidObservable) iStupidModel).notifyObservers(msg);
+        Log.v(TAG, "notify observers: " + msg);
     }
 
     /**
@@ -252,8 +254,9 @@ public class MainPresenter {
 
     /**
      * save stupid button send's info to db
+     *
      * @param templateName template name
-     * @param view the button
+     * @param view         the button
      * @return content values
      */
     private ContentValues saveButtonSendInfo(String templateName, StupidButtonSend view) {
@@ -277,8 +280,9 @@ public class MainPresenter {
 
     /**
      * save a stupid button receive's info to db
+     *
      * @param templateName template name
-     * @param view the button
+     * @param view         the button
      * @return content values
      */
     private ContentValues saveButtonReceiveInfo(String templateName, StupidButtonReceive view) {
@@ -302,8 +306,9 @@ public class MainPresenter {
 
     /**
      * save a stupid text view's info to db
+     *
      * @param templateName template name
-     * @param view the text view
+     * @param view         the text view
      * @return content values
      */
     private ContentValues saveTextViewInfo(String templateName, StupidTextView view) {
@@ -325,8 +330,9 @@ public class MainPresenter {
 
     /**
      * save a stupid edit text's info to db
+     *
      * @param templateName template name
-     * @param view the edit text
+     * @param view         the edit text
      * @return content values
      */
     private ContentValues saveEditTextInfo(String templateName, StupidEditText view) {

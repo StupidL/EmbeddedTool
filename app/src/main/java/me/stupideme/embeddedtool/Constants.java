@@ -13,7 +13,7 @@ public class Constants {
     public static final int REQUEST_CODE_SEND = 0x01;
     public static final int REQUEST_CODE_RECEIVE = 0x10;
     public static final int REQUEST_CODE_CHART = 0x11;
-    public static final int MESSAGE_BODY_EMPTY = 0x00000000;
+    public static final int MESSAGE_BODY_EMPTY = 0xff;
 
     // Message types sent from the BluetoothService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;

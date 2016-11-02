@@ -71,16 +71,28 @@ public class BluetoothService {
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
+    private static BluetoothService INSTANCE;
+
     /**
      * Constructor. Prepares a new BluetoothChat session.
      *
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothService(Handler handler) {
+    private BluetoothService(Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         mHandler = handler;
         Log.v(TAG, "bluetooth service constructed");
+    }
+
+    public static BluetoothService getInstance(Handler handler) {
+        if (INSTANCE == null) {
+            synchronized (BluetoothService.class) {
+                if (INSTANCE == null)
+                    INSTANCE = new BluetoothService(handler);
+            }
+        }
+        return INSTANCE;
     }
 
     /**
@@ -304,6 +316,7 @@ public class BluetoothService {
             BluetoothServerSocket tmp = null;
             mSocketType = secure ? "Secure" : "Insecure";
 
+            Log.v(TAG, "Accept Thread Created...");
             // Create a new listening server socket
             try {
                 if (secure) {
@@ -320,8 +333,8 @@ public class BluetoothService {
         }
 
         public void run() {
-            Log.d(TAG, "Socket Type: " + mSocketType +
-                    "BEGIN mAcceptThread" + this);
+            Log.d(TAG, "Socket Type: " + mSocketType + "BEGIN mAcceptThread" + this);
+            Log.v(TAG, "Accept Thread Running...");
             setName("AcceptThread" + mSocketType);
 
             BluetoothSocket socket = null;
@@ -389,12 +402,14 @@ public class BluetoothService {
             mSocketType = secure ? "Secure" : "Insecure";
 
             ParcelUuid[] parcelUuids = device.getUuids();
-
+            Log.v(TAG, "array size: " + parcelUuids.length);
             try {
                 if (secure) {
                     tmp = device.createRfcommSocketToServiceRecord(parcelUuids[0].getUuid());
+//                    tmp = device.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
                 } else {
                     tmp = device.createInsecureRfcommSocketToServiceRecord(parcelUuids[0].getUuid());
+//                    tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID_INSECURE);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
@@ -469,6 +484,8 @@ public class BluetoothService {
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
+            Log.d(TAG, "InputStream = null ");
+            Log.d(TAG, "OutputStream = null ");
 
             // Get the BluetoothSocket input and output streams
             try {
@@ -480,6 +497,7 @@ public class BluetoothService {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+
         }
 
         public void run() {
@@ -493,9 +511,11 @@ public class BluetoothService {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
 
+                    Log.v(TAG, "read mesage: " + Arrays.toString(buffer));
+
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
+                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
@@ -531,4 +551,5 @@ public class BluetoothService {
             }
         }
     }
+
 }

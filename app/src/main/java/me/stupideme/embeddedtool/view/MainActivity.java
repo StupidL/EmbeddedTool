@@ -29,6 +29,8 @@ import java.util.List;
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.bluetooth.BluetoothService;
+import me.stupideme.embeddedtool.bluetooth.library.BluetoothSPP;
+import me.stupideme.embeddedtool.bluetooth.library.BluetoothState;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 import me.stupideme.embeddedtool.view.custom.OnBindViewIdChangedListener;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         mPresenter = MainPresenter.getInstance(MainActivity.this);
         //set handler for BluetoothService's need
         mPresenter.setHandler(mHandler);
+
     }
 
     @Override
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     String address = data.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
                     mPresenter.connectDevice(address, true);
                     Log.v("MainPresenter ", "connect device secure...");
+
                 }
                 break;
 
@@ -121,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     String address = data.getStringExtra(Constants.EXTRA_DEVICE_ADDRESS);
                     mPresenter.connectDevice(address, false);
                     Log.v("MainPresenter ", "connect device insecure...");
+
                 }
                 break;
 
@@ -371,8 +376,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     break;
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
-                    Log.v(TAG, "read data: " + Arrays.toString(((byte[]) msg.obj)));
-                    mPresenter.notifyObservers(new String(readBuf, 0, msg.arg1));
+                    String writeMessage = new String(readBuf);
+                    Log.v(TAG, "read data: " + writeMessage);
+                    mPresenter.notifyObservers(writeMessage);
 
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:

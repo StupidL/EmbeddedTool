@@ -1,6 +1,8 @@
 package me.stupideme.embeddedtool.model;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 
 import java.util.List;
@@ -42,4 +44,5 @@ public interface IStupidModel {
      * stop bluetooth service when MainActivity destroyed
      */
     void stopBluetoothService();
+
 }

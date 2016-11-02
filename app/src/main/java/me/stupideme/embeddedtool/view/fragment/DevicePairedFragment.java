@@ -23,9 +23,9 @@ import android.widget.Toast;
 
 import java.util.Set;
 
+import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-
-import static me.stupideme.embeddedtool.Constants.EXTRA_DEVICE_ADDRESS;
+import me.stupideme.embeddedtool.bluetooth.library.BluetoothState;
 
 
 /**
@@ -117,7 +117,7 @@ public class DevicePairedFragment extends Fragment {
             if (info.contains(":")) {
                 Intent intent = new Intent();
                 String address = info.substring(info.length() - 17);
-                intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+                intent.putExtra(Constants.EXTRA_DEVICE_ADDRESS, address);
                 Log.v(TAG, "BT address: " + address);
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();

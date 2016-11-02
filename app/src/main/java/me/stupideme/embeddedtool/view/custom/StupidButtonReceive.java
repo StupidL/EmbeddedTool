@@ -90,10 +90,12 @@ public class StupidButtonReceive extends Button implements
                 if (getDataType() != null) {
                     if (getBindView() != null) {
                         //============================================================
-                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_RECEIVE,
-                                getDataType(), java.lang.String.valueOf(Constants.MESSAGE_BODY_EMPTY));
+                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_RECEIVE,//request code
+                                getDataType(), //data type
+                                String.valueOf(Constants.MESSAGE_BODY_EMPTY));//body
                         getBindView().append("\n" + "Waiting...");
                         //============================================================
+
                     } else {
                         Toast.makeText(context, "该按钮需要绑定一个文本框～", Toast.LENGTH_SHORT).show();
                     }
@@ -114,7 +116,7 @@ public class StupidButtonReceive extends Button implements
     }
 
     @Override
-    public void receiveMessage(java.lang.String msg) {
+    public void receiveMessage(String msg) {
         if (mBindView != null) {
             mBindView.append("\n" + msg);
         }

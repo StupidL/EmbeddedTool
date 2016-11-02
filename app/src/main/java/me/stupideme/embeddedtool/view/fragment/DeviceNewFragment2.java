@@ -28,9 +28,11 @@ import me.stupideme.embeddedtool.R;
 
 
 /**
- * Created by stupidl on 16-9-12.
+ * Created by StupidL on 2016/10/31.
  */
-public class DeviceNewFragment extends Fragment {
+
+public class DeviceNewFragment2 extends Fragment {
+
 
     private static final String TAG = "DeviceNewFragment";
     private ProgressDialog mProgressDialog;
@@ -41,11 +43,11 @@ public class DeviceNewFragment extends Fragment {
     private static final int REQUEST_ENABLE_BT = 0x200;
 
 
-    public DeviceNewFragment() {
+    public DeviceNewFragment2() {
     }
 
-    public static DeviceNewFragment newInstance() {
-        return new DeviceNewFragment();
+    public static me.stupideme.embeddedtool.view.fragment.DeviceNewFragment newInstance() {
+        return new me.stupideme.embeddedtool.view.fragment.DeviceNewFragment();
     }
 
     @Override
@@ -81,6 +83,37 @@ public class DeviceNewFragment extends Fragment {
                     mProgressDialog.setCancelable(false);
                     doDiscovery();
 
+//                    mClient.searchDevices(new OnSearchDeviceListener() {
+//                        @Override
+//                        public void onStartDiscovery() {
+//                            mProgressDialog.setTitle("扫描设备");
+//                            mProgressDialog.setMessage("扫描设备中，请稍等...");
+//                            mProgressDialog.show();
+//                            mProgressDialog.setCancelable(false);
+//                            Log.v(TAG, "start search bluetooth");
+//                        }
+//
+//                        @Override
+//                        public void onNewDeviceFounded(BluetoothDevice bluetoothDevice) {
+//                            mNewDevicesArrayAdapter.add(bluetoothDevice.getName() + "\n" + bluetoothDevice.getAddress());
+//                            mNewDevicesArrayAdapter.notifyDataSetChanged();
+//                            Log.v(TAG, "new device found");
+//                        }
+//
+//                        @Override
+//                        public void onSearchCompleted(List<BluetoothDevice> list, List<BluetoothDevice> list1) {
+//                            mProgressDialog.dismiss();
+//                            Log.v(TAG, "list size: " + list.size() + "list1 size: " + list1.size());
+//                            Log.v(TAG, "search completed");
+//
+//                        }
+//
+//                        @Override
+//                        public void onError(Exception e) {
+//                            Toast.makeText(getActivity(), "错误", Toast.LENGTH_SHORT).show();
+//                            Log.v(TAG, "search error");
+//                        }
+//                    });
                 }
             }
         });
@@ -156,8 +189,10 @@ public class DeviceNewFragment extends Fragment {
             Intent intent = new Intent();
             intent.putExtra(Constants.EXTRA_DEVICE_ADDRESS, address);
             Log.v(TAG, "BT address: " + address);
+            //back to MainActivity and try to connect device
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         }
     };
 }
+
