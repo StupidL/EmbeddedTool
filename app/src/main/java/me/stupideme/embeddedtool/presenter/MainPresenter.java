@@ -2,7 +2,6 @@ package me.stupideme.embeddedtool.presenter;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.util.Log;
@@ -14,8 +13,8 @@ import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.model.IStupidModel;
-import me.stupideme.embeddedtool.model.StupidObservable;
 import me.stupideme.embeddedtool.model.StupidModelImpl;
+import me.stupideme.embeddedtool.model.StupidObservable;
 import me.stupideme.embeddedtool.model.StupidObserver;
 import me.stupideme.embeddedtool.view.IMainView;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;

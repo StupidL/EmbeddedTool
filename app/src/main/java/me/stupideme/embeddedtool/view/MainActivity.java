@@ -29,8 +29,6 @@ import java.util.List;
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.bluetooth.BluetoothService;
-import me.stupideme.embeddedtool.bluetooth.library.BluetoothSPP;
-import me.stupideme.embeddedtool.bluetooth.library.BluetoothState;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
 import me.stupideme.embeddedtool.view.custom.OnBindViewIdChangedListener;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
@@ -360,11 +358,12 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                                 getSupportActionBar().setSubtitle(R.string.string_connected_device);
                             break;
                         case BluetoothService.STATE_CONNECTING:
-
                             if (getSupportActionBar() != null)
                                 getSupportActionBar().setSubtitle(R.string.string_connecting_device);
                             break;
                         case BluetoothService.STATE_LISTEN:
+                            if (getSupportActionBar() != null)
+                                getSupportActionBar().setTitle(R.string.string_app_name);
                         case BluetoothService.STATE_NONE:
                             if (getSupportActionBar() != null)
                                 getSupportActionBar().setTitle(R.string.string_app_name);
@@ -378,7 +377,10 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     byte[] readBuf = (byte[]) msg.obj;
                     String writeMessage = new String(readBuf);
                     Log.v(TAG, "read data: " + writeMessage);
-                    mPresenter.notifyObservers(writeMessage);
+
+                    String result = bytesToHexString(readBuf);
+                    Log.v(TAG, "receive message: " + result);
+                    mPresenter.notifyObservers(result);
 
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
@@ -392,6 +394,19 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             }
         }
     };
+
+
+    public static final String bytesToHexString(byte[] bArray) {
+        StringBuffer sb = new StringBuffer(bArray.length);
+        String sTemp;
+        for (int i = 0; i < bArray.length; i++) {
+            sTemp = Integer.toHexString(0xFF & bArray[i]);
+            if (sTemp.length() < 2)
+                sb.append(0);
+            sb.append(sTemp.toUpperCase());
+        }
+        return sb.toString();
+    }
 
     /**
      * create option menu

@@ -3,21 +3,16 @@ package me.stupideme.embeddedtool.model;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Handler;
 import android.util.Log;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.bluetooth.BluetoothService;
-import me.stupideme.embeddedtool.bluetooth.library.BluetoothSPP;
-import me.stupideme.embeddedtool.bluetooth.library.BluetoothState;
 import me.stupideme.embeddedtool.db.DBManager;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 
@@ -120,7 +115,10 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
 
         byte[] re = hexStringToByte(msg);
         Log.v(TAG, "hexStringToBytes:" + Arrays.toString(re));
-        mService.write(re);
+
+
+        byte[] test = {-128};
+        mService.write(test);
 
         Log.v(TAG, "send message success");
 
