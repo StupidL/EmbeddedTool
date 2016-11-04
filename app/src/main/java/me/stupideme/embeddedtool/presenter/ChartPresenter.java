@@ -4,7 +4,7 @@ import me.stupideme.embeddedtool.model.IStupidModel;
 import me.stupideme.embeddedtool.model.StupidModelImpl;
 import me.stupideme.embeddedtool.model.StupidObservable;
 import me.stupideme.embeddedtool.model.StupidObserver;
-import me.stupideme.embeddedtool.view.IChartView;
+import me.stupideme.embeddedtool.view.interfaces.IChartView;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 
 /**
@@ -12,7 +12,14 @@ import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
  */
 
 public class ChartPresenter {
+
+    /**
+     * chart view
+     */
     private IChartView iChartView;
+    /**
+     * iStupidModel
+     */
     private IStupidModel iStupidModel;
 
     public ChartPresenter(IChartView view){
@@ -20,14 +27,25 @@ public class ChartPresenter {
         iStupidModel = StupidModelImpl.getInstance();
     }
 
+    /**
+     * set send message listener for chart view
+     */
     public void setSendMessageListener(){
         iChartView.setOnSendMessageListener((OnSendMessageListener) iStupidModel);
     }
 
+    /**
+     * attach observer
+     * @param observer observer
+     */
     public void attachObserver(StupidObserver observer){
         ((StupidObservable)iStupidModel).attach(observer);
     }
 
+    /**
+     * detach observer
+     * @param observer observer
+     */
     public void detachObserver(StupidObserver observer){
         ((StupidObservable)iStupidModel).detach(observer);
     }

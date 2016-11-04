@@ -5,7 +5,7 @@ import java.util.Map;
 
 import me.stupideme.embeddedtool.model.ISettingsModel;
 import me.stupideme.embeddedtool.model.SettingsModelImpl;
-import me.stupideme.embeddedtool.view.ISettingsView;
+import me.stupideme.embeddedtool.view.interfaces.ISettingsView;
 
 /**
  * Created by stupidl on 16-10-19.

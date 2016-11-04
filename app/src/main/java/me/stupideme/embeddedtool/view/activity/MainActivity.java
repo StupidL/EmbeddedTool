@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view;
+package me.stupideme.embeddedtool.view.activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -12,6 +12,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +30,10 @@ import java.util.List;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
+import me.stupideme.embeddedtool.Util;
 import me.stupideme.embeddedtool.bluetooth.BluetoothService;
 import me.stupideme.embeddedtool.presenter.MainPresenter;
+import me.stupideme.embeddedtool.view.interfaces.IMainView;
 import me.stupideme.embeddedtool.view.custom.OnBindViewIdChangedListener;
 import me.stupideme.embeddedtool.view.custom.StupidButtonReceive;
 import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
@@ -162,15 +166,15 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            // if bluetooth is not enabled, request to enable it.
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+//            // if bluetooth is not enabled, request to enable it.
+//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+//        }
+//    }
 
     @Override
     public void onDestroy() {
@@ -217,6 +221,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         stupidTextView.setText(txt);
         stupidTextView.setOnTouchListener(mTouchListener);
         stupidTextView.setBindViewListener(this);
+        stupidTextView.setVerticalScrollBarEnabled(true);
+        stupidTextView.setEllipsize(TextUtils.TruncateAt.START);
+        stupidTextView.setMovementMethod(ScrollingMovementMethod.getInstance());
         mFrameLayout.addView(stupidTextView);
     }
 
@@ -378,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
                     String writeMessage = new String(readBuf);
                     Log.v(TAG, "read data: " + writeMessage);
 
-                    String result = bytesToHexString(readBuf);
+                    String result = Util.bytesToHexString(readBuf);
                     Log.v(TAG, "receive message: " + result);
                     mPresenter.notifyObservers(result);
 
@@ -395,18 +402,6 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     };
 
-
-    public static final String bytesToHexString(byte[] bArray) {
-        StringBuffer sb = new StringBuffer(bArray.length);
-        String sTemp;
-        for (int i = 0; i < bArray.length; i++) {
-            sTemp = Integer.toHexString(0xFF & bArray[i]);
-            if (sTemp.length() < 2)
-                sb.append(0);
-            sb.append(sTemp.toUpperCase());
-        }
-        return sb.toString();
-    }
 
     /**
      * create option menu

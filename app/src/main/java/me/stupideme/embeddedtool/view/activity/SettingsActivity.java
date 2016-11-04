@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view;
+package me.stupideme.embeddedtool.view.activity;
 
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
@@ -21,6 +21,7 @@ import java.util.Map;
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.SettingsPresenter;
+import me.stupideme.embeddedtool.view.interfaces.ISettingsView;
 import me.stupideme.embeddedtool.view.fragment.DataProtocolFragment;
 import me.stupideme.embeddedtool.view.fragment.DataTypeFragment;
 

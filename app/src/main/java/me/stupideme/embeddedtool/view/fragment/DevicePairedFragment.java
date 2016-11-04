@@ -25,7 +25,6 @@ import java.util.Set;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.bluetooth.library.BluetoothState;
 
 
 /**

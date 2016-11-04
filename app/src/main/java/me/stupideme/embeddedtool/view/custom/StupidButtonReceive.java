@@ -92,7 +92,7 @@ public class StupidButtonReceive extends Button implements
                         //============================================================
                         mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_RECEIVE,//request code
                                 getDataType(), //data type
-                                String.valueOf(Constants.MESSAGE_BODY_EMPTY));//body
+                                Constants.MESSAGE_BODY_EMPTY);//body
                         getBindView().append("\n" + "Waiting...");
                         //============================================================
 

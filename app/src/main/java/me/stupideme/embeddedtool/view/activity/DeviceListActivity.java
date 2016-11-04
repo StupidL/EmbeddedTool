@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view;
+package me.stupideme.embeddedtool.view.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -16,10 +16,6 @@ import me.stupideme.embeddedtool.view.fragment.DevicePairedFragment;
 
 public class DeviceListActivity extends AppCompatActivity {
 
-
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    private ViewPager mViewPager;
 
     private DeviceNewFragment mNewFragment;
     private DevicePairedFragment mPairedFragment;
@@ -39,9 +35,9 @@ public class DeviceListActivity extends AppCompatActivity {
                 DeviceListActivity.super.onBackPressed();
             }
         });
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -54,7 +50,7 @@ public class DeviceListActivity extends AppCompatActivity {
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view;
+package me.stupideme.embeddedtool.view.interfaces;
 
 import android.view.View;
 

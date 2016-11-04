@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.stupideme.embeddedtool.Constants;
+import me.stupideme.embeddedtool.Util;
 import me.stupideme.embeddedtool.bluetooth.BluetoothService;
 import me.stupideme.embeddedtool.db.DBManager;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
@@ -113,46 +114,15 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         Log.v(TAG, "write string: " + msg);
         Log.v(TAG, "write string: " + Arrays.toString(msg.getBytes()));
 
-        byte[] re = hexStringToByte(msg);
+        byte[] re = Util.hexStringToByte(msg);
         Log.v(TAG, "hexStringToBytes:" + Arrays.toString(re));
 
-
-        byte[] test = {-128};
+        String s = "80";
+        byte[] test = Util.hexStringToByte(s);
         mService.write(test);
 
         Log.v(TAG, "send message success");
 
-    }
-//
-//    public static final String bytesToHexString(byte[] bArray) {
-//        StringBuffer sb = new StringBuffer(bArray.length);
-//        String sTemp;
-//        for (int i = 0; i < bArray.length; i++) {
-//            sTemp = Integer.toHexString(0xFF & bArray[i]);
-//            if (sTemp.length() < 2)
-//                sb.append(0);
-//            sb.append(sTemp.toUpperCase());
-//        }
-//        return sb.toString();
-//    }
-
-    private static byte[] hexStringToByte(String hexString) {
-        if (hexString == null || hexString.equals("")) {
-            return null;
-        }
-        hexString = hexString.toUpperCase();
-        int length = hexString.length() / 2;
-        char[] hexChars = hexString.toCharArray();
-        byte[] d = new byte[length];
-        for (int i = 0; i < length; i++) {
-            int pos = i * 2;
-            d[i] = (byte) (charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
-        }
-        return d;
-    }
-
-    private static byte charToByte(char c) {
-        return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
     /**
@@ -239,6 +209,10 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         mService.connect(device, secure);
     }
 
+    /**
+     * save view's info to database
+     * @param values content values
+     */
     @Override
     public void saveViewInfo(ContentValues values) {
         mManager.insertView(values);

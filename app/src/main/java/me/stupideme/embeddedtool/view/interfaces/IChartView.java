@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view;
+package me.stupideme.embeddedtool.view.interfaces;
 
 import me.stupideme.embeddedtool.model.StupidObserver;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
@@ -8,5 +8,10 @@ import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
  */
 
 public interface IChartView extends StupidObserver{
+
+    /**
+     * listener for chart view
+     * @param listener chart view
+     */
     void setOnSendMessageListener(OnSendMessageListener listener);
 }

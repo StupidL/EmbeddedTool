@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view;
+package me.stupideme.embeddedtool.view.activity;
 
 import android.app.Activity;
 import android.content.Intent;

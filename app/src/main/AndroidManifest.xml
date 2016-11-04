@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -25,20 +25,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.ChartActivity"
+            android:name=".view.activity.ChartActivity"
             android:label="ChartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.TemplateActivity"
+            android:name=".view.activity.TemplateActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".view.DocumentActivity" />
+        <activity android:name=".view.activity.DocumentActivity" />
         <activity
-            android:name=".view.SettingsActivity"
+            android:name=".view.activity.SettingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.DeviceListActivity"
+            android:name=".view.activity.DeviceListActivity"
             android:label="@string/title_activity_device_list"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

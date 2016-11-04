@@ -1,4 +1,4 @@
-package me.stupideme.embeddedtool.view;
+package me.stupideme.embeddedtool.view.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,6 +31,7 @@ import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.ChartPresenter;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 import me.stupideme.embeddedtool.view.custom.StupidChartViewDialog;
+import me.stupideme.embeddedtool.view.interfaces.IChartView;
 
 /**
  * Created by StupidL on 2016/10/3.
@@ -39,23 +40,87 @@ import me.stupideme.embeddedtool.view.custom.StupidChartViewDialog;
 public class ChartActivity extends AppCompatActivity implements OnChartValueSelectedListener,
         StupidChartViewDialog.StupidChartDialogListener, IChartView {
 
+    //debug
     private static final java.lang.String TAG = ChartActivity.class.getSimpleName();
+
+    /**
+     * settings dialog
+     */
     private StupidChartViewDialog mDialog;
+
+    /**
+     * a image button to control receive data or not
+     */
     private ImageButton mButton;
+
+    /**
+     * is image button running
+     */
     private boolean isPlaying = true;
+
+    /**
+     * background of chart view
+     */
     private FrameLayout mFrameLayout;
+
+    /**
+     * presenter for chart view
+     */
     private ChartPresenter mPresenter;
+
+    /**
+     * send message listener
+     */
     private OnSendMessageListener mListener;
+
+    /**
+     * color pos in dialog
+     */
     private int mColorPos = 0;
+
+    /**
+     * type pos in dialog
+     */
     private int mTypePos = 0;
+
+    /**
+     * name of data type
+     */
     private String mDataType;
 
+    /**
+     * Linear type of chart
+     */
     private LineChart mChart;
+
+    /**
+     * x axis
+     */
     private XAxis xAxis;
+
+    /**
+     * y axis
+     */
     private YAxis yAxis;
+
+    /**
+     * max x axis value
+     */
     private int xMax = 500;
+
+    /**
+     * min x axis value
+     */
     private int xMin = 0;
+
+    /**
+     * max y axis value
+     */
     private int yMax = 100;
+
+    /**
+     * min y axis value
+     */
     private int yMin = 0;
 
 
@@ -85,6 +150,12 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
                 if (isPlaying) {
                     mButton.setImageResource(R.drawable.ic_pause_circle_filled_teal_500_48dp);
                     addEntry();
+                    if (getDataType() != null)
+                        mListener.onSendMessage(Constants.REQUEST_CODE_CHART,
+                                getDataType(),
+                                Constants.MESSAGE_BODY_EMPTY);
+                    else
+                        Toast.makeText(ChartActivity.this, "请设置数据类型～", Toast.LENGTH_SHORT).show();
                 } else {
                     mButton.setImageResource(R.drawable.ic_play_circle_filled_teal_500_48dp);
                 }
@@ -124,12 +195,42 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 
     }
 
+    /**
+     * set data type for chart
+     *
+     * @param type name of type
+     */
+    public void setDataType(String type) {
+        mDataType = type;
+    }
+
+    /**
+     * get data type of chart
+     *
+     * @return name of type
+     */
+    public String getDataType() {
+        return mDataType;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.detachObserver(this);
     }
 
+    /**
+     * init linear chart
+     */
     void initChart() {
         mChart = (LineChart) findViewById(R.id.line_chart);
         mChart.setOnChartValueSelectedListener(this);
@@ -192,40 +293,48 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     }
 
     @Override
-    public void onSave(Map<java.lang.String, java.lang.String> map) {
+    public void onSave(Map<String, String> map) {
+        //dismiss dialog
         mDialog.dismiss();
-        int color = getResources().getColor(Constants.mColors[Integer.parseInt(map.get("color"))]);
-        mChart.setBackgroundColor(color);
-        mFrameLayout.setBackgroundColor(color);
+
+        //set color for chart view and frame layout
         if (map.containsKey(Constants.KEY_COLOR_POS)) {
             mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));
+            int color = getResources().getColor(Constants.mColors[mColorPos]);
+            mChart.setBackgroundColor(color);
+            mFrameLayout.setBackgroundColor(color);
         }
+        //set pos of data type for chart view
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
         }
-        if(map.containsKey(Constants.KEY_TYPE_STRING)){
-            mDataType = map.get(Constants.KEY_TYPE_STRING);
+        //set data type for chart view
+        if (map.containsKey(Constants.KEY_TYPE_STRING)) {
+            setDataType(map.get(Constants.KEY_TYPE_STRING));
         }
+        //set max X value
         if (map.containsKey(Constants.KEY_MAX_X)) {
             xMax = Integer.parseInt(map.get(Constants.KEY_MAX_X));
             xAxis.setAxisMaxValue(xMax);
         }
+        //set max Y value
         if (map.containsKey(Constants.KEY_MAX_Y)) {
             yMax = Integer.parseInt(map.get(Constants.KEY_MAX_Y));
             yAxis.setAxisMaxValue(yMax);
         }
+        //set min X value
         if (map.containsKey(Constants.KEY_MIN_X)) {
             xMin = Integer.parseInt(map.get(Constants.KEY_MIN_X));
             xAxis.setAxisMinValue(xMin);
         }
+        //set min Y value
         if (map.containsKey(Constants.KEY_MIN_Y)) {
             yMin = Integer.parseInt(map.get(Constants.KEY_MIN_Y));
             yAxis.setAxisMinValue(yMin);
         }
+        //notify
         mChart.notifyDataSetChanged();
 
-        mListener.onSendMessage(Constants.REQUEST_CODE_CHART, mDataType,
-                java.lang.String.valueOf(Constants.MESSAGE_BODY_EMPTY));
     }
 
     @Override
@@ -255,6 +364,9 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         return true;
     }
 
+    /**
+     * add an random entry
+     */
     private void addEntry() {
 
         LineData data = mChart.getData();
@@ -288,6 +400,11 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         }
     }
 
+    /**
+     * create linear type data set
+     *
+     * @return set
+     */
     private LineDataSet createSet() {
 
         LineDataSet set = new LineDataSet(null, "Dynamic Data");
@@ -344,20 +461,13 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         Log.i("Entry selected", e.toString());
+        Toast.makeText(ChartActivity.this,
+                "X = " + e.getX() + " Y = " + e.getY(), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onNothingSelected() {
         Log.i("Nothing selected", "Nothing selected.");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (thread != null) {
-            thread.interrupt();
-        }
     }
 
 }
