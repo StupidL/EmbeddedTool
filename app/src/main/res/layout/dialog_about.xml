@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="罗周杨 陈延泽 叶晨纯 韩璐 张玉敏" />
+            android:text="韩璐 陈延泽 罗周杨 叶晨纯 张玉敏" />
     </TableRow>
 
     <TableRow

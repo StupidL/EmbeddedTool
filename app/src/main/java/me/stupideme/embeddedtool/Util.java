@@ -38,4 +38,15 @@ public class Util {
         return sb.toString();
     }
 
+    public static String adjustText(String s) {
+        if (s.isEmpty())
+            return "00";
+        int len = s.length();
+        if (len >= 2) {
+            return s.substring(0, 1);
+        } else if (len > 0)
+            return "0" + s;
+        else
+            return "00";
+    }
 }

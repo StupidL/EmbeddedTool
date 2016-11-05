@@ -59,9 +59,6 @@ public class DevicePairedFragment extends Fragment {
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         getActivity().registerReceiver(mReceiver, filter);
 
-        //Get a set of currently paired devices
-
-
     }
 
     @Override

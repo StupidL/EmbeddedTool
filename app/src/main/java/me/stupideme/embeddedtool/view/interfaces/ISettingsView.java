@@ -8,7 +8,16 @@ import java.util.Map;
  */
 
 public interface ISettingsView {
+
+    /**
+     * recovery default data type
+     * @param list a list contains all default types
+     */
     void recoveryTypeDefault(List<Map<String, String>> list);
 
+    /**
+     * recovery default protocol
+     * @param list a list contains all default protocol
+     */
     void recoveryProtocolDefault(List<Map<String, String>> list);
 }

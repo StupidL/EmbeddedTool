@@ -32,18 +32,44 @@ import me.stupideme.embeddedtool.R;
  */
 public class DeviceNewFragment extends Fragment {
 
+    //debug
     private static final String TAG = "DeviceNewFragment";
+    /**
+     * progress dialog
+     */
     private ProgressDialog mProgressDialog;
+
+    /**
+     * bluetooth adapter
+     */
     private BluetoothAdapter mBtAdapter;
+
+    /**
+     * relative layout
+     */
     private RelativeLayout relativeLayout;
+
+    /**
+     * array adapter fro list view
+     */
     ArrayAdapter<String> mNewDevicesArrayAdapter;
 
+    /**
+     * request code to enable bluetooth
+     */
     private static final int REQUEST_ENABLE_BT = 0x200;
 
-
+    /**
+     * constructor
+     */
     public DeviceNewFragment() {
+
     }
 
+    /**
+     * get instance of this fragment
+     * @return instance
+     */
     public static DeviceNewFragment newInstance() {
         return new DeviceNewFragment();
     }
@@ -62,6 +88,7 @@ public class DeviceNewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_device, container, false);
+        //find views by id
         relativeLayout = (RelativeLayout) view.findViewById(R.id.relative_layout);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.bluetooth_search);
         mNewDevicesArrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.device_name);
@@ -70,21 +97,21 @@ public class DeviceNewFragment extends Fragment {
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
         mProgressDialog = new ProgressDialog(getActivity());
+        //show a dialog when fab clicked and begin search devices
         fab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //mBtAdapter.cancelDiscovery();
                 setupBluetooth();
                 if (mBtAdapter.isEnabled()) {
+                    //init progress dialog
                     mProgressDialog.setTitle("扫描设备");
                     mProgressDialog.setMessage("扫描设备中，请稍等...");
                     mProgressDialog.show();
                     mProgressDialog.setCancelable(false);
                     doDiscovery();
-
                 }
             }
         });
-
         return view;
     }
 
@@ -98,7 +125,9 @@ public class DeviceNewFragment extends Fragment {
         getActivity().unregisterReceiver(mReceiver);
     }
 
-
+    /**
+     * setup bluetooth
+     */
     private void setupBluetooth() {
         if (mBtAdapter == null) {
             Toast.makeText(getActivity(), "设备不支持蓝牙！", Toast.LENGTH_SHORT).show();
@@ -110,6 +139,9 @@ public class DeviceNewFragment extends Fragment {
         }
     }
 
+    /**
+     * search bluetooth
+     */
     private void doDiscovery() {
         Log.d(TAG, "doDiscovery()");
         if (mBtAdapter.isDiscovering()) {
@@ -118,6 +150,9 @@ public class DeviceNewFragment extends Fragment {
         mBtAdapter.startDiscovery();
     }
 
+    /**
+     * register a broadcast receiver to update list when a new device is discovered
+     */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -147,6 +182,9 @@ public class DeviceNewFragment extends Fragment {
         }
     };
 
+    /**
+     * finish this activity and connect to the device when item clicked
+     */
     private AdapterView.OnItemClickListener mDeviceClickListener
             = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {

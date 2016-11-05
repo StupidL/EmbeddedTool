@@ -26,9 +26,21 @@ import me.stupideme.embeddedtool.db.DBManager;
 
 public class TemplateActivity extends AppCompatActivity {
 
+    //debug
     private static final String TAG = TemplateActivity.class.getSimpleName();
+    /**
+     * a list contains all templates' names
+     */
     private List<String> mTemplateNames;
+
+    /**
+     * data base manager to query or delete templates
+     */
     private DBManager mManager;
+
+    /**
+     * a list view adapter
+     */
     private MyAdapter mAdapter;
 
     @Override
@@ -79,13 +91,14 @@ public class TemplateActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            //clear all templates
             case R.id.action_clear:
                 mTemplateNames.clear();
                 mAdapter.notifyDataSetChanged();
                 mManager.deleteAllTemplates();
                 break;
-            case R.id.action_settings_advanced:
-
+            case R.id.action_settings:
+                //do nothing
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -99,6 +112,9 @@ public class TemplateActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * a adapter of list view
+     */
     private class MyAdapter extends BaseAdapter {
 
         @Override
@@ -161,8 +177,18 @@ public class TemplateActivity extends AppCompatActivity {
             return view;
         }
 
+        /**
+         * view holder
+         */
         private class ViewHolder {
+            /**
+             * a text view to show template's name
+             */
             TextView mName;
+
+            /**
+             * a image button to delete a template
+             */
             ImageButton mDelete;
         }
     }

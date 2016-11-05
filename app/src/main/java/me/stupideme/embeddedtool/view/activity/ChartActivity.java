@@ -35,6 +35,7 @@ import me.stupideme.embeddedtool.view.interfaces.IChartView;
 
 /**
  * Created by StupidL on 2016/10/3.
+ * A activity to show income data from bluetooth in graphic way
  */
 
 public class ChartActivity extends AppCompatActivity implements OnChartValueSelectedListener,
@@ -129,6 +130,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_realtime_linechart);
 
+        //init toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("图表工具");
         setSupportActionBar(toolbar);
@@ -141,6 +143,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
             }
         });
 
+        //find views
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         mButton = (ImageButton) findViewById(R.id.control_button);
 
@@ -165,20 +168,29 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         mDialog = new StupidChartViewDialog(this, this);
         initChart();
 
+        //set on long click listener
         mChart.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                //set color position for color spinner in dialog
                 mDialog.setColorPos(mColorPos);
+                //set type position fro type spinner
                 mDialog.setTypePos(mTypePos);
+                //show max X value in dialog
                 mDialog.showMaxX(xMax);
+                //show min X value in dialog
                 mDialog.showMinX(xMin);
+                //show max Y value in dialog
                 mDialog.showMaxY(yMax);
+                //show min Y value in dialog
                 mDialog.showMinY(yMin);
+                //show dialog
                 mDialog.show();
                 return false;
             }
         });
 
+        //init presenter
         mPresenter = new ChartPresenter(this);
         mPresenter.setSendMessageListener();
         mPresenter.attachObserver(this);
@@ -216,8 +228,8 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     @Override
     protected void onPause() {
         super.onPause();
-
         if (thread != null) {
+            //stop thread
             thread.interrupt();
         }
     }
@@ -225,6 +237,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //detach observer
         mPresenter.detachObserver(this);
     }
 
@@ -269,6 +282,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         l.setForm(Legend.LegendForm.LINE);
         l.setTextColor(Color.WHITE);
 
+        //init x axis
         xAxis = mChart.getXAxis();
         xAxis.setTextColor(Color.WHITE);
         xAxis.setGridLineWidth(2f);
@@ -276,6 +290,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         xAxis.setAvoidFirstLastClipping(true);
         xAxis.setEnabled(true);
 
+        //init y axis
         yAxis = mChart.getAxisLeft();
         yAxis.setTextColor(Color.WHITE);
         yAxis.setGridLineWidth(2f);
@@ -287,11 +302,18 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         rightAxis.setEnabled(false);
     }
 
+    /**
+     * dismiss dialog
+     */
     @Override
     public void onCancel() {
         mDialog.dismiss();
     }
 
+    /**
+     * save attrs from dialog
+     * @param map map that contains attrs for chart view from dialog
+     */
     @Override
     public void onSave(Map<String, String> map) {
         //dismiss dialog
@@ -406,7 +428,6 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
      * @return set
      */
     private LineDataSet createSet() {
-
         LineDataSet set = new LineDataSet(null, "Dynamic Data");
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         set.setColor(ColorTemplate.getHoloBlue());
@@ -422,8 +443,14 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         return set;
     }
 
+    /**
+     * a thread to create entries
+     */
     private Thread thread;
 
+    /**
+     * create 1000 entries
+     */
     private void feedMultiple() {
 
         if (thread != null)
@@ -458,6 +485,11 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         thread.start();
     }
 
+    /**
+     * do something when a entry selected in graph
+     * @param e entry
+     * @param h highlight
+     */
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         Log.i("Entry selected", e.toString());
@@ -465,6 +497,9 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
                 "X = " + e.getX() + " Y = " + e.getY(), Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * on nothing selected
+     */
     @Override
     public void onNothingSelected() {
         Log.i("Nothing selected", "Nothing selected.");

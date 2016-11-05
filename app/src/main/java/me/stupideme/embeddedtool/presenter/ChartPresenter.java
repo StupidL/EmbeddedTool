@@ -22,8 +22,14 @@ public class ChartPresenter {
      */
     private IStupidModel iStupidModel;
 
+    /**
+     * constructor
+     * @param view IChartView
+     */
     public ChartPresenter(IChartView view){
+        //init iChartView
         iChartView = view;
+        //get instance of iStupidModel
         iStupidModel = StupidModelImpl.getInstance();
     }
 

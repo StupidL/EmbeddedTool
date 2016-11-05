@@ -60,25 +60,38 @@ public class StupidButtonReceive extends Button implements
     public StupidButtonReceive(final Context context) {
         super(context);
 
+        //init dialog
         mDialog = new StupidButtonDialog(context, this);
-
+        //set text color
         setTextColor(Color.WHITE);
+        //set background color
         setBackgroundColor(getResources().getColor(R.color.Gray));
+        //set width
         setWidth(200);
+        //set height
         setHeight(100);
+        //set layout params
         setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
+        //set on long click listener
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                //show name in dialog
                 mDialog.showButtonName(getText().toString());
+                //show width in dialog
                 mDialog.showButtonWidth(getWidth());
+                //show height in dialog
                 mDialog.showButtonHeight(getHeight());
+                //show id in dialog
                 mDialog.showButtonId(getId());
+                //set position of color spinner
                 mDialog.showSpinnerColor(mColorPos);
+                //set position of type spinner
                 mDialog.showSpinnerType(mTypePos);
+                //show dialog
                 mDialog.show();
                 return false;
             }
@@ -89,12 +102,11 @@ public class StupidButtonReceive extends Button implements
             public void onClick(View view) {
                 if (getDataType() != null) {
                     if (getBindView() != null) {
-                        //============================================================
+                        //send a message before receive
                         mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_RECEIVE,//request code
                                 getDataType(), //data type
                                 Constants.MESSAGE_BODY_EMPTY);//body
                         getBindView().append("\n" + "Waiting...");
-                        //============================================================
 
                     } else {
                         Toast.makeText(context, "该按钮需要绑定一个文本框～", Toast.LENGTH_SHORT).show();
@@ -107,14 +119,29 @@ public class StupidButtonReceive extends Button implements
 
     }
 
+    /**
+     * set send message listener
+     *
+     * @param listener listener
+     */
     public void setSendMessageListener(OnSendMessageListener listener) {
         mSendMessageListener = listener;
     }
 
-    public void updateSpinnerAdapter(List<java.lang.String> list) {
+    /**
+     * update spinner
+     *
+     * @param list a set of data types
+     */
+    public void updateSpinnerAdapter(List<String> list) {
         mDialog.updateTypeSpinnerAdapter(list);
     }
 
+    /**
+     * receive message
+     *
+     * @param msg message
+     */
     @Override
     public void receiveMessage(String msg) {
         if (mBindView != null) {
@@ -203,6 +230,9 @@ public class StupidButtonReceive extends Button implements
         this.mBindView = mBindView;
     }
 
+    /**
+     * delete button itself
+     */
     @Override
     public void onDelete() {
         mDialog.dismiss();
@@ -211,29 +241,44 @@ public class StupidButtonReceive extends Button implements
         ((FrameLayout) getParent()).removeView(this);
     }
 
+    /**
+     * save attrs in dialog
+     *
+     * @param map map contains attrs
+     */
     @Override
-    public void onSave(Map<java.lang.String, java.lang.String> map) {
+    public void onSave(Map<String, String> map) {
+        //dismiss dialog
         mDialog.dismiss();
+        //get layout params
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
-        if (map.containsKey(Constants.KEY_NAME))
+        //set name
+        if (map.containsKey(Constants.KEY_NAME)) {
             setText(map.get(Constants.KEY_NAME));
+        }
+        //set width
         if (map.containsKey(Constants.KEY_WIDTH)) {
             params.width = Integer.parseInt(map.get(Constants.KEY_WIDTH));
             setLayoutParams(params);
         }
+        //set height
         if (map.containsKey(Constants.KEY_HEIGHT)) {
             params.height = Integer.parseInt(map.get(Constants.KEY_HEIGHT));
             setLayoutParams(params);
         }
+        //set id
         if (map.containsKey(Constants.KEY_ID)) {
             setId(Integer.parseInt(map.get(Constants.KEY_ID)));
         }
+        //set type position
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
         }
-        if(map.containsKey(Constants.KEY_TYPE_STRING)){
+        //set type name
+        if (map.containsKey(Constants.KEY_TYPE_STRING)) {
             setDataType(map.get(Constants.KEY_TYPE_STRING));
         }
+        //set color position
         if (map.containsKey(Constants.KEY_COLOR_POS)) {
             mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));
             int color = getResources().getColor(Constants.mColors[mColorPos]);

@@ -69,12 +69,27 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
      */
     private int mDataType;
 
+    /**
+     * data type
+     */
     private String mDataTypeString;
 
+    /**
+     * adapter for type spinner
+     */
     private ArrayAdapter<String> mTypeSpinnerAdapter;
 
+    /**
+     * a list contains data types
+     */
     private List<String> mList = new ArrayList<>();
 
+    /**
+     * constructor
+     *
+     * @param context  context
+     * @param listener listener
+     */
     StupidButtonDialog(Context context, StupidButtonDialogListener listener) {
         super(context);
         //set listener
@@ -91,6 +106,7 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
         mWidth = (EditText) findViewById(R.id.stupid_button_dialog_width_et);
         mHeight = (EditText) findViewById(R.id.stupid_button_dialog_height_et);
 
+        //init type spinner
         mTypeSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mList);
         mTypeSpinnerAdapter.setDropDownViewResource(R.layout.item_spinner);
         mTypeSpinner.setAdapter(mTypeSpinnerAdapter);
@@ -119,17 +135,25 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
             }
         });
 
+        //set on click listener
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);
         delete.setOnClickListener(this);
 
     }
 
+    /**
+     * update spinner content
+     *
+     * @param list a list contains data types
+     */
     public void updateTypeSpinnerAdapter(List<String> list) {
+        //clear list first
         mList.clear();
+        //add list
         mList.addAll(list);
+        //notify
         mTypeSpinnerAdapter.notifyDataSetChanged();
-        Log.v(TAG, "updateTypeSpinnerAdapter size:" + mTypeSpinnerAdapter.getCount());
     }
 
     /**
@@ -189,29 +213,47 @@ public class StupidButtonDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            //cancel clicked
             case R.id.stupid_button_dialog_cancel:
                 mListener.onCancel();
                 break;
+            //ok clicked
             case R.id.stupid_button_dialog_ok:
-                if (!mEditText.getText().toString().isEmpty())
+                if (!mEditText.getText().toString().isEmpty()) {
+                    //save name
                     map.put(Constants.KEY_NAME, mEditText.getText().toString());
-                if (!mWidth.getText().toString().isEmpty())
+                }
+                if (!mWidth.getText().toString().isEmpty()) {
+                    //save width
                     map.put(Constants.KEY_WIDTH, mWidth.getText().toString());
-                if (!mHeight.getText().toString().isEmpty())
+                }
+                if (!mHeight.getText().toString().isEmpty()) {
+                    //save height
                     map.put(Constants.KEY_HEIGHT, mHeight.getText().toString());
-                if (!mId.getText().toString().isEmpty())
+                }
+                if (!mId.getText().toString().isEmpty()) {
+                    //save id
                     map.put(Constants.KEY_ID, mId.getText().toString());
+                }
+                //save color position
                 map.put(Constants.KEY_COLOR_POS, mColorPos + "");
+                //save data type position
                 map.put(Constants.KEY_TYPE_POS, mDataType + "");
+                //save data type name
                 map.put(Constants.KEY_TYPE_STRING, mDataTypeString);
+                //save attrs to map
                 mListener.onSave(map);
                 break;
+            //delete clicked
             case R.id.stupid_button_dialog_delete:
                 mListener.onDelete();
                 break;
         }
     }
 
+    /**
+     * a callback interface to settings attrs for button
+     */
     interface StupidButtonDialogListener {
 
         /**

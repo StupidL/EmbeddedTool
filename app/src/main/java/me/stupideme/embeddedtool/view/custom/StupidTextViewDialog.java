@@ -20,20 +20,59 @@ import me.stupideme.embeddedtool.R;
 
 public class StupidTextViewDialog extends Dialog implements View.OnClickListener {
 
+    /**
+     * listener
+     */
     private StupidTextViewListener mListener;
+
+    /**
+     * id edit text
+     */
     private EditText id;
+
+    /**
+     * width edit text
+     */
     private EditText width;
+
+    /**
+     * height edit text
+     */
     private EditText height;
+
+    /**
+     * bind id edit text
+     */
     private EditText bindId;
+
+    /**
+     * color spinner
+     */
     private Spinner color;
+
+    /**
+     * color position
+     */
     private int mColorPos;
 
+    /**
+     * a map to contains attrs
+     */
     private Map<String, String> map = new HashMap<>();
 
+    /**
+     * constructor
+     * @param context context
+     * @param listener listener
+     */
     public StupidTextViewDialog(final Context context, StupidTextViewListener listener) {
         super(context);
+
+        //init listener
         mListener = listener;
+        //set layout
         setContentView(R.layout.stupid_text_view_dialog);
+        //find views by id
         id = (EditText) findViewById(R.id.stupid_text_view_dialog_et_id);
         width = (EditText) findViewById(R.id.stupid_text_view_dialog_et_width);
         height = (EditText) findViewById(R.id.stupid_text_view_dialog_et_height);
@@ -43,6 +82,7 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         Button cancel = (Button) findViewById(R.id.stupid_text_view_dialog_button_cancel);
         Button ok = (Button) findViewById(R.id.stupid_text_view_dialog_button_ok);
 
+        //set on click listener
         delete.setOnClickListener(this);
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);
@@ -59,22 +99,42 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         });
     }
 
+    /**
+     * show id
+     * @param viewId id
+     */
     void showTextViewId(int viewId) {
         id.setText(viewId + "");
     }
 
+    /**
+     * show width
+     * @param w width
+     */
     void showTextViewWidth(int w) {
         width.setText(w + "");
     }
 
+    /**
+     * show height
+     * @param h height
+     */
     void showTextViewHeight(int h) {
         height.setText(h + "");
     }
 
+    /**
+     * show bind view id
+     * @param id id
+     */
     void showBindViewId(int id) {
         bindId.setText(id + "");
     }
 
+    /**
+     * show color spinner
+     * @param i position
+     */
     void showSpinnerColor(int i) {
         color.setSelection(i, true);
     }
@@ -105,11 +165,25 @@ public class StupidTextViewDialog extends Dialog implements View.OnClickListener
         }
     }
 
+    /**
+     * a callback interface to operate attrs
+     */
     interface StupidTextViewListener {
+
+        /**
+         * delete text view itself
+         */
         void onDelete();
 
+        /**
+         * dismiss
+         */
         void onCancel();
 
+        /**
+         * save attrs
+         * @param map a map contains attrs
+         */
         void onSave(Map<String, String> map);
     }
 }

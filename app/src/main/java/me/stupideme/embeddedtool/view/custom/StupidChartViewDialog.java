@@ -80,7 +80,9 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
      * init dialog view
      */
     private void initView() {
+        //set layout
         setContentView(R.layout.stupid_chart_view_dialog);
+        //find views bu id
         mTypeSpinner = (Spinner) findViewById(R.id.stupid_chart_view_dialog_spinner_type);
         mColorSpinner = (Spinner) findViewById(R.id.stupid_chart_view_dialog_spinner_color);
         xMax = (EditText) findViewById(R.id.stupid_chart_view_dialog_et_x_max);

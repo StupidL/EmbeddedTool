@@ -14,10 +14,19 @@ import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.view.fragment.DeviceNewFragment;
 import me.stupideme.embeddedtool.view.fragment.DevicePairedFragment;
 
+/**
+ * A activity to show bluetooth devices and select one to connect
+ */
 public class DeviceListActivity extends AppCompatActivity {
 
-
+    /**
+     * device new fragment
+     */
     private DeviceNewFragment mNewFragment;
+
+    /**
+     * device paired fragment
+     */
     private DevicePairedFragment mPairedFragment;
 
     @Override
@@ -25,6 +34,7 @@ public class DeviceListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
 
+        //init toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("蓝牙设备");
@@ -48,6 +58,9 @@ public class DeviceListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * adapter fro view pager
+     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         SectionsPagerAdapter(FragmentManager fm) {

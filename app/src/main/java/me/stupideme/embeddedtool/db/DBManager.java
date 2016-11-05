@@ -14,13 +14,37 @@ import me.stupideme.embeddedtool.Constants;
 
 public class DBManager {
 
+    //debug
     private static final String TAG = DBManager.class.getSimpleName();
+
+    /**
+     * instance of DBManager
+     */
     private static DBManager mInstance;
+
+    /**
+     * sqlite database
+     */
     private SQLiteDatabase db;
+
+    /**
+     * context for constructor's need
+     */
     private static Context mContext;
 
+    /**
+     * name of table templates
+     */
     private static final String TABLE_TEMPLATES = "templates";
+
+    /**
+     * name of table type
+     */
     private static final String TABLE_TYPE = "data_type";
+
+    /**
+     * name of table protocol
+     */
     private static final String TABLE_PROTOCOL = "data_protocol";
 
     /**
@@ -32,6 +56,10 @@ public class DBManager {
         initDefault();
     }
 
+    /**
+     * get context
+     * @param context context
+     */
     public static void init(Context context) {
         mContext = context;
     }
@@ -54,6 +82,7 @@ public class DBManager {
 
     /**
      * insert a view
+     *
      * @param values content values
      */
     public void insertView(ContentValues values) {
@@ -69,12 +98,19 @@ public class DBManager {
         db.delete(TABLE_TEMPLATES, "template_name = ?", new String[]{templateName});
     }
 
+    /**
+     * delete all templates
+     */
     public void deleteAllTemplates() {
         db.execSQL("DELETE FROM " + TABLE_TEMPLATES);
         String sql = "UPDATE SQLITE_SEQUENCE SET SEQ = 0 WHERE NAME = '" + TABLE_TEMPLATES + "\'";
         db.execSQL(sql);
     }
 
+    /**
+     * query all templates' name
+     * @return cursor
+     */
     public Cursor queryAllTemplateName() {
         return db.rawQuery("SELECT DISTINCT template_name FROM " + TABLE_TEMPLATES + " where _id >= ?", new String[]{"0"});
     }
@@ -141,7 +177,7 @@ public class DBManager {
      * @return
      */
     public Cursor queryDataTypeDefault() {
-        return db.rawQuery("SELECT * FROM " + TABLE_TYPE + " WHERE _id <= ?", new String[]{"3"});
+        return db.rawQuery("SELECT * FROM " + TABLE_TYPE + " WHERE _id <= ?", new String[]{"4"});
     }
 
     /**
@@ -166,7 +202,7 @@ public class DBManager {
      * delete all custom types
      */
     public void deleteDataTypeCustom() {
-        db.delete(TABLE_TYPE, "_id >= ?", new String[]{"4"});
+        db.delete(TABLE_TYPE, "_id >= ?", new String[]{"5"});
     }
 
     /**
@@ -176,6 +212,11 @@ public class DBManager {
         db.delete(TABLE_PROTOCOL, "_id >= ?", new String[]{"2"});
     }
 
+    /**
+     * get code of data type by name
+     * @param name name of type
+     * @return code
+     */
     public String queryTypeCodeByName(String name) {
         Cursor cursor = db.rawQuery("SELECT * FROM data_type WHERE name = ?", new String[]{name});
         cursor.moveToFirst();
@@ -188,9 +229,10 @@ public class DBManager {
      * set default types and protocol
      */
     private void initDefault() {
-        db.execSQL("INSERT OR REPLACE INTO data_type (_id, name, code) VALUES ('1', 'LED', 'aa')");
-        db.execSQL("INSERT OR REPLACE INTO data_type (_id, name, code) VALUES ('2', 'BUZZER', 'ab')");
-        db.execSQL("INSERT OR REPLACE INTO data_type (_id, name, code) VALUES ('3', 'TEMPERATURE', 'ac')");
-        db.execSQL("INSERT OR REPLACE INTO data_protocol (_id, header, tail) VALUES ('1', 'FFFFFF','FFFFFF')");
+        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('1', '数码管', 'aa')");
+        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('2', 'LED', 'ab')");
+        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('3', 'USB', 'ac')");
+        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('4', '亮度', 'ad')");
+        db.execSQL("INSERT OR REPLACE INTO data_protocol (_id, header, tail) VALUES ('1', 'FF','FF')");
     }
 }

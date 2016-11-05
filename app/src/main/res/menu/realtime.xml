@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/actionAdd"
-        android:title="Feed new Entry">
+        android:title="@string/add_an_entry">
     </item>
     <item
         android:id="@+id/actionClear"
-        android:title="Clear Values">
+        android:title="@string/clear_all_entry">
     </item>
     <item
         android:id="@+id/actionFeedMultiple"
-        android:title="Fast feed multiple">
+        android:title="@string/add_nulti_entries">
     </item>
 </menu>

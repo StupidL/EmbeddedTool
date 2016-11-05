@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="primary">#009688</color>
@@ -9,8 +7,6 @@
     <color name="accent">#FF4081</color>
 
     <color name="colorPrimary2">#795548</color>
-    <color name="colorPrimaryDark2">#5D4037</color>
-    <color name="colorAccent2">#607D8B</color>
 
     <color name="Gray">#616161</color>
     <color name="Purple">#9C27B0</color>

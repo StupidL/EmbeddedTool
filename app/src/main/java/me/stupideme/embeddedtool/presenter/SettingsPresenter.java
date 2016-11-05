@@ -9,21 +9,35 @@ import me.stupideme.embeddedtool.view.interfaces.ISettingsView;
 
 /**
  * Created by stupidl on 16-10-19.
+ * a presenter of settings activity to communicate with data base
  */
 
 public class SettingsPresenter {
 
+    /**
+     * iSettingsView. SettingsActivity actually
+     */
     private ISettingsView iSettingsView;
+
+    /**
+     * iSettingsModel. operations whit database
+     */
     private ISettingsModel iSettingsModel;
 
+    /**
+     * constructor
+     * @param view ISettingsView
+     */
     public SettingsPresenter(ISettingsView view) {
+        //init iSettingsView
         iSettingsView = view;
+        //get instance of iSettingsModel
         iSettingsModel = SettingsModelImpl.getInstance();
     }
 
     /**
      * add a data type
-     * @param map
+     * @param map a map contains name and code of type
      */
     public void addDataType(Map<String, String> map) {
         iSettingsModel.addDataType(map);
@@ -31,7 +45,7 @@ public class SettingsPresenter {
 
     /**
      * remove a data type
-     * @param name
+     * @param name name of data type
      */
     public void removeDataType(String name) {
         iSettingsModel.removeDataType(name);
@@ -47,7 +61,7 @@ public class SettingsPresenter {
 
     /**
      * get all data types
-     * @return
+     * @return a list
      */
     public List<Map<String, String>> getDataType() {
         return iSettingsModel.getDataType();

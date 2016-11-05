@@ -14,6 +14,7 @@ import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
+import me.stupideme.embeddedtool.Util;
 
 /**
  * Created by StupidL on 2016/9/28.
@@ -34,6 +35,9 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
      */
     private StupidEditText mBindView;
 
+    /**
+     * a reference of bind text view
+     */
     private StupidTextView mBindTextView;
 
     /**
@@ -56,30 +60,50 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
      */
     private int mColorPos = -1;
 
+    /**
+     * send message listener
+     */
     private OnSendMessageListener mSendMessageListener;
 
+    /**
+     * constructor
+     * @param context context
+     */
     public StupidButtonSend(final Context context) {
         super(context);
 
+        //init a dialog
         mDialog = new StupidButtonDialog(context, this);
-
+        //set text color
         setTextColor(Color.WHITE);
+        //set default background color
         setBackgroundColor(getResources().getColor(R.color.Gray));
+        //set default width
         setWidth(200);
+        //set default height
         setHeight(100);
+        //set layout params
         setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
+        //set on long click listener
         setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                //show name in dialog
                 mDialog.showButtonName(getText().toString());
+                //show width in dialog
                 mDialog.showButtonWidth(getWidth());
+                //show height in dialog
                 mDialog.showButtonHeight(getHeight());
+                //show id in dialog
                 mDialog.showButtonId(getId());
+                //set color spinner position
                 mDialog.showSpinnerColor(mColorPos);
+                //set type spinner position
                 mDialog.showSpinnerType(mTypePos);
+                //show dialog
                 mDialog.show();
                 return false;
             }
@@ -90,10 +114,16 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
             public void onClick(View view) {
                 if (getDataType() != null) {
                     if (getBindView() != null) {
-                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND,
-                                getDataType(), getBindView().getText().toString());
-                        if (getBindTextView() != null)
-                            getBindTextView().append("\n" + getBindView().getText().toString());
+                        //get text in edit text and adjust it to legal string
+                        String text = getBindView().getText().toString();
+                        String data = Util.adjustText(text);
+                        //send message
+                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND, getDataType(), data);
+                        //update bind text view
+                        if (getBindTextView() != null) {
+                            getBindTextView().append("\n" + data);
+                        }
+                        //update bind edit text
                         getBindView().setText(null);
 
                     } else {
@@ -106,13 +136,20 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
         });
     }
 
+    /**
+     * set send message listener
+     * @param listener listener
+     */
     public void setSendMessageListener(OnSendMessageListener listener) {
         mSendMessageListener = listener;
     }
 
-    public void updateSpinnerAdapter(List<java.lang.String> list) {
+    /**
+     * update spinner contents
+     * @param list a set of data types
+     */
+    public void updateSpinnerAdapter(List<String> list) {
         mDialog.updateTypeSpinnerAdapter(list);
-        Log.v(TAG, java.lang.String.valueOf(list.size()));
     }
 
     /**
@@ -167,7 +204,6 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
      */
     public void setDataType(String type) {
         this.mDataType = type;
-        Log.v(TAG, "String:" + type);
     }
 
     /**
@@ -197,14 +233,25 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
         return mBackgroundColor;
     }
 
+    /**
+     * set bind text view
+     * @param view text view
+     */
     public void setBindTextView(StupidTextView view) {
         mBindTextView = view;
     }
 
+    /**
+     * get bind text view
+     * @return text view
+     */
     public StupidTextView getBindTextView() {
         return mBindTextView;
     }
 
+    /**
+     * delete button itself
+     */
     @Override
     public void onDelete() {
         mDialog.dismiss();
@@ -216,28 +263,38 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
     }
 
     @Override
-    public void onSave(Map<java.lang.String, java.lang.String> map) {
+    public void onSave(Map<String, String> map) {
+        //dismiss dialog
         mDialog.dismiss();
+        //get layout params
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getLayoutParams();
-        if (map.containsKey(Constants.KEY_NAME))
+        //set name
+        if (map.containsKey(Constants.KEY_NAME)) {
             setText(map.get(Constants.KEY_NAME));
+        }
+        //set width
         if (map.containsKey(Constants.KEY_WIDTH)) {
             params.width = Integer.parseInt(map.get(Constants.KEY_WIDTH));
             setLayoutParams(params);
         }
+        //set height
         if (map.containsKey(Constants.KEY_HEIGHT)) {
             params.height = Integer.parseInt(map.get(Constants.KEY_HEIGHT));
             setLayoutParams(params);
         }
+        //set id
         if (map.containsKey(Constants.KEY_ID)) {
             setId(Integer.parseInt(map.get(Constants.KEY_ID)));
         }
+        //set type position
         if (map.containsKey(Constants.KEY_TYPE_POS)) {
             mTypePos = Integer.parseInt(map.get(Constants.KEY_TYPE_POS));
         }
-        if(map.containsKey(Constants.KEY_TYPE_STRING)){
+        //set type name
+        if (map.containsKey(Constants.KEY_TYPE_STRING)) {
             setDataType(map.get(Constants.KEY_TYPE_STRING));
         }
+        //set color position
         if (map.containsKey(Constants.KEY_COLOR_POS)) {
             mColorPos = Integer.parseInt(map.get(Constants.KEY_COLOR_POS));
             int color = getResources().getColor(Constants.mColors[mColorPos]);
@@ -246,6 +303,9 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
         }
     }
 
+    /**
+     * dismiss dialog
+     */
     @Override
     public void onCancel() {
         mDialog.dismiss();

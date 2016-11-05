@@ -21,15 +21,32 @@ import me.stupideme.embeddedtool.R;
 
 public class DataProtocolFragment extends Fragment {
 
+    //debug
     private static final String TAG = DataProtocolFragment.class.getSimpleName();
+
+    /**
+     * protocol changed listener
+     */
     private OnDataProtocolChangedListener mListener;
+
+    /**
+     * header of protocol
+     */
     private EditText mHeader;
+
+    /**
+     * tail of protocol
+     */
     private EditText mTail;
 
     public DataProtocolFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * get instance of this fragment
+     * @return instance
+     */
     public static DataProtocolFragment newInstance() {
         DataProtocolFragment fragment = new DataProtocolFragment();
         Bundle args = new Bundle();
@@ -37,15 +54,30 @@ public class DataProtocolFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * set listener
+     * @param listener OnDataProtocolChangedListener
+     */
     public void setOnDataProtocolChangedListener(OnDataProtocolChangedListener listener) {
         mListener = listener;
     }
 
+    /**
+     * onCreate life circle
+     * @param savedInstanceState state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * onCreateView life circle
+     * @param inflater layout inflater
+     * @param container container
+     * @param savedInstanceState state
+     * @return view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,6 +85,7 @@ public class DataProtocolFragment extends Fragment {
         mHeader = (EditText) root.findViewById(R.id.edit_text_header);
         mTail = (EditText) root.findViewById(R.id.edit_text_tail);
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fab);
+        //set on click listener
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,6 +108,10 @@ public class DataProtocolFragment extends Fragment {
         return root;
     }
 
+    /**
+     * attach activity
+     * @param context activity
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -86,12 +123,19 @@ public class DataProtocolFragment extends Fragment {
         }
     }
 
+    /**
+     * detach activity
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * recovery default protocol from database
+     * @param list a list contains default protocol
+     */
     public void recoveryDefault(List<Map<String, String>> list) {
         Log.v(TAG, String.valueOf(list.size()));
         for (Map<String, String> map : list) {
@@ -106,6 +150,9 @@ public class DataProtocolFragment extends Fragment {
         }
     }
 
+    /**
+     * set protocol when fragment created
+     */
     private void setDataProtocol() {
         List<Map<String, String>> list = mListener.getDataProtocol();
         for (Map<String, String> map : list) {
@@ -120,9 +167,21 @@ public class DataProtocolFragment extends Fragment {
         }
     }
 
+    /**
+     * a callback interface to save custom protocol
+     */
     public interface OnDataProtocolChangedListener {
+
+        /**
+         * save custom protocol
+         * @param map a map contains custom protocol
+         */
         void onSaveProtocol(Map<String, String> map);
 
+        /**
+         * get protocol from database
+         * @return a list
+         */
         List<Map<String, String>> getDataProtocol();
     }
 }

@@ -9,24 +9,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import me.stupideme.embeddedtool.App;
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.db.DBManager;
 
 /**
  * Created by stupidl on 16-10-19.
+ * to communicate with SettingsActivity and the data base.
+ * settings activity's changed can be reflect to data base
  */
 
 public class SettingsModelImpl implements ISettingsModel {
 
+    //debug
     private static final String TAG = SettingsModelImpl.class.getSimpleName();
+
+    /**
+     * database manager
+     */
     private DBManager mManager;
+
+    /**
+     * instance of this model
+     */
     private static SettingsModelImpl INSTANCE;
 
+    /**
+     * private constructor
+     */
     private SettingsModelImpl() {
+        //get database manager instance
         mManager = DBManager.getInstance();
     }
 
+    /**
+     * get instance of this model.
+     * singleton pattern
+     * @return INSTANCE
+     */
     public static SettingsModelImpl getInstance() {
         if (INSTANCE == null) {
             synchronized (SettingsModelImpl.class) {
@@ -37,12 +56,19 @@ public class SettingsModelImpl implements ISettingsModel {
         return INSTANCE;
     }
 
+    /**
+     * remove a custom data type from database
+     * @param name name of type
+     */
     @Override
     public void removeDataType(String name) {
         mManager.deleteDataType(name);
-        Log.v(TAG, "delete data type " + name);
     }
 
+    /**
+     * add a custom data type to database
+     * @param map a map contains name and code
+     */
     @Override
     public void addDataType(Map<String, String> map) {
         ContentValues values = new ContentValues();
@@ -51,6 +77,10 @@ public class SettingsModelImpl implements ISettingsModel {
         mManager.insertDataType(values);
     }
 
+    /**
+     * save a custom protocol to database
+     * @param map a map contains header and tail
+     */
     @Override
     public void saveDataProtocol(Map<String, String> map) {
         ContentValues values = new ContentValues();
@@ -60,7 +90,10 @@ public class SettingsModelImpl implements ISettingsModel {
         mManager.insertDataProtocol(values);
     }
 
-
+    /**
+     * get all data types from database
+     * @return a list contains data types' info
+     */
     @Override
     public List<Map<String, String>> getDataType() {
         List<Map<String, String>> list = new ArrayList<>();
@@ -77,6 +110,10 @@ public class SettingsModelImpl implements ISettingsModel {
         return list;
     }
 
+    /**
+     * get custom data protocol from data base
+     * @return a list contains protocol's info
+     */
     @Override
     public List<Map<String, String>> getDataProtocol() {
         List<Map<String, String>> list = new ArrayList<>();
@@ -93,6 +130,10 @@ public class SettingsModelImpl implements ISettingsModel {
         return list;
     }
 
+    /**
+     * get default data types from database
+     * @return a list
+     */
     @Override
     public List<Map<String, String>> getDataTypeDefault() {
         mManager.deleteDataTypeCustom();
@@ -111,6 +152,10 @@ public class SettingsModelImpl implements ISettingsModel {
         return list;
     }
 
+    /**
+     * get default protocol from database
+     * @return a list
+     */
     @Override
     public List<Map<String, String>> getProtocolDefault() {
         mManager.deleteDataProtocolCustom();

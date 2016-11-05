@@ -4,60 +4,122 @@ package me.stupideme.embeddedtool.model;
  * Created by stupidl on 16-10-14.
  */
 
+/**
+ * a message bean to contains commands' info
+ */
 public class MessageBean {
-    //header
-    private java.lang.String mHeader;
-    //tail
-    private java.lang.String mTail;
-    //body
-    private java.lang.String mBody;
-    //send or receive
+
+    /**
+     * header of the command
+     */
+    private String mHeader;
+
+    /**
+     * tail of the command
+     */
+    private String mTail;
+
+    /**
+     * body of the command. In usual it is a hex value
+     */
+    private String mBody;
+
+    /**
+     * a request code to identity where this command from
+     */
     private String mRequestCode;
-    //data type
+
+    /**
+     * a code to identity which type this command operates
+     */
     private String mDataType;
 
-    public void setHeader(java.lang.String header) {
+    /**
+     * setter of header
+     * @param header header
+     */
+    public void setHeader(String header) {
         mHeader = header;
     }
 
-    public java.lang.String getHeader() {
+    /**
+     * getter of header
+     * @return header
+     */
+    public String getHeader() {
         return mHeader;
     }
 
-    public void setTail(java.lang.String tail) {
+    /**
+     * setter of tail
+     * @param tail tail
+     */
+    public void setTail(String tail) {
         mTail = tail;
     }
 
-    public java.lang.String getTail() {
+    /**
+     * getter of tail
+     * @return tail
+     */
+    public String getTail() {
         return mTail;
     }
 
-    public void setBody(java.lang.String body) {
+    /**
+     * setter of body
+     * @param body body
+     */
+    public void setBody(String body) {
         mBody = body;
     }
 
-    public java.lang.String getBody() {
+    /**
+     * getter of body
+     * @return body
+     */
+    public String getBody() {
         return mBody;
     }
 
-    public void setRequestCode(String type) {
-        mRequestCode = type;
+    /**
+     * setter of request code
+     * @param code code
+     */
+    public void setRequestCode(String code) {
+        mRequestCode = code;
     }
 
+    /**
+     * getter of request code
+     * @return request code
+     */
     public String getRequestCode() {
         return mRequestCode;
     }
 
+    /**
+     * setter of data type
+     * @param type data type
+     */
     public void setDataType(String type) {
         mDataType = type;
     }
 
+    /**
+     * getter if data type
+     * @return data type
+     */
     public String getDataType() {
         return mDataType;
     }
 
+    /**
+     * to string as a command content
+     * @return command's content
+     */
     @Override
-    public java.lang.String toString() {
+    public String toString() {
         return mHeader + mRequestCode + mDataType + mBody + mTail;
     }
 }
