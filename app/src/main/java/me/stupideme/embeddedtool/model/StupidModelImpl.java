@@ -1,5 +1,6 @@
 package me.stupideme.embeddedtool.model;
 
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
@@ -52,6 +53,15 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     private static StupidModelImpl INSTANCE;
 
 
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    private Thread mThread = new Thread(mRunnable);
+
     /**
      * private constructor
      */
@@ -99,8 +109,87 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         String code = mManager.queryTypeCodeByName(type);
         Log.v("code", code);
         Log.v(TAG, "body: " + body);
-        bean.setDataType(code.toLowerCase());
-        bean.setBody(body);
+        bean.setDataType(code.toUpperCase());
+
+        switch (code) {
+            case "aa":
+                int num = Integer.parseInt(body.substring(0, 1));
+                switch (num) {
+                    case 0:
+                        bean.setBody("3F");
+                        break;
+                    case 1:
+                        bean.setBody("06");
+                        break;
+                    case 2:
+                        bean.setBody("5B");
+                        break;
+                    case 3:
+                        bean.setBody("4F");
+                        break;
+                    case 4:
+                        bean.setBody("66");
+                        break;
+                    case 5:
+                        bean.setBody("6D");
+                        break;
+                    case 6:
+                        bean.setBody("7D");
+                        break;
+                    case 7:
+                        bean.setBody("07");
+                        break;
+                    case 8:
+                        bean.setBody("7F");
+                        break;
+                    case 9:
+                        bean.setBody("67");
+                        break;
+                    default:
+                        bean.setBody(body);
+                        break;
+                }
+
+                break;
+
+            case "ab":
+                int num2 = Integer.parseInt(body.substring(0, 1));
+                switch (num2) {
+                    case 1:
+                        bean.setBody("01");
+                        break;
+                    case 2:
+                        bean.setBody("02");
+                        break;
+                    case 3:
+                        bean.setBody("04");
+                        break;
+                    case 4:
+                        bean.setBody("08");
+                        break;
+                    case 5:
+                        bean.setBody("10");
+                        break;
+                    case 6:
+                        bean.setBody("20");
+                        break;
+                    case 7:
+                        bean.setBody("40");
+                        break;
+                    case 8:
+                        bean.setBody("80");
+                        break;
+                    case 9:
+                        bean.setBody("63");
+                        break;
+                    default:
+                        bean.setBody(body);
+                        break;
+                }
+                break;
+        }
+
+//        bean.setBody(body);
         Cursor cursor = mManager.queryDataProtocol();
         cursor.moveToLast();
         String header = cursor.getString(cursor.getColumnIndex(Constants.KEY_DATA_HEADER));
@@ -112,14 +201,15 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         String msg = bean.toString();
 
         Log.v(TAG, "write string: " + msg);
-        Log.v(TAG, "write string: " + Arrays.toString(msg.getBytes()));
+//        Log.v(TAG, "write string: " + Arrays.toString(msg.getBytes()));
 
-        byte[] re = Util.hexStringToByte(msg);
+        final byte[] re = Util.hexStringToByte(msg);
         Log.v(TAG, "hexStringToBytes:" + Arrays.toString(re));
 
-        String s = "80";
-        byte[] test = Util.hexStringToByte(s);
-        mService.write(test);
+
+        for (byte aTest : re) {
+            mService.write(new byte[]{aTest});
+        }
 
         Log.v(TAG, "send message success");
 
@@ -211,6 +301,7 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
 
     /**
      * save view's info to database
+     *
      * @param values content values
      */
     @Override

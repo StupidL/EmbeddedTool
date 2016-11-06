@@ -116,12 +116,13 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
                     if (getBindView() != null) {
                         //get text in edit text and adjust it to legal string
                         String text = getBindView().getText().toString();
-                        String data = Util.adjustText(text);
                         //send message
-                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND, getDataType(), data);
+//                        String message = Util.adjustInputString(getDataType(),text);
+
+                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND, getDataType(), text);
                         //update bind text view
                         if (getBindTextView() != null) {
-                            getBindTextView().append("\n" + data);
+                            getBindTextView().append("\n" + text);
                         }
                         //update bind edit text
                         getBindView().setText(null);

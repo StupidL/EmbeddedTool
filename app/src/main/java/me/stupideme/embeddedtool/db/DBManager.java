@@ -231,8 +231,8 @@ public class DBManager {
     private void initDefault() {
         db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('1', '数码管', 'aa')");
         db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('2', 'LED', 'ab')");
-        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('3', 'USB', 'ac')");
-        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('4', '亮度', 'ad')");
+        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('3', '亮度', 'ac')");
+        db.execSQL("INSERT OR IGNORE INTO data_type (_id, name, code) VALUES ('4', 'USB', 'ad')");
         db.execSQL("INSERT OR REPLACE INTO data_protocol (_id, header, tail) VALUES ('1', 'FF','FF')");
     }
 }

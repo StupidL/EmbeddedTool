@@ -166,15 +166,15 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-//            // if bluetooth is not enabled, request to enable it.
-//            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-//        }
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            // if bluetooth is not enabled, request to enable it.
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
+    }
 
     @Override
     public void onDestroy() {
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     @Override
     public void clearViews() {
         mFrameLayout.removeAllViews();
-        mFrameLayout.invalidate();
+//        mFrameLayout.invalidate();
     }
 
     @Override

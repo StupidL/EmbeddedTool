@@ -45,6 +45,7 @@ public class DataProtocolFragment extends Fragment {
 
     /**
      * get instance of this fragment
+     *
      * @return instance
      */
     public static DataProtocolFragment newInstance() {
@@ -56,6 +57,7 @@ public class DataProtocolFragment extends Fragment {
 
     /**
      * set listener
+     *
      * @param listener OnDataProtocolChangedListener
      */
     public void setOnDataProtocolChangedListener(OnDataProtocolChangedListener listener) {
@@ -64,6 +66,7 @@ public class DataProtocolFragment extends Fragment {
 
     /**
      * onCreate life circle
+     *
      * @param savedInstanceState state
      */
     @Override
@@ -73,8 +76,9 @@ public class DataProtocolFragment extends Fragment {
 
     /**
      * onCreateView life circle
-     * @param inflater layout inflater
-     * @param container container
+     *
+     * @param inflater           layout inflater
+     * @param container          container
      * @param savedInstanceState state
      * @return view
      */
@@ -90,7 +94,7 @@ public class DataProtocolFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Map<String, String> map = new HashMap<>();
-                if (!mHeader.getText().toString().isEmpty() && !mTail.getText().toString().isEmpty()) {
+                if (!mHeader.getText().toString().isEmpty() /*&& !mTail.getText().toString().isEmpty()*/) {
                     map.put(Constants.KEY_DATA_HEADER, mHeader.getText().toString());
                     map.put(Constants.KEY_DATA_TAIL, mTail.getText().toString());
                     Log.v(TAG, "tail: " + mTail.getText().toString());
@@ -110,6 +114,7 @@ public class DataProtocolFragment extends Fragment {
 
     /**
      * attach activity
+     *
      * @param context activity
      */
     @Override
@@ -134,6 +139,7 @@ public class DataProtocolFragment extends Fragment {
 
     /**
      * recovery default protocol from database
+     *
      * @param list a list contains default protocol
      */
     public void recoveryDefault(List<Map<String, String>> list) {
@@ -174,12 +180,14 @@ public class DataProtocolFragment extends Fragment {
 
         /**
          * save custom protocol
+         *
          * @param map a map contains custom protocol
          */
         void onSaveProtocol(Map<String, String> map);
 
         /**
          * get protocol from database
+         *
          * @return a list
          */
         List<Map<String, String>> getDataProtocol();

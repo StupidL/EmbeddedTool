@@ -279,6 +279,7 @@ public class BluetoothService {
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
+
         r.write(out);
         Log.v(TAG, "write message: " + Arrays.toString(out) + " success");
     }
@@ -580,13 +581,20 @@ public class BluetoothService {
          */
         public void write(byte[] buffer) {
             try {
-                mmOutStream.write(buffer);
+//                mmOutStream.write(buffer);
+
+                for (byte b : buffer) {
+                    mmOutStream.write(new byte[]{b});
+                    Thread.sleep(100);
+                }
 
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 

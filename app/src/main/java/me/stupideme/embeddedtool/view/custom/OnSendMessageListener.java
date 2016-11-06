@@ -13,5 +13,5 @@ public interface OnSendMessageListener {
      * @param type data type
      * @param msg body of message bean
      */
-    void onSendMessage(String requestCode, String type, java.lang.String msg);
+    void onSendMessage(String requestCode, String type, String msg);
 }
