@@ -24,6 +24,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
@@ -124,6 +125,8 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
      */
     private int yMin = 0;
 
+    private int mEntryX = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,8 +158,9 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
                     addEntry();
                     if (getDataType() != null)
                         mListener.onSendMessage(Constants.REQUEST_CODE_CHART,
-                                getDataType(),
-                                Constants.MESSAGE_BODY_EMPTY);
+                                getDataType(), "05"
+                                //Constants.MESSAGE_BODY_EMPTY
+                        );
                     else
                         Toast.makeText(ChartActivity.this, "请设置数据类型～", Toast.LENGTH_SHORT).show();
                 } else {
@@ -173,9 +177,9 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
             @Override
             public boolean onLongClick(View view) {
                 //set color position for color spinner in dialog
-                mDialog.setColorPos(mColorPos);
+                mDialog.showColorPos(mColorPos);
                 //set type position fro type spinner
-                mDialog.setTypePos(mTypePos);
+                mDialog.showTypePos(mTypePos);
                 //show max X value in dialog
                 mDialog.showMaxX(xMax);
                 //show min X value in dialog
@@ -191,9 +195,10 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         });
 
         //init presenter
-        mPresenter = new ChartPresenter(this);
+        mPresenter = ChartPresenter.getInstance(this);
         mPresenter.setSendMessageListener();
         mPresenter.attachObserver(this);
+        mPresenter.updateTypeSpinnerAdapter();
     }
 
     @Override
@@ -202,9 +207,63 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
     }
 
     @Override
-    public void receiveMessage(java.lang.String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    public void updateTypeSpinner(List<String> list) {
+        mDialog.updateTypeSpinnerAdapter(list);
+    }
 
+    @Override
+    public void receiveMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Log.v(TAG, "receive message : " + msg);
+
+        parseMessageAndAddEntry(msg);
+    }
+
+    /**
+     * receive a message and add an entry
+     * @param msg message from bluetooth
+     */
+    private void parseMessageAndAddEntry(String msg) {
+        int y = Integer.parseInt(msg.substring(0, 2));
+        Entry entry = new Entry(mEntryX++, y);
+        Log.v(TAG, "X = " + mEntryX + " , Y = " + y);
+        addEntry(entry);
+    }
+
+    /**
+     * add a entry
+     * @param entry entry to be added
+     */
+    private void addEntry(Entry entry) {
+        LineData data = mChart.getData();
+
+        if (data != null) {
+
+            ILineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntry(...); // can be called as well
+
+            if (set == null) {
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+            data.addEntry(entry, 0);
+            data.notifyDataChanged();
+
+            // let the chart know it's data has changed
+            mChart.notifyDataSetChanged();
+
+            // limit the number of visible entries
+            mChart.setVisibleXRangeMaximum(120);
+            // mChart.setVisibleYRange(30, AxisDependency.LEFT);
+
+            // move to the latest entry
+            mChart.moveViewToX(data.getEntryCount());
+
+            // this automatically refreshes the chart (calls invalidate())
+            // mChart.moveViewTo(data.getXValCount()-7, 55f,
+            // AxisDependency.LEFT);
+        }
     }
 
     /**
@@ -312,6 +371,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 
     /**
      * save attrs from dialog
+     *
      * @param map map that contains attrs for chart view from dialog
      */
     @Override
@@ -487,6 +547,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 
     /**
      * do something when a entry selected in graph
+     *
      * @param e entry
      * @param h highlight
      */

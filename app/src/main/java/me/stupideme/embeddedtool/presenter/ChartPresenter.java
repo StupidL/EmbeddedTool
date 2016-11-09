@@ -23,10 +23,16 @@ public class ChartPresenter {
     private IStupidModel iStupidModel;
 
     /**
-     * constructor
+     * instance of ChertPresenter
+     */
+    private static ChartPresenter INSTANCE;
+
+    /**
+     * private constructor
+     *
      * @param view IChartView
      */
-    public ChartPresenter(IChartView view){
+    private ChartPresenter(IChartView view) {
         //init iChartView
         iChartView = view;
         //get instance of iStupidModel
@@ -34,25 +40,51 @@ public class ChartPresenter {
     }
 
     /**
+     * get instance. singleton pattern
+     *
+     * @param view IChartView
+     * @return instance of ChartPresenter
+     */
+    public static ChartPresenter getInstance(IChartView view) {
+        if (INSTANCE == null) {
+            synchronized (ChartPresenter.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new ChartPresenter(view);
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    /**
      * set send message listener for chart view
      */
-    public void setSendMessageListener(){
+    public void setSendMessageListener() {
         iChartView.setOnSendMessageListener((OnSendMessageListener) iStupidModel);
     }
 
     /**
      * attach observer
+     *
      * @param observer observer
      */
-    public void attachObserver(StupidObserver observer){
-        ((StupidObservable)iStupidModel).attach(observer);
+    public void attachObserver(StupidObserver observer) {
+        ((StupidObservable) iStupidModel).attach(observer);
     }
 
     /**
      * detach observer
+     *
      * @param observer observer
      */
-    public void detachObserver(StupidObserver observer){
-        ((StupidObservable)iStupidModel).detach(observer);
+    public void detachObserver(StupidObserver observer) {
+        ((StupidObservable) iStupidModel).detach(observer);
+    }
+
+    /**
+     * get all data types for chart view
+     */
+    public void updateTypeSpinnerAdapter() {
+        iChartView.updateTypeSpinner(iStupidModel.queryDataTypesForSpinner());
     }
 }

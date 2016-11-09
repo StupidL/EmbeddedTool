@@ -544,7 +544,7 @@ public class BluetoothService {
         public void read() {
 
             Log.i(TAG, "BEGIN mConnectedThread");
-            byte[] buffer = new byte[16];
+            byte[] buffer = new byte[5];
             int bytes;
 
             Log.v(TAG, "mState = " + mState);

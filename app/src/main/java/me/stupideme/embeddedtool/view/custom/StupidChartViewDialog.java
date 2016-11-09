@@ -4,11 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
@@ -66,6 +69,21 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
     private int colorPos;
 
     /**
+     * a list to store data types
+     */
+    private List<String> mDataTypeList = new ArrayList<>();
+
+    /**
+     * adapter of type spinner
+     */
+    private ArrayAdapter<String> mTypeSpinnerAdapter;
+
+    /**
+     * name of data type
+     */
+    private String mTypeString;
+
+    /**
      * constructor
      * @param context context
      * @param listener stupid chart dialog listener
@@ -73,13 +91,13 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
     public StupidChartViewDialog(Context context, StupidChartDialogListener listener) {
         super(context);
         mListener = listener;
-        initView();
+        initView(context);
     }
 
     /**
      * init dialog view
      */
-    private void initView() {
+    private void initView(Context context) {
         //set layout
         setContentView(R.layout.stupid_chart_view_dialog);
         //find views bu id
@@ -94,14 +112,20 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);
 
+        mTypeSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mDataTypeList);
+        mTypeSpinnerAdapter.setDropDownViewResource(R.layout.item_spinner);
+        mTypeSpinner.setAdapter(mTypeSpinnerAdapter);
+
         mTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mTypePos = i;
+                mTypeString = (String) mTypeSpinner.getItemAtPosition(i);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
@@ -120,10 +144,25 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
     }
 
     /**
+     * update spinner content
+     *
+     * @param list a list contains data types
+     */
+    public void updateTypeSpinnerAdapter(List<String> list) {
+        //clear list first
+        mDataTypeList.clear();
+        //add list
+        mDataTypeList.addAll(list);
+        //notify
+        mTypeSpinnerAdapter.notifyDataSetChanged();
+    }
+
+
+    /**
      * set color pos when dialog showing
      * @param pos position of color spinner
      */
-    public void setColorPos(int pos) {
+    public void showColorPos(int pos) {
         mColorSpinner.setSelection(pos, true);
     }
 
@@ -131,7 +170,7 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
      * set data type pos when dialog dismiss
      * @param pos pos of type spinner
      */
-    public void setTypePos(int pos) {
+    public void showTypePos(int pos) {
         mTypeSpinner.setSelection(pos, true);
     }
 
@@ -177,7 +216,7 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
                 Map<String, String> map = new HashMap<>();
                 map.put(Constants.KEY_TYPE_POS, mTypePos + "");
                 map.put(Constants.KEY_COLOR_POS, colorPos + "");
-                map.put(Constants.KEY_TYPE_STRING, (String) mTypeSpinner.getItemAtPosition(mTypePos));
+                map.put(Constants.KEY_TYPE_STRING, mTypeString+"");
                 if (!xMax.getText().toString().isEmpty())
                     map.put(Constants.KEY_MAX_X, xMax.getText().toString());
                 if (!yMax.getText().toString().isEmpty())

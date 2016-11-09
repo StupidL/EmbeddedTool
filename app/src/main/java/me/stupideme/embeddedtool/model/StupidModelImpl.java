@@ -1,6 +1,5 @@
 package me.stupideme.embeddedtool.model;
 
-import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
@@ -52,16 +51,6 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
      */
     private static StupidModelImpl INSTANCE;
 
-
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-
-        }
-    };
-
-    private Thread mThread = new Thread(mRunnable);
-
     /**
      * private constructor
      */
@@ -111,85 +100,9 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         Log.v(TAG, "body: " + body);
         bean.setDataType(code.toUpperCase());
 
-        switch (code) {
-            case "aa":
-                int num = Integer.parseInt(body.substring(0, 1));
-                switch (num) {
-                    case 0:
-                        bean.setBody("3F");
-                        break;
-                    case 1:
-                        bean.setBody("06");
-                        break;
-                    case 2:
-                        bean.setBody("5B");
-                        break;
-                    case 3:
-                        bean.setBody("4F");
-                        break;
-                    case 4:
-                        bean.setBody("66");
-                        break;
-                    case 5:
-                        bean.setBody("6D");
-                        break;
-                    case 6:
-                        bean.setBody("7D");
-                        break;
-                    case 7:
-                        bean.setBody("07");
-                        break;
-                    case 8:
-                        bean.setBody("7F");
-                        break;
-                    case 9:
-                        bean.setBody("67");
-                        break;
-                    default:
-                        bean.setBody(body);
-                        break;
-                }
+        String body2 = adjustMessageBody(code, body);
+        bean.setBody(body2);
 
-                break;
-
-            case "ab":
-                int num2 = Integer.parseInt(body.substring(0, 1));
-                switch (num2) {
-                    case 1:
-                        bean.setBody("01");
-                        break;
-                    case 2:
-                        bean.setBody("02");
-                        break;
-                    case 3:
-                        bean.setBody("04");
-                        break;
-                    case 4:
-                        bean.setBody("08");
-                        break;
-                    case 5:
-                        bean.setBody("10");
-                        break;
-                    case 6:
-                        bean.setBody("20");
-                        break;
-                    case 7:
-                        bean.setBody("40");
-                        break;
-                    case 8:
-                        bean.setBody("80");
-                        break;
-                    case 9:
-                        bean.setBody("63");
-                        break;
-                    default:
-                        bean.setBody(body);
-                        break;
-                }
-                break;
-        }
-
-//        bean.setBody(body);
         Cursor cursor = mManager.queryDataProtocol();
         cursor.moveToLast();
         String header = cursor.getString(cursor.getColumnIndex(Constants.KEY_DATA_HEADER));
@@ -197,6 +110,8 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         bean.setHeader(header);
         Log.v(TAG, "header: " + header);
         Log.v(TAG, "tail: " + tail);
+        Log.v(TAG, "body: " + body);
+        Log.v(TAG, "body2 = " + body2);
         bean.setTail(tail);
         String msg = bean.toString();
 
@@ -210,8 +125,6 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
         for (byte aTest : re) {
             mService.write(new byte[]{aTest});
         }
-
-        Log.v(TAG, "send message success");
 
     }
 
@@ -307,6 +220,121 @@ public class StupidModelImpl implements IStupidModel, OnSendMessageListener, Stu
     @Override
     public void saveViewInfo(ContentValues values) {
         mManager.insertView(values);
+    }
+
+    private String adjustMessageBody(String code, String body) {
+        String nBody = null;
+        switch (code) {
+            case "aa":
+                int num = Integer.parseInt(body.substring(0, 1));
+                switch (num) {
+                    case 0:
+                        nBody = "3F";
+                        break;
+                    case 1:
+                        nBody = "06";
+                        break;
+                    case 2:
+                        nBody = "5B";
+                        break;
+                    case 3:
+                        nBody = "4F";
+                        break;
+                    case 4:
+                        nBody = "66";
+                        break;
+                    case 5:
+                        nBody = "6D";
+                        break;
+                    case 6:
+                        nBody = "7D";
+                        break;
+                    case 7:
+                        nBody = "07";
+                        break;
+                    case 8:
+                        nBody = "7F";
+                        break;
+                    case 9:
+                        nBody = "67";
+                        break;
+                    default:
+                        nBody = body;
+                        break;
+                }
+                break;
+
+            case "ab":
+                int num2 = Integer.parseInt(body.substring(0, 1));
+                switch (num2) {
+                    case 1:
+                        nBody = "01";
+                        break;
+                    case 2:
+                        nBody = "02";
+                        break;
+                    case 3:
+                        nBody = "04";
+                        break;
+                    case 4:
+                        nBody = "08";
+                        break;
+                    case 5:
+                        nBody = "10";
+                        break;
+                    case 6:
+                        nBody = "20";
+                        break;
+                    case 7:
+                        nBody = "40";
+                        break;
+                    case 8:
+                        nBody = "80";
+                        break;
+                    case 9:
+                        nBody = "63";
+                        break;
+                    default:
+                        nBody = body;
+                        break;
+                }
+                break;
+            default:
+                nBody = body;
+                break;
+            case "ac":
+                int num3 = Integer.parseInt(body.substring(0, 1));
+                switch (num3) {
+                    case 1:
+                        nBody = "01";
+                        break;
+                    case 2:
+                        nBody = "02";
+                        break;
+                    case 3:
+                        nBody = "03";
+                        break;
+                    case 4:
+                        nBody = "04";
+                        break;
+                    case 5:
+                        nBody = "05";
+                        break;
+                    case 6:
+                        nBody = "06";
+                        break;
+                    case 7:
+                        nBody = "07";
+                        break;
+                    case 8:
+                        nBody = "08";
+                        break;
+                    default:
+                        nBody = body;
+                        break;
+                }
+        }
+        return nBody;
     }
 
 }

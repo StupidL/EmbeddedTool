@@ -1,5 +1,7 @@
 package me.stupideme.embeddedtool.view.interfaces;
 
+import java.util.List;
+
 import me.stupideme.embeddedtool.model.StupidObserver;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 
@@ -14,4 +16,10 @@ public interface IChartView extends StupidObserver{
      * @param listener chart view
      */
     void setOnSendMessageListener(OnSendMessageListener listener);
+
+    /**
+     * show data types when activity crated
+     * @param list a list contains all data types
+     */
+    void updateTypeSpinner(List<String> list);
 }

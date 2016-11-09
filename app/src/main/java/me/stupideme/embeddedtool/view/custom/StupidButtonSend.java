@@ -67,6 +67,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * constructor
+     *
      * @param context context
      */
     public StupidButtonSend(final Context context) {
@@ -118,6 +119,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
                         String text = getBindView().getText().toString();
                         //send message
 //                        String message = Util.adjustInputString(getDataType(),text);
+                        Log.v(TAG, "text = " + text);
 
                         mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND, getDataType(), text);
                         //update bind text view
@@ -139,6 +141,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * set send message listener
+     *
      * @param listener listener
      */
     public void setSendMessageListener(OnSendMessageListener listener) {
@@ -147,6 +150,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * update spinner contents
+     *
      * @param list a set of data types
      */
     public void updateSpinnerAdapter(List<String> list) {
@@ -236,6 +240,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * set bind text view
+     *
      * @param view text view
      */
     public void setBindTextView(StupidTextView view) {
@@ -244,6 +249,7 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
 
     /**
      * get bind text view
+     *
      * @return text view
      */
     public StupidTextView getBindTextView() {
