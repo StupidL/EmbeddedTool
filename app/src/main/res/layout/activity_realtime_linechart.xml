@@ -35,7 +35,7 @@
             android:scaleType="fitCenter"
             android:layout_height="60dp"
             android:background="@null"
-            android:src="@drawable/ic_play_circle_filled_teal_500_48dp"
+            android:src="@drawable/chart_button_background"
             />
 
     </LinearLayout>

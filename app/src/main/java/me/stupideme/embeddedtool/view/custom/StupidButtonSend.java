@@ -14,7 +14,6 @@ import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
-import me.stupideme.embeddedtool.Util;
 
 /**
  * Created by StupidL on 2016/9/28.
@@ -120,8 +119,8 @@ public class StupidButtonSend extends Button implements StupidButtonDialog.Stupi
                         //send message
 //                        String message = Util.adjustInputString(getDataType(),text);
                         Log.v(TAG, "text = " + text);
-
-                        mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND, getDataType(), text);
+                        if (!text.isEmpty())
+                            mSendMessageListener.onSendMessage(Constants.REQUEST_CODE_SEND, getDataType(), text);
                         //update bind text view
                         if (getBindTextView() != null) {
                             getBindTextView().append("\n" + text);

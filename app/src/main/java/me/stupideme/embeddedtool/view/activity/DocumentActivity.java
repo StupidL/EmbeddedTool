@@ -9,6 +9,9 @@ import android.view.View;
 
 import me.stupideme.embeddedtool.R;
 
+/**
+ * Created by StupidL on 2016/9/30.
+ */
 public class DocumentActivity extends AppCompatActivity {
 
 //    private static final String TAG = DocumentActivity.class.getSimpleName();

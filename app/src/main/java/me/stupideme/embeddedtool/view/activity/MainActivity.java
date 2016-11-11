@@ -40,6 +40,9 @@ import me.stupideme.embeddedtool.view.custom.StupidButtonSend;
 import me.stupideme.embeddedtool.view.custom.StupidEditText;
 import me.stupideme.embeddedtool.view.custom.StupidTextView;
 
+/**
+ * Created by StupidL on 2016/9/30.
+ */
 public class MainActivity extends AppCompatActivity implements IMainView, OnBindViewIdChangedListener {
 
     //debug
@@ -108,6 +111,12 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
 
     }
 
+    /**
+     * handler results when activity finished and set results which started by main activity
+     * @param requestCode request code
+     * @param resultCode result code
+     * @param data intent contains data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -166,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
+    /**
+     * check if bluetooth enable when start
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -176,6 +188,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
+    /**
+     * stop bluetooth connection when activity is destroyed
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -204,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
     public void addReceiveButton() {
         StupidButtonReceive button = new StupidButtonReceive(MainActivity.this);
         button.setId(viewIndex++);
-        String txt = "Button" + button.getId();
+        String txt = "Recv" + button.getId();
         button.setText(txt);
         button.setOnTouchListener(mTouchListener);
         mPresenter.setSendMessageListenerForButton(button);
@@ -213,6 +228,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         mPresenter.updateSpinnerAdapter();
     }
 
+    /**
+     * add a text view to mFrameLayout
+     */
     @Override
     public void addTextView() {
         StupidTextView stupidTextView = new StupidTextView(this);
@@ -227,6 +245,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         mFrameLayout.addView(stupidTextView);
     }
 
+    /**
+     * add a edit text to mFrameLayout
+     */
     @Override
     public void addEditText() {
         StupidEditText editText = new StupidEditText(this);
@@ -238,17 +259,28 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         mFrameLayout.addView(editText);
     }
 
+    /**
+     * get view in mFrameLayout by view's id
+     * @param id the view's id
+     * @return the view
+     */
     @Override
     public View getViewById(int id) {
         return mFrameLayout.findViewById(id);
     }
 
+    /**
+     * delete all views in mFrameLayout
+     */
     @Override
     public void clearViews() {
         mFrameLayout.removeAllViews();
-//        mFrameLayout.invalidate();
     }
 
+    /**
+     * update spinner contents when data type changes
+     * @param list a list contains all data types
+     */
     @Override
     public void updateTypeSpinnerAdapter(List<String> list) {
         for (int i = 0; i < mFrameLayout.getChildCount(); i++) {
@@ -262,6 +294,11 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
         }
     }
 
+    /**
+     * rebind view when bind-view-id changed
+     * @param other id of the view to bind
+     * @param self id of the view itself
+     */
     @Override
     public void onBindViewIdChanged(int other, int self) {
         View view = getViewById(self);

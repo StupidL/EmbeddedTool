@@ -153,20 +153,29 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPlaying) {
-                    mButton.setImageResource(R.drawable.ic_pause_circle_filled_teal_500_48dp);
-                    addEntry();
-                    if (getDataType() != null)
-                        mListener.onSendMessage(Constants.REQUEST_CODE_CHART,
-                                getDataType(), "05"
-                                //Constants.MESSAGE_BODY_EMPTY
-                        );
-                    else
-                        Toast.makeText(ChartActivity.this, "请设置数据类型～", Toast.LENGTH_SHORT).show();
-                } else {
-                    mButton.setImageResource(R.drawable.ic_play_circle_filled_teal_500_48dp);
-                }
-                isPlaying = !isPlaying;
+//                if (isPlaying) {
+//                    mButton.setImageResource(R.drawable.ic_pause_circle_filled_teal_500_48dp);
+//                    //addEntry();
+//                    if (getDataType() != null)
+//                        mListener.onSendMessage(Constants.REQUEST_CODE_CHART,
+//                                getDataType(), "05"
+//                                //Constants.MESSAGE_BODY_EMPTY
+//                        );
+//                    else
+//                        Toast.makeText(ChartActivity.this, "请设置数据类型～", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    mButton.setImageResource(R.drawable.ic_play_circle_filled_teal_500_48dp);
+//                }
+//                isPlaying = !isPlaying;
+
+                if (getDataType() != null)
+                    mListener.onSendMessage(Constants.REQUEST_CODE_CHART,
+                            getDataType(), "05"
+                            //Constants.MESSAGE_BODY_EMPTY
+                    );
+                else
+                    Toast.makeText(ChartActivity.this, "请设置数据类型～", Toast.LENGTH_SHORT).show();
+                Log.v(TAG, "Button Clicked");
             }
         });
         mDialog = new StupidChartViewDialog(this, this);
@@ -221,10 +230,11 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 
     /**
      * receive a message and add an entry
+     *
      * @param msg message from bluetooth
      */
     private void parseMessageAndAddEntry(String msg) {
-        int y = Integer.parseInt(msg.substring(0, 2));
+        int y = Integer.parseInt(msg.substring(8));
         Entry entry = new Entry(mEntryX++, y);
         Log.v(TAG, "X = " + mEntryX + " , Y = " + y);
         addEntry(entry);
@@ -232,6 +242,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 
     /**
      * add a entry
+     *
      * @param entry entry to be added
      */
     private void addEntry(Entry entry) {

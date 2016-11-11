@@ -1,16 +1,14 @@
 package me.stupideme.embeddedtool.view.activity;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,14 +16,14 @@ import android.view.View;
 import java.util.List;
 import java.util.Map;
 
-import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
 import me.stupideme.embeddedtool.presenter.SettingsPresenter;
-import me.stupideme.embeddedtool.view.interfaces.ISettingsView;
 import me.stupideme.embeddedtool.view.fragment.DataProtocolFragment;
 import me.stupideme.embeddedtool.view.fragment.DataTypeFragment;
+import me.stupideme.embeddedtool.view.interfaces.ISettingsView;
 
 /**
+ * Created by StupidL on 2016/9/30.
  * advanced settings activity where you can custom data type and protocol
  */
 public class SettingsActivity extends AppCompatActivity implements ISettingsView,
