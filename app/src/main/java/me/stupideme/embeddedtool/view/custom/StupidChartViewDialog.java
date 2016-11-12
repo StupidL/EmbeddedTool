@@ -112,9 +112,9 @@ public class StupidChartViewDialog extends Dialog implements View.OnClickListene
         cancel.setOnClickListener(this);
         ok.setOnClickListener(this);
 
-        mTypeSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mDataTypeList);
-        mTypeSpinnerAdapter.setDropDownViewResource(R.layout.item_spinner);
-        mTypeSpinner.setAdapter(mTypeSpinnerAdapter);
+//        mTypeSpinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, mDataTypeList);
+//        mTypeSpinnerAdapter.setDropDownViewResource(R.layout.item_spinner);
+//        mTypeSpinner.setAdapter(mTypeSpinnerAdapter);
 
         mTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

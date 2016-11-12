@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="StupidButtonType">
+        <item>数码管</item>
         <item>LED</item>
-        <item>蜂鸣器</item>
-        <item>温度</item>
+        <item>亮度</item>
+        <item>USB</item>
     </array>
 
     <array name="StupidTextViewColors">

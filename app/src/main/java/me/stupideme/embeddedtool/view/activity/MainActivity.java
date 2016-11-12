@@ -469,10 +469,10 @@ public class MainActivity extends AppCompatActivity implements IMainView, OnBind
             startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
                     REQUEST_CONNECT_DEVICE_SECURE);
         }
-        if (id == R.id.action_bluetooth_insecure) {
-            startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
-                    REQUEST_CONNECT_DEVICE_INSECURE);
-        }
+//        if (id == R.id.action_bluetooth_insecure) {
+//            startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class),
+//                    REQUEST_CONNECT_DEVICE_INSECURE);
+//        }
         if (id == R.id.action_bluetooth_discoverable) {
             setDiscoverable();
         }

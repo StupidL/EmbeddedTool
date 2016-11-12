@@ -29,6 +29,7 @@ import java.util.Map;
 
 import me.stupideme.embeddedtool.Constants;
 import me.stupideme.embeddedtool.R;
+import me.stupideme.embeddedtool.model.StupidModelImpl;
 import me.stupideme.embeddedtool.presenter.ChartPresenter;
 import me.stupideme.embeddedtool.view.custom.OnSendMessageListener;
 import me.stupideme.embeddedtool.view.custom.StupidChartViewDialog;
@@ -43,7 +44,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
         StupidChartViewDialog.StupidChartDialogListener, IChartView {
 
     //debug
-    private static final java.lang.String TAG = ChartActivity.class.getSimpleName();
+    private static final String TAG = ChartActivity.class.getSimpleName();
 
     /**
      * settings dialog
@@ -168,23 +169,32 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
 //                }
 //                isPlaying = !isPlaying;
 
-                if (getDataType() != null)
+                if (getDataType() != null) {
+                    mListener = StupidModelImpl.getInstance();
                     mListener.onSendMessage(Constants.REQUEST_CODE_CHART,
                             getDataType(), "05"
                             //Constants.MESSAGE_BODY_EMPTY
                     );
-                else
+                } else
                     Toast.makeText(ChartActivity.this, "请设置数据类型～", Toast.LENGTH_SHORT).show();
                 Log.v(TAG, "Button Clicked");
             }
         });
         mDialog = new StupidChartViewDialog(this, this);
+
+        //init presenter
+        mPresenter = ChartPresenter.getInstance(this);
+        mPresenter.setSendMessageListener();
+        mPresenter.attachObserver(this);
+//        mPresenter.updateTypeSpinnerAdapter();
         initChart();
 
         //set on long click listener
         mChart.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+
+//                mPresenter.updateTypeSpinnerAdapter();
                 //set color position for color spinner in dialog
                 mDialog.showColorPos(mColorPos);
                 //set type position fro type spinner
@@ -203,26 +213,34 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
             }
         });
 
-        //init presenter
-        mPresenter = ChartPresenter.getInstance(this);
-        mPresenter.setSendMessageListener();
-        mPresenter.attachObserver(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         mPresenter.updateTypeSpinnerAdapter();
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ChartActivity.this.finish();
+    }
+
+    @Override
     public void setOnSendMessageListener(OnSendMessageListener listener) {
-        mListener = listener;
+//        mListener = listener;
+        mListener = StupidModelImpl.getInstance();
     }
 
     @Override
     public void updateTypeSpinner(List<String> list) {
-        mDialog.updateTypeSpinnerAdapter(list);
+//        mDialog.updateTypeSpinnerAdapter(list);
     }
 
     @Override
     public void receiveMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         Log.v(TAG, "receive message : " + msg);
 
         parseMessageAndAddEntry(msg);
@@ -234,10 +252,13 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
      * @param msg message from bluetooth
      */
     private void parseMessageAndAddEntry(String msg) {
-        int y = Integer.parseInt(msg.substring(8));
-        Entry entry = new Entry(mEntryX++, y);
-        Log.v(TAG, "X = " + mEntryX + " , Y = " + y);
-        addEntry(entry);
+        String r = msg.substring(0, 2).toUpperCase();
+        if (!r.contains("FF")) {
+            int y = Integer.parseInt(msg.substring(0, 2));
+            Entry entry = new Entry(mEntryX++, y);
+            Log.v(TAG, "X = " + mEntryX + " , Y = " + y);
+            addEntry(entry);
+        }
     }
 
     /**
@@ -245,6 +266,7 @@ public class ChartActivity extends AppCompatActivity implements OnChartValueSele
      *
      * @param entry entry to be added
      */
+
     private void addEntry(Entry entry) {
         LineData data = mChart.getData();
 

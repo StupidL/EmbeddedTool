@@ -24,11 +24,11 @@
                 android:title="@string/bluetooth_secure"
                 app:showAsAction="never" />
 
-            <item
-                android:id="@+id/action_bluetooth_insecure"
-                android:orderInCategory="90"
-                android:title="@string/bluetooth_insecure"
-                app:showAsAction="never" />
+            <!--<item-->
+                <!--android:id="@+id/action_bluetooth_insecure"-->
+                <!--android:orderInCategory="90"-->
+                <!--android:title="@string/bluetooth_insecure"-->
+                <!--app:showAsAction="never" />-->
 
             <item
                 android:id="@+id/action_bluetooth_discoverable"
