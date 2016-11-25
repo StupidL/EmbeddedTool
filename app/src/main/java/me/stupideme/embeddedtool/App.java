@@ -17,7 +17,5 @@ public class App extends Application {
         super.onCreate();
         //init database
         DBManager.init(getApplicationContext());
-
-        OnSendMessageListener listener = StupidModelImpl.getInstance();
     }
 }
